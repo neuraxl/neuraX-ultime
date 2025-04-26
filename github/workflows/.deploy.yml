@@ -1,0 +1,35 @@
+name: Deploy NeuraX - Ultime
+
+on:
+  push:
+    branches:
+      - main  # Ce workflow s'exécute à chaque push sur la branche main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Vérifier le code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Installer Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Installer les dépendances
+      - name: Install dependencies
+        run: npm install
+
+      # Construire l'application
+      - name: Build app
+        run: npm run build
+
+      # Déployer sur GitHub Pages
+      - name: Deploy to GitHub Pages
+        run: npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
