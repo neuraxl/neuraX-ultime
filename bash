@@ -1,5 +1,34 @@
 
-```bash
-git add .
-git commit -m "Ajout des fichiers de base pour NeuraX - ultime"
-git push -u origin main
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuraX – Ultime</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Bienvenue sur NeuraX – Ultime</h1>
+    <p>Votre chatbot intelligent avec interface réaliste.</p>
+  </header>
+
+  <main>
+    <section id="chat-container">
+      <div id="chat-box">
+        <div id="chat-messages">
+          <!-- Les messages du chatbot apparaîtront ici -->
+        </div>
+        <input type="text" id="user-input" placeholder="Posez une question..." />
+        <button id="send-button">Envoyer</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 NeuraX. Tous droits réservés.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
