@@ -1,0 +1,38 @@
+// Sélectionner les éléments HTML
+const sendButton = document.getElementById('send-button');
+const userInput = document.getElementById('user-input');
+const chatMessages = document.getElementById('chat-messages');
+
+// Fonction pour ajouter un message dans le chat
+function addMessage(content, isUser = false) {
+  const message = document.createElement('div');
+  message.textContent = content;
+  message.classList.add(isUser ? 'user-message' : 'bot-message');
+  chatMessages.appendChild(message);
+  chatMessages.scrollTop = chatMessages.scrollHeight;  // Scroll automatique vers le bas
+}
+
+// Fonction pour gérer l'envoi de message
+function sendMessage() {
+  const message = userInput.value.trim();
+  if (message) {
+    addMessage(message, true);  // Afficher le message de l'utilisateur
+    userInput.value = '';
+
+    // Simuler une réponse du chatbot
+    setTimeout(() => {
+      const botResponse = NeuraX: ${message} ? Ça m'intéresse !;
+      addMessage(botResponse);
+    }, 1000);
+  }
+}
+
+// Écouter le bouton d'envoi
+sendButton.addEventListener('click', sendMessage);
+
+// Permettre d'envoyer avec "Entrée"
+userInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    sendMessage();
+  }
+});
