@@ -1,1 +1,8 @@
+function parler(texte) {
+  const synth = window.speechSynthesis;
+  const utterance = new SpeechSynthesisUtterance(texte);
+  synth.speak(utterance);
+}
 
+// Exemple d'utilisation :
+parler("Bonjour, je suis neuraX-core, votre assistant intelligent.");
