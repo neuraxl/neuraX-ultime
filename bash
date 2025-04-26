@@ -1,3 +1,4 @@
+npm install
 
 <!DOCTYPE html>
 <html lang="fr">
