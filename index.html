@@ -1,8 +1,109 @@
-function parler(texte) {
-  const synth = window.speechSynthesis;
-  const utterance = new SpeechSynthesisUtterance(texte);
-  synth.speak(utterance);
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuraX Chatbot</title>
+  <style>
+    #chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-family: Arial, sans-serif;
+    }
+    #chat-messages {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .user-message {
+      text-align: right;
+      color: blue;
+    }
+    .bot-message {
+      text-align: left;
+      color: green;
+    }
+    #user-input {
+      width: calc(100% - 90px);
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    #send-button {
+      padding: 10px;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #send-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="chat-messages"></div>
+    <input type="text" id="user-input" placeholder="Tapez votre message ici..." />
+    <button id="send-button">Envoyer</button>
+  </div>
 
-// Exemple d'utilisation :
-parler("Bonjour, je suis neuraX-core, votre assistant intelligent.");
+  <script>
+    // Fonction pour activer la synthèse vocale
+    function parler(texte) {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(texte);
+      synth.speak(utterance);
+    }
+
+    // Récupération des éléments HTML
+    const sendButton = document.getElementById('send-button');
+    const userInput = document.getElementById('user-input');
+    const chatMessages = document.getElementById('chat-messages');
+
+    // Fonction pour envoyer un message
+    function sendMessage() {
+      const message = userInput.value.trim();
+
+      if (message) {
+        // Ajouter le message de l'utilisateur dans la zone de chat
+        const userMessage = document.createElement('div');
+        userMessage.className = 'user-message';
+        userMessage.textContent = `Vous: ${message}`;
+        chatMessages.appendChild(userMessage);
+
+        // Appeler la fonction parler pour lire le message
+        parler(message);
+
+        // Répondre automatiquement à l'utilisateur
+        const botMessage = document.createElement('div');
+        botMessage.className = 'bot-message';
+        botMessage.textContent = `NeuraX: Désolé, je ne peux pas encore répondre à cette question.`;
+        chatMessages.appendChild(botMessage);
+
+        // Réinitialiser le champ de saisie
+        userInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll automatique
+      }
+    }
+
+    // Gestion du clic sur le bouton "Envoyer"
+    sendButton.addEventListener('click', sendMessage);
+
+    // Gestion de la touche "Entrée" depuis le clavier
+    userInput.addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
