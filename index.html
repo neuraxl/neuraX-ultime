@@ -1,35 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NeuraX-ultime - Chatbot interactif de nouvelle génération">
-    <title>NeuraX-ultime - Chatbot Interactif</title>
-    <!-- Fichiers CSS -->
-    <link rel="stylesheet" href="styles.css">
-    <!-- Fichiers JS -->
-    <script src="script.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuraX-Ultime - Chatbot</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
-    <header>
-        <h1>Bienvenue sur NeuraX-ultime</h1>
-        <p>Votre chatbot interactif avancé, basé sur GPT-4.</p>
-    </header>
 
-    <main>
-        <section>
-            <h2>Chatbot Interactif</h2>
-            <div id="chat-interface">
-                <!-- Zone où le chatbot interagit avec l'utilisateur -->
-                <div id="chatbox"></div>
-                <input type="text" id="user-input" placeholder="Posez une question..." />
-                <button id="send-button">Envoyer</button>
-            </div>
-        </section>
-    </main>
+  <div class="chat-container">
+    <div id="chat-log"></div>
+    <form id="chat-form">
+      <input type="text" id="user-input" placeholder="Pose ta question..." autocomplete="off" required>
+      <button type="submit">Envoyer</button>
+    </form>
+  </div>
 
-    <footer>
-        <p>&copy; 2025 NeuraX-ultime. Tous droits réservés.</p>
-    </footer>
+  <script src="script.js" defer></script>
 </body>
 </html>
+
+
