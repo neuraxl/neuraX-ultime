@@ -3,25 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuraX-Ultime - Chatbot</title>
+  <title>NeuraX-Ultime 🤖</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
+  <header>
+    <h1>NeuraX-Ultime 🤖</h1>
+    <button id="darkModeToggle">🌗 Mode sombre</button>
+  </header>
 
-  <div class="top-bar">
-    <button id="dark-mode-toggle">🌗 Mode sombre</button>
-  </div>
-
-  <div class="chat-container">
-    <div id="chat-log"></div>
-    <form id="chat-form">
-      <input type="text" id="user-input" placeholder="Pose ta question..." autocomplete="off" required>
+  <main id="chatContainer">
+    <div id="messages"></div>
+    <div id="loader" class="hidden">🧠 NeuraX réfléchit... 🔄</div>
+    <form id="chatForm">
+      <input type="text" id="userInput" placeholder="Écris ton message..." required>
       <button type="submit">Envoyer</button>
     </form>
-  </div>
+    <select id="modelSelector">
+      <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+      <option value="gpt-4">GPT-4</option>
+      <option value="gpt-4o">GPT-4o</option>
+    </select>
+  </main>
 
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
-
