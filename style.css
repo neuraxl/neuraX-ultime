@@ -1,0 +1,88 @@
+/* Style général */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Conteneur du chatbot */
+.chat-container {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+/* Zone de messages */
+#chat-log {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 10px;
+}
+
+/* Messages utilisateur et bot */
+.user-message, .bot-message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 80%;
+}
+
+/* Message utilisateur */
+.user-message {
+  background-color: #d1e7dd;
+  align-self: flex-end;
+}
+
+/* Message chatbot */
+.bot-message {
+  background-color: #e2e3e5;
+  align-self: flex-start;
+}
+
+/* Formulaire d'envoi */
+#chat-form {
+  display: flex;
+  margin-top: 10px;
+}
+
+#user-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+}
+
+#chat-form button {
+  padding: 10px 20px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+}
+
+#chat-form button:hover {
+  background: #0b5ed7;
+}
+
+/* Scrollbar pour le chat */
+#chat-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chat-log::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
