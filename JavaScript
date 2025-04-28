@@ -44,7 +44,3 @@
     </script>
 </body>
 </html>
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<div id="brain-map"></div>
-<link rel="stylesheet" href="css/style.css">
-<script src="js/script.js"></script>
