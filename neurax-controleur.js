@@ -1,3 +1,14 @@
+import { dessinerCarteNeurale } from './neurax-visualisation.js';
+
+const neurones = [
+    { nom: "Assistant" },
+    { nom: "Mémoire" },
+    { nom: "Analyseur" },
+    { nom: "Réflexion" },
+    { nom: "Émotion" }
+];
+
+dessinerCarteNeurale(neurones);
 import { NeuraMemoire } from './neurax-memoire.js';
 import { NeuraAnalyseur } from './neurax-analyseur.js';
 import { NeuraAssistant } from './neurax-assistant.js';
