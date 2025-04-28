@@ -1,3 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraX-ultime</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #output { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>NeuraX-ultime - Chatbot Créatif</h1>
+    <textarea id="inputText" placeholder="Posez une question à NeuraX" rows="4" cols="50"></textarea>
+    <button id="sendBtn">Envoyer</button>
+
+    <div id="output"></div>
+
+    <script>
+        const sendBtn = document.getElementById('sendBtn');
+        const inputText = document.getElementById('inputText');
+        const outputDiv = document.getElementById('output');
+
+        sendBtn.addEventListener('click', async () => {
+            const userInput = inputText.value;
+
+            // Appel au backend
+            const response = await fetch('http://localhost:3000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: userInput })
+            });
+            const data = await response.json();
+            const outputText = data.choices[0].text;
+
+            // Affichage du texte de la réponse
+            outputDiv.innerText = outputText;
+
+            // Synthèse vocale
+            const synth = window.speechSynthesis;
+            const utterThis = new SpeechSynthesisUtterance(outputText);
+            synth.speak(utterThis);
+        });
+    </script>
+</body>
+</html>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <div id="brain-map"></div>
 <link rel="stylesheet" href="css/style.css">
