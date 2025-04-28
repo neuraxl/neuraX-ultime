@@ -1,31 +1,18 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuraX-Ultime 🤖</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraX-Ultime</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>NeuraX-Ultime 🤖</h1>
-    <button id="darkModeToggle">🌗 Mode sombre</button>
-  </header>
+    <div id="app">
+        <h1>NeuraX-Ultime - Cerveau Virtuel</h1>
+        <div id="console"></div>
+    </div>
 
-  <main id="chatContainer">
-    <div id="messages"></div>
-    <div id="loader" class="hidden">🧠 NeuraX réfléchit... 🔄</div>
-    <form id="chatForm">
-      <input type="text" id="userInput" placeholder="Écris ton message..." required>
-      <button type="submit">Envoyer</button>
-    </form>
-    <select id="modelSelector">
-      <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-      <option value="gpt-4">GPT-4</option>
-      <option value="gpt-4o">GPT-4o</option>
-    </select>
-  </main>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
+
