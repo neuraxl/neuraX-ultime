@@ -1,0 +1,12 @@
+{
+  "name": "neuraX-ultime",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "webpack --mode production",  // ou toute commande de build nécessaire
+    "deploy": "gh-pages -d dist"  // Déploie sur GitHub Pages (assure-toi que le dossier 'dist' est créé)
+  },
+  "dependencies": {
+    "gh-pages": "^3.2.3",  // Ajoute cette dépendance si ce n'est pas déjà fait
+    "webpack": "^5.0.0"  // ou la version que tu utilises
+  }
+}
