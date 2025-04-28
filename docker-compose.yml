@@ -1,0 +1,14 @@
+ersion: '3'
+services:
+  chatbot1:
+    build: .
+    ports:
+      - "5001:5000"
+  chatbot2:
+    build: .
+    ports:
+      - "5002:5000"
+  chatbot3:
+    build: .
+    ports:
+      - "5003:5000"
