@@ -79,6 +79,62 @@
       document.getElementById("userInput").value = '';
     }
   </script>
+<canvas id="neuralCanvas" width="800" height="500" style="border:1px solid #00ffcc; margin-top:40px;"></canvas>
+
+<script>
+  const canvas = document.getElementById('neuralCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const neurones = [];
+  const connexions = [];
+
+  const N = 30; // Nombre de neurones
+
+  // Génère des neurones aléatoires
+  for (let i = 0; i < N; i++) {
+    neurones.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: 4 + Math.random() * 2,
+    });
+  }
+
+  // Connexions aléatoires entre les neurones
+  for (let i = 0; i < N * 1.5; i++) {
+    const a = Math.floor(Math.random() * N);
+    const b = Math.floor(Math.random() * N);
+    if (a !== b) {
+      connexions.push({ a, b, alpha: Math.random() });
+    }
+  }
+
+  function dessinerCerveau() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Dessine les connexions
+    connexions.forEach(conn => {
+      const na = neurones[conn.a];
+      const nb = neurones[conn.b];
+      ctx.beginPath();
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.strokeStyle = `rgba(0,255,204,${Math.abs(Math.sin(Date.now() * 0.002 + conn.alpha))})`;
+      ctx.stroke();
+    });
+
+    // Dessine les neurones
+    neurones.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, 2 * Math.PI);
+      ctx.fillStyle = '#00ffcc';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(dessinerCerveau);
+  }
+
+  dessinerCerveau(); // Lancement de l’animation
+</script>
 
 </body>
 </html>
