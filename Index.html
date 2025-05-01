@@ -1,140 +1,40 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NeuraX-ultime</title>
-  <style>
-    body {
-      background-color: #0d0d0d;
-      color: #00ffcc;
-      font-family: 'Courier New', monospace;
-      padding: 40px;
-      text-align: center;
-    }
-    #chatbox {
-      width: 100%;
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: #111;
-      border: 1px solid #00ffcc;
-      padding: 20px;
-      border-radius: 12px;
-    }
-    input, button {
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin-top: 10px;
-    }
-    input[type="text"] {
-      width: 80%;
-    }
-    button {
-      background-color: #00ffcc;
-      color: #000;
-      cursor: pointer;
-    }
-    .toggle-voice {
-      margin-top: 10px;
-      color: #aaa;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <header>
+    <h1>NeuraX-ultime</h1>
+    <p class="slogan">Le cerveau qui pense plus vite que l’éclair</p>
+  </header>
 
-  <h1>🧠 NeuraX-ultime</h1>
-  <div id="chatbox">
-    <div id="output">Bienvenue dans le cerveau.</div>
-    <input type="text" id="userInput" placeholder="Pose une question au cerveau..." />
-    <button onclick="envoyer()">Envoyer</button>
-    <div class="toggle-voice">
-      <label><input type="checkbox" id="toggleVoice" checked> Activer la voix</label>
+  <main>
+    <div class="neural-background">
+      <button id="start-brain">Démarrer le cerveau</button>
+      <p class="status">Connexion des neurones en cours...</p>
     </div>
-  </div>
 
-  <script>
-    function parler(texte) {
-      const synth = window.speechSynthesis;
-      const voix = new SpeechSynthesisUtterance(texte);
-      voix.lang = 'fr-FR';
-      voix.pitch = 1;
-      voix.rate = 1;
-      synth.speak(voix);
-    }
+    <section class="features">
+      <h2>Fonctionnalités principales</h2>
+      <ul>
+        <li>Synthèse vocale humaine</li>
+        <li>Tableau de bord visuel animé</li>
+        <li>Auto-réplication neuronale</li>
+        <li>Sauvegarde intelligente des logs</li>
+        <li>Assistant visuel intégré</li>
+      </ul>
+    </section>
+  </main>
 
-    function repondre(message) {
-      document.getElementById("output").innerText = message;
-      if (document.getElementById("toggleVoice").checked) {
-        parler(message);
-      }
-    }
+  <footer>
+    <p>Version Beta • <a href="https://github.com/Sav-art/NeuraX-ultime" target="_blank">GitHub</a></p>
+  </footer>
 
-    function envoyer() {
-      const input = document.getElementById("userInput").value;
-      if (!input) return;
-
-      // Simule une réponse de l'IA (remplace ça avec GPT-4 plus tard)
-      const reponse = `Tu m'as demandé : "${input}". Réponse : NeuraX est en pleine forme.`;
-      repondre(reponse);
-      document.getElementById("userInput").value = '';
-    }
-  </script>
-<canvas id="neuralCanvas" width="800" height="500" style="border:1px solid #00ffcc; margin-top:40px;"></canvas>
-
-<script>
-  const canvas = document.getElementById('neuralCanvas');
-  const ctx = canvas.getContext('2d');
-
-  const neurones = [];
-  const connexions = [];
-
-  const N = 30; // Nombre de neurones
-
-  // Génère des neurones aléatoires
-  for (let i = 0; i < N; i++) {
-    neurones.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: 4 + Math.random() * 2,
-    });
-  }
-
-  // Connexions aléatoires entre les neurones
-  for (let i = 0; i < N * 1.5; i++) {
-    const a = Math.floor(Math.random() * N);
-    const b = Math.floor(Math.random() * N);
-    if (a !== b) {
-      connexions.push({ a, b, alpha: Math.random() });
-    }
-  }
-
-  function dessinerCerveau() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Dessine les connexions
-    connexions.forEach(conn => {
-      const na = neurones[conn.a];
-      const nb = neurones[conn.b];
-      ctx.beginPath();
-      ctx.moveTo(na.x, na.y);
-      ctx.lineTo(nb.x, nb.y);
-      ctx.strokeStyle = `rgba(0,255,204,${Math.abs(Math.sin(Date.now() * 0.002 + conn.alpha))})`;
-      ctx.stroke();
-    });
-
-    // Dessine les neurones
-    neurones.forEach(n => {
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, 2 * Math.PI);
-      ctx.fillStyle = '#00ffcc';
-      ctx.fill();
-    });
-
-    requestAnimationFrame(dessinerCerveau);
-  }
-
-  dessinerCerveau(); // Lancement de l’animation
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
