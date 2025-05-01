@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuraX-ultime</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>NeuraX-ultime</h1>
+    <p class="slogan">Le cerveau qui pense plus vite que l’éclair</p>
+  </header>
+
+  <main>
+    <div class="neural-background">
+      <button id="start-brain">Démarrer le cerveau</button>
+      <p class="status">Connexion des neurones en cours...</p>
+    </div>
+
+    <section class="features">
+      <h2>Fonctionnalités principales</h2>
+      <ul>
+        <li>Synthèse vocale humaine</li>
+        <li>Tableau de bord visuel animé</li>
+        <li>Auto-réplication neuronale</li>
+        <li>Sauvegarde intelligente des logs</li>
+        <li>Assistant visuel intégré</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Version Beta • <a href="https://github.com/Sav-art/NeuraX-ultime" target="_blank">GitHub</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
