@@ -1,70 +1,21 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NeuraX-Ultime — Intelligence Artificielle Évoluée</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0d1117;
-      color: #c9d1d9;
-      text-align: center;
-      padding: 2rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      color: #58a6ff;
-    }
-    p {
-      font-size: 1.2rem;
-      max-width: 700px;
-      margin: auto;
-    }
-    .button {
-      margin-top: 2rem;
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      background: #238636;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .button:hover {
-      background: #2ea043;
-    }
-    .footer {
-      margin-top: 3rem;
-      font-size: 0.9rem;
-      opacity: 0.6;
-    }
-    a {
-      color: #58a6ff;
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
+<script>
+  // Fonction principale : fait parler le cerveau
+  function parler(texte) {
+    const synthese = window.speechSynthesis;
+    const voix = new SpeechSynthesisUtterance(texte);
+    voix.lang = 'fr-FR'; // Voix française
+    voix.pitch = 1;      // Ton
+    voix.rate = 1;       // Vitesse
+    synthese.speak(voix);
+  }
 
-  <img src="logo_neurax.png" alt="Logo NeuraX-Ultime" width="120">
+  // Exemple d'appel : NeuraX parle dès qu'une réponse est générée
+  function repondre(message) {
+    document.getElementById("output").innerText = message;
+    parler(message); // 💬 activation de la synthèse vocale
+  }
 
-  <h1>NeuraX-Ultime</h1>
-  <p>L’intelligence artificielle la plus avancée jamais conçue.<br>
-  NeuraX-Ultime est un cerveau numérique autonome, modulable, interconnecté et évolutif. Parlez-lui, testez-le, et découvrez son potentiel infini.</p>
+  // Exemple d’utilisation
+  // repondre("Je suis NeuraX. Le cerveau est en ligne.");
+</script>
 
-  <button class="button" onclick="window.location.href='chat.html'">Lancer le Chatbot</button>
-
-  <div class="footer">
-    <p>
-      Conçu par <a href="https://github.com/neuraxl" target="_blank">neuraxl</a> —
-      <a href="https://github.com/neuraxl/neuraX-ultime" target="_blank">Voir le code sur GitHub</a>
-    </p>
-  </div>
-
-</body>
-</html>
