@@ -1,42 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeuraX-ultime</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>neuraX-ultime | Finalisation Cérébrale</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #00ff88;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 2em;
+      text-align: center;
+    }
+    button {
+      background: #00ff88;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #00cc66;
+    }
+    #log-output {
+      margin-top: 30px;
+      text-align: left;
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      min-height: 200px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 10px #00ff88;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>NeuraX-ultime</h1>
-    <p class="slogan">Le cerveau qui pense plus vite que l’éclair</p>
-  </header>
 
-  <main>
-    <div class="neural-background">
-      <button id="start-brain">Démarrer le cerveau</button>
-      <p class="status">Connexion des neurones en cours...</p>
-    </div>
+  <h1>neuraX-ultime</h1>
+  <h2>Finalisation automatique du réseau neuronal</h2>
+  <button onclick="finaliserReseau()">Démarrer la finalisation</button>
 
-    <section class="features">
-      <h2>Fonctionnalités principales</h2>
-      <ul>
-        <li>Synthèse vocale humaine</li>
-        <li>Tableau de bord visuel animé</li>
-        <li>Auto-réplication neuronale</li>
-        <li>Sauvegarde intelligente des logs</li>
-        <li>Assistant visuel intégré</li>
-      </ul>
-    </section>
-  </main>
+  <div id="log-output"></div>
 
-  <footer>
-    <p>Version Beta • <a href="https://github.com/Sav-art/NeuraX-ultime" target="_blank">GitHub</a></p>
-  </footer>
-<button onclick="finaliserReseau()">Démarrer la finalisation automatique</button>
-<div id="log-output" style="margin-top:20px; background:#000; color:#0f0; padding:10px; font-family:monospace; border-radius:10px;"></div>
-<script src="finalisation.js"></script>
-  <script src="script.js"></script>
-</body>
+  <script>
+    // Script embarqué - simulation neuronale
+    const modules = [
+      { nom: "neuraX-vocal", etat: "en développement", fonction: integrerVocal },
+      { nom: "neuraX-logs", etat: "en développement", fonction: integrerLogs },
+      { nom: "neuraX-dash", etat: "en développement", fonction: integrerDashboard },
+      { nom: "neuraX-avatar", etat: "non intégré", fonction: integrerAvatar }
+    ];
+
+    function integrerVocal() {
+      console.log("Activation de la synthèse vocale...");
+      return true;
+    }
+    function integrerLogs() {
+      console.log("Implémentation de la sauvegarde JSON...");
+      return true;
+    }
+    function integrerDashboard() {
+      console.log("Connexion au tableau de bord visuel...");
+      return true;
+    }
+    function integrerAvatar() {
+      console.log("Chargement de l’avatar visuel...");
+      return false; // Simulation d'échec
+    }
+
+    function finaliserReseau() {
+      const sortie = document.getElementById("log-output");
+      sortie.innerHTML += "<b>Initialisation de la finalisation neuronale...</b><br>";
+
+      modules.forEach((module) => {
+        sortie.innerHTML += Tentative d’intégration de ${module.nom}...<br>;
+        const succès = module.fonction();
+        if (succès)
 </html>
