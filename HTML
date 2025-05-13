@@ -11,10 +11,10 @@
 </head>
 <body>
     <h1>NeuraX-ultime - Chatbot Créatif</h1>
-    <textarea id="inputText" placeholder="Posez une question à NeuraX" rows="4" cols="50"></textarea>
-    <button id="sendBtn">Envoyer</button>
+    <textarea id="inputText" aria-label="Zone de texte pour entrer une question" placeholder="Posez une question à NeuraX" rows="4" cols="50"></textarea>
+    <button id="sendBtn" aria-label="Bouton pour envoyer la question">Envoyer</button>
 
-    <div id="output"></div>
+    <div id="output" role="region" aria-live="polite"></div>
 
     <script>
         const sendBtn = document.getElementById('sendBtn');
@@ -24,22 +24,34 @@
         sendBtn.addEventListener('click', async () => {
             const userInput = inputText.value;
 
-            // Appel au backend
-            const response = await fetch('http://localhost:3000/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: userInput })
-            });
-            const data = await response.json();
-            const outputText = data.choices[0].text;
+            if (!userInput.trim()) {
+                outputDiv.innerText = 'Veuillez entrer une question avant d\'envoyer.';
+                return;
+            }
 
-            // Affichage du texte de la réponse
-            outputDiv.innerText = outputText;
+            try {
+                const response = await fetch('http://localhost:3000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userInput })
+                });
 
-            // Synthèse vocale
-            const synth = window.speechSynthesis;
-            const utterThis = new SpeechSynthesisUtterance(outputText);
-            synth.speak(utterThis);
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+
+                const data = await response.json();
+                const outputText = data.choices[0]?.text || 'Aucune réponse reçue.';
+
+                outputDiv.innerText = outputText;
+
+                // Synthèse vocale
+                const synth = window.speechSynthesis;
+                const utterThis = new SpeechSynthesisUtterance(outputText);
+                synth.speak(utterThis);
+            } catch (error) {
+                outputDiv.innerText = `Une erreur est survenue : ${error.message}`;
+            }
         });
     </script>
 </body>
