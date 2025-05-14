@@ -1,85 +1,149 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>neuraX-ultime | Finalisation Cérébrale</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuraX-Ultime | Cerveau en Opération</title>
   <style>
     body {
+      margin: 0;
       background: #0a0a0a;
-      color: #00ff88;
-      font-family: 'Courier New', Courier, monospace;
+      color: #00ffe1;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .dashboard {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       padding: 2em;
       text-align: center;
     }
-    button {
-      background: #00ff88;
-      color: #000;
-      font-weight: bold;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
+    .start-button {
+      margin-top: 2em;
+      padding: 1em 2em;
       font-size: 1.2em;
+      background: transparent;
+      border: 2px solid #00ffe1;
+      color: #00ffe1;
+      text-shadow: 0 0 5px #00ffe1;
       cursor: pointer;
-      transition: background 0.3s;
+      border-radius: 12px;
+      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
     }
-    button:hover {
-      background: #00cc66;
+    .start-button:hover {
+      background: #00ffe1;
+      color: #000;
+      transform: scale(1.05);
     }
-    #log-output {
-      margin-top: 30px;
+    .functions {
+      margin-top: 2em;
       text-align: left;
-      background: #111;
-      padding: 20px;
-      border-radius: 10px;
-      min-height: 200px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 10px #00ff88;
+      max-width: 400px;
+    }
+    .functions li {
+      margin-bottom: 0.5em;
+      list-style: none;
+    }
+    .functions li::before {
+      content: '🧠';
+      margin-right: 0.5em;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
+      50% { box-shadow: 0 0 20px #00ffe1; }
     }
   </style>
 </head>
 <body>
-
-  <h1>neuraX-ultime</h1>
-  <h2>Finalisation automatique du réseau neuronal</h2>
-  <button onclick="finaliserReseau()">Démarrer la finalisation</button>
-
-  <div id="log-output"></div>
-
+  <canvas id="neuralCanvas"></canvas>
+  <div class="dashboard">
+    <h1>🧠 NeuraX-Ultime</h1>
+    <p>Tableau de bord neuronal en temps réel</p>
+    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
+    <ul class="functions">
+      <li>Auto-réplication neuronale</li>
+      <li>Sauvegarde JSON automatique</li>
+      <li>Statistiques du cerveau</li>
+      <li>Synthèse vocale intégrée</li>
+      <li>Interconnexion des modules</li>
+    </ul>
+  </div>
   <script>
-    // Script embarqué - simulation neuronale
-    const modules = [
-      { nom: "neuraX-vocal", etat: "en développement", fonction: integrerVocal },
-      { nom: "neuraX-logs", etat: "en développement", fonction: integrerLogs },
-      { nom: "neuraX-dash", etat: "en développement", fonction: integrerDashboard },
-      { nom: "neuraX-avatar", etat: "non intégré", fonction: integrerAvatar }
-    ];
-
-    function integrerVocal() {
-      console.log("Activation de la synthèse vocale...");
-      return true;
-    }
-    function integrerLogs() {
-      console.log("Implémentation de la sauvegarde JSON...");
-      return true;
-    }
-    function integrerDashboard() {
-      console.log("Connexion au tableau de bord visuel...");
-      return true;
-    }
-    function integrerAvatar() {
-      console.log("Chargement de l’avatar visuel...");
-      return false; // Simulation d'échec
+    function launchNeuraX() {
+      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = "fr-FR";
+      speechSynthesis.speak(utterance);
+      alert(phrase);
     }
 
-    function finaliserReseau() {
-      const sortie = document.getElementById("log-output");
-      sortie.innerHTML += "<b>Initialisation de la finalisation neuronale...</b><br>";
+    // Animation canvas neurale
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
-      modules.forEach((module) => {
-        sortie.innerHTML += Tentative d’intégration de ${module.nom}...<br>;
-        const succès = module.fonction();
-        if (succès)
+    const nodes = Array.from({ length: 50 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ffe1';
+        ctx.fill();
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const dx = n1.x - n2.x;
+          const dy = n1.y - n2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.strokeStyle = 'rgba(0,255,225,0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      nodes.forEach(n => {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
 </html>
