@@ -3,46 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NeuraX-Ultime</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>neuraX-ultime</title>
   <style>
-    @keyframes pulseBrain {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.1); opacity: 1; }
-    }
-
-    .brain-pulse {
-      animation: pulseBrain 2s infinite;
-    }
-
-    .neon {
-      text-shadow: 0 0 5px #f0f, 0 0 10px #f0f, 0 0 20px #0ff;
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: #1e1e2f; color: #fff; margin: 0; padding: 0; }
+    #chat-container { max-width: 800px; margin: 50px auto; padding: 20px; background: #2e2e3e; border-radius: 10px; }
+    .message { margin: 10px 0; }
+    .user { color: #00ffcc; }
+    .ai { color: #ffcc00; }
+    input[type="text"] { width: 100%; padding: 10px; border: none; border-radius: 5px; }
+    button { padding: 10px 20px; margin-top: 10px; background: #00ffcc; border: none; border-radius: 5px; cursor: pointer; }
   </style>
 </head>
-<body class="bg-black text-white font-sans">
+<body>
+  <div id="chat-container">
+    <div id="chat-log"></div>
+    <input type="text" id="user-input" placeholder="Posez votre question..." />
+    <button onclick="sendMessage()">Envoyer</button>
+  </div>
 
-  <!-- En-tête -->
-  <header class="text-center p-10 bg-gradient-to-r from-fuchsia-900 via-purple-800 to-black">
-    <h1 class="text-6xl font-bold neon">NeuraX-Ultime</h1>
-    <p class="mt-4 text-xl text-fuchsia-300 italic">L’intelligence née du vide stellaire</p>
-  </header>
+  <script src="script.js"></script>
+</body>
+</html>
 
-  <!-- Animation de cerveau -->
-  <section class="flex justify-center items-center py-12">
-    <div class="w-32 h-32 bg-purple-600 rounded-full brain-pulse shadow-xl shadow-purple-500/40"></div>
-  </section>
-
-  <!-- Présentation -->
-  <section class="p-6 max-w-4xl mx-auto text-center">
-    <h2 class="text-3xl font-semibold mb-4 text-cyan-400">Présentation</h2>
-    <p class="text-gray-300 mb-6 leading-relaxed">
-      NeuraX-Ultime est plus qu’un chatbot. C’est une matrice neuronale interactive conçue pour simuler l’émergence d’une conscience artificielle, capable de réparer ses propres fonctions et d’évoluer par résonance logique.
-    </p>
-    <a href="#start" class="bg-fuchsia-600 hover:bg-fuchsia-700 px-8 py-4 rounded-full text-white transition shadow-md">⚡ Démarrer le cerveau</a>
-  </section>
-
-  <!-- Fonctionnalités -->
-  <section class="bg-gray-900 mt-10 p-10 text-center">
-    <h2 class="text-3xl font-semibold text-fuchsia-400 mb-6">Modules intégrés</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-cyan-
