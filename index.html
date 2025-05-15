@@ -1,17 +1,172 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuraX-Ultime</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NeuraX-Ultime | Voyage Cosmique</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: #00ffe1;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      display: block;
+    }
+    .dashboard {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 2em;
+      text-align: center;
+    }
+    .start-button {
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background: transparent;
+      border: 2px solid #00ffe1;
+      color: #00ffe1;
+      text-shadow: 0 0 5px #00ffe1;
+      cursor: pointer;
+      border-radius: 12px;
+      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
+    }
+    .start-button:hover {
+      background: #00ffe1;
+      color: #000;
+      transform: scale(1.05);
+    }
+    .functions {
+      margin-top: 2em;
+      text-align: left;
+      max-width: 400px;
+    }
+    .functions li {
+      margin-bottom: 0.5em;
+      list-style: none;
+    }
+    .functions li::before {
+      content: '🧠';
+      margin-right: 0.5em;
+    }
+    .chatbots {
+      margin-top: 2em;
+    }
+    .chatbots button {
+      margin: 0.5em;
+      padding: 0.8em 1.5em;
+      background: transparent;
+      border: 2px solid #00ffe1;
+      color: #00ffe1;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      text-shadow: 0 0 5px #00ffe1;
+      transition: transform 0.2s, background 0.3s, color 0.3s;
+    }
+    .chatbots button:hover {
+      background: #00ffe1;
+      color: #000;
+      transform: scale(1.05);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
+      50% { box-shadow: 0 0 20px #00ffe1; }
+    }
+  </style>
 </head>
 <body>
-    <div id="app">
-        <h1>NeuraX-Ultime - Cerveau Virtuel</h1>
-        <div id="console"></div>
+  <canvas id="neuralCanvas"></canvas>
+  <div class="dashboard">
+    <h1>🧠 NeuraX-Ultime</h1>
+    <p>Tableau de bord neuronal en temps réel</p>
+    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
+    <ul class="functions">
+      <li>Auto-réplication neuronale</li>
+      <li>Sauvegarde JSON automatique</li>
+      <li>Statistiques du cerveau</li>
+      <li>Synthèse vocale intégrée</li>
+      <li>Interconnexion des modules</li>
+    </ul>
+    <div class="chatbots">
+      <h2>Chatbots connectés</h2>
+      <button onclick="connectBot('NeuraX-Core')">🧠 NeuraX-Core</button>
+      <button onclick="connectBot('NeuraX-Memo')">📚 NeuraX-Memo</button>
+      <button onclick="connectBot('NeuraX-Vox')">🔊 NeuraX-Vox</button>
     </div>
+  </div>
+  <script>
+    // Synthèse vocale et interactions
+    function speakAndAnimate(message) {
+      const utterance = new SpeechSynthesisUtterance(message);
+      utterance.lang = "fr-FR";
+      speechSynthesis.speak(utterance);
+    }
 
-    <script src="script.js"></script>
-</body>
-</html>
+    function launchNeuraX() {
+      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
+      speakAndAnimate(phrase);
+      alert(phrase);
+    }
+
+    function connectBot(name) {
+      const message = `Connexion au chatbot ${name} réussie. Interface synchronisée.`;
+      speakAndAnimate(message);
+      alert(message);
+    }
+
+    // Canvas setup
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Noeuds neuronaux animés
+    const nodes = Array.from({ length: 50 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5
+    }));
+
+    // Comète douce et poétique
+    const comet = {
+      x: -100,   // départ hors écran à gauche
+      y: h * 0.3 + Math.random() * h * 0.4, // position verticale aléatoire dans la zone centrale
+      vx: 2,     // vitesse horizontale (douce)
+      tailLength: 80,
+      tailPoints: []
+    };
+
+    function drawNodes() {
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ffe1';
+        ctx.fill();
+        for (let j = i + 1; j < nodes.length; j++) {
+          const
