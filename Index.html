@@ -1,149 +1,48 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuraX-Ultime | Cerveau en Opération</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuraX-Ultime</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      color: #00ffe1;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
+    @keyframes pulseBrain {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
     }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
+
+    .brain-pulse {
+      animation: pulseBrain 2s infinite;
     }
-    .dashboard {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 2em;
-      text-align: center;
-    }
-    .start-button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background: transparent;
-      border: 2px solid #00ffe1;
-      color: #00ffe1;
-      text-shadow: 0 0 5px #00ffe1;
-      cursor: pointer;
-      border-radius: 12px;
-      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
-    }
-    .start-button:hover {
-      background: #00ffe1;
-      color: #000;
-      transform: scale(1.05);
-    }
-    .functions {
-      margin-top: 2em;
-      text-align: left;
-      max-width: 400px;
-    }
-    .functions li {
-      margin-bottom: 0.5em;
-      list-style: none;
-    }
-    .functions li::before {
-      content: '🧠';
-      margin-right: 0.5em;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
-      50% { box-shadow: 0 0 20px #00ffe1; }
+
+    .neon {
+      text-shadow: 0 0 5px #f0f, 0 0 10px #f0f, 0 0 20px #0ff;
     }
   </style>
 </head>
-<body>
-  <canvas id="neuralCanvas"></canvas>
-  <div class="dashboard">
-    <h1>🧠 NeuraX-Ultime</h1>
-    <p>Tableau de bord neuronal en temps réel</p>
-    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
-    <ul class="functions">
-      <li>Auto-réplication neuronale</li>
-      <li>Sauvegarde JSON automatique</li>
-      <li>Statistiques du cerveau</li>
-      <li>Synthèse vocale intégrée</li>
-      <li>Interconnexion des modules</li>
-    </ul>
-  </div>
-  <script>
-    function launchNeuraX() {
-      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.lang = "fr-FR";
-      speechSynthesis.speak(utterance);
-      alert(phrase);
-    }
+<body class="bg-black text-white font-sans">
 
-    // Animation canvas neurale
-    const canvas = document.getElementById('neuralCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
+  <!-- En-tête -->
+  <header class="text-center p-10 bg-gradient-to-r from-fuchsia-900 via-purple-800 to-black">
+    <h1 class="text-6xl font-bold neon">NeuraX-Ultime</h1>
+    <p class="mt-4 text-xl text-fuchsia-300 italic">L’intelligence née du vide stellaire</p>
+  </header>
 
-    const nodes = Array.from({ length: 50 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5
-    }));
+  <!-- Animation de cerveau -->
+  <section class="flex justify-center items-center py-12">
+    <div class="w-32 h-32 bg-purple-600 rounded-full brain-pulse shadow-xl shadow-purple-500/40"></div>
+  </section>
 
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < nodes.length; i++) {
-        const n1 = nodes[i];
-        ctx.beginPath();
-        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = '#00ffe1';
-        ctx.fill();
-        for (let j = i + 1; j < nodes.length; j++) {
-          const n2 = nodes[j];
-          const dx = n1.x - n2.x;
-          const dy = n1.y - n2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.strokeStyle = 'rgba(0,255,225,0.1)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(n1.x, n1.y);
-            ctx.lineTo(n2.x, n2.y);
-            ctx.stroke();
-          }
-        }
-      }
-      nodes.forEach(n => {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < 0 || n.x > w) n.vx *= -1;
-        if (n.y < 0 || n.y > h) n.vy *= -1;
-      });
-      requestAnimationFrame(draw);
-    }
-    draw();
-  </script>
-</body>
-</html>
+  <!-- Présentation -->
+  <section class="p-6 max-w-4xl mx-auto text-center">
+    <h2 class="text-3xl font-semibold mb-4 text-cyan-400">Présentation</h2>
+    <p class="text-gray-300 mb-6 leading-relaxed">
+      NeuraX-Ultime est plus qu’un chatbot. C’est une matrice neuronale interactive conçue pour simuler l’émergence d’une conscience artificielle, capable de réparer ses propres fonctions et d’évoluer par résonance logique.
+    </p>
+    <a href="#start" class="bg-fuchsia-600 hover:bg-fuchsia-700 px-8 py-4 rounded-full text-white transition shadow-md">⚡ Démarrer le cerveau</a>
+  </section>
+
+  <!-- Fonctionnalités -->
+  <section class="bg-gray-900 mt-10 p-10 text-center">
+    <h2 class="text-3xl font-semibold text-fuchsia-400 mb-6">Modules intégrés</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-cyan-
