@@ -1,3 +1,55 @@
+const phrases = [
+  "NeuraX connection established. Prepare to travel through the galactic mind.",
+  "Cerebral stream activated. Neuronal visualization in progress...",
+  "Welcome to the core. Evolutionary intelligence is now at your service.",
+  "Synapses connected. Starting the expanding smart core.",
+  "Modules interlinked. The quantum journey begins."
+];
+
+function launchNeuraX() {
+  const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+  speakPhrase(phrase);
+
+  const brainVoice = document.getElementById("brainVoice");
+  brainVoice.textContent = phrase;
+  brainVoice.classList.add("visible");
+
+  const btn = document.querySelector('.start-button');
+  btn.textContent = "Brain Activated ✔️";
+  btn.disabled = true;
+  btn.style.opacity = 0.5;
+
+  const rocket = document.getElementById('rocketGif');
+  rocket.style.display = 'block';
+  rocket.style.animation = 'flyRocket 5s ease-in-out';
+
+  setTimeout(() => {
+    brainVoice.classList.remove("visible");
+    rocket.style.display = 'none';
+  }, 5000);
+
+  // Launch periodic speech every 30 seconds
+  if (!window.neuraXIntervalStarted) {
+    setInterval(() => {
+      const repeatedPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+      speakPhrase(repeatedPhrase);
+      brainVoice.textContent = repeatedPhrase;
+      brainVoice.classList.add("visible");
+      setTimeout(() => brainVoice.classList.remove("visible"), 5000);
+    }, 30000);
+    window.neuraXIntervalStarted = true;
+  }
+}
+
+function speakPhrase(phrase) {
+  const utterance = new SpeechSynthesisUtterance(phrase);
+  utterance.lang = "en-US";
+  // Attempt to pick a female voice
+  const voices = speechSynthesis.getVoices();
+  const femaleVoice = voices.find(voice => voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('samantha') || voice.name.toLowerCase().includes('karen'));
+  if (femaleVoice) utterance.voice = femaleVoice;
+  speechSynthesis.speak(utterance);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
