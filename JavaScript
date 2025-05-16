@@ -1,98 +1,22 @@
-const phrases = [
-  "NeuraX connection established. Prepare to travel through the galactic mind.",
-  "Cerebral stream activated. Neuronal visualization in progress...",
-  "Welcome to the core. Evolutionary intelligence is now at your service.",
-  "Synapses connected. Starting the expanding smart core.",
-  "Modules interlinked. The quantum journey begins."
-];
-
-function launchNeuraX() {
-  const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-  speakPhrase(phrase);
-
-  const brainVoice = document.getElementById("brainVoice");
-  brainVoice.textContent = phrase;
-  brainVoice.classList.add("visible");
-
-  const btn = document.querySelector('.start-button');
-  btn.textContent = "Brain Activated ✔️";
-  btn.disabled = true;
-  btn.style.opacity = 0.5;
-
-  const rocket = document.getElementById('rocketGif');
-  rocket.style.display = 'block';
-  rocket.style.animation = 'flyRocket 5s ease-in-out';
-
-  setTimeout(() => {
-    brainVoice.classList.remove("visible");
-    rocket.style.display = 'none';
-  }, 5000);
-
-  // Launch periodic speech every 30 seconds
-  if (!window.neuraXIntervalStarted) {
-    setInterval(() => {
-      const repeatedPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-      speakPhrase(repeatedPhrase);
-      brainVoice.textContent = repeatedPhrase;
-      brainVoice.classList.add("visible");
-      setTimeout(() => brainVoice.classList.remove("visible"), 5000);
-    }, 30000);
-    window.neuraXIntervalStarted = true;
-  }
+function populateVoiceOptions() {
+  const voiceSelect = document.getElementById("voiceSelect");
+  const voices = speechSynthesis.getVoices();
+  voiceSelect.innerHTML = '';
+  voices.forEach((voice, i) => {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = voice.name;
+    voiceSelect.appendChild(option);
+  });
 }
+
+window.speechSynthesis.onvoiceschanged = populateVoiceOptions;
 
 function speakPhrase(phrase) {
   const utterance = new SpeechSynthesisUtterance(phrase);
-  utterance.lang = "en-US";
-  // Attempt to pick a female voice
   const voices = speechSynthesis.getVoices();
-  const femaleVoice = voices.find(voice => voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('samantha') || voice.name.toLowerCase().includes('karen'));
-  if (femaleVoice) utterance.voice = femaleVoice;
+  const voiceIndex = document.getElementById("voiceSelect").value;
+  utterance.voice = voices[voiceIndex] || voices[0];
+  utterance.rate = parseFloat(document.getElementById("rateSlider").value);
   speechSynthesis.speak(utterance);
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuraX-ultime</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #output { margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <h1>NeuraX-ultime - Chatbot Créatif</h1>
-    <textarea id="inputText" placeholder="Posez une question à NeuraX" rows="4" cols="50"></textarea>
-    <button id="sendBtn">Envoyer</button>
-
-    <div id="output"></div>
-
-    <script>
-        const sendBtn = document.getElementById('sendBtn');
-        const inputText = document.getElementById('inputText');
-        const outputDiv = document.getElementById('output');
-
-        sendBtn.addEventListener('click', async () => {
-            const userInput = inputText.value;
-
-            // Appel au backend
-            const response = await fetch('http://localhost:3000/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: userInput })
-            });
-            const data = await response.json();
-            const outputText = data.choices[0].text;
-
-            // Affichage du texte de la réponse
-            outputDiv.innerText = outputText;
-
-            // Synthèse vocale
-            const synth = window.speechSynthesis;
-            const utterThis = new SpeechSynthesisUtterance(outputText);
-            synth.speak(utterThis);
-        });
-    </script>
-</body>
-</html>
