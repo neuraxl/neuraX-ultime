@@ -1,6 +1,260 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuraX-Ultime | Cerveau en Opération</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at bottom, #050505 0%, #000000 100%);
+      color: #00ffe1;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .dashboard {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 2em;
+      text-align: center;
+    }
+    .start-button {
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background: transparent;
+      border: 2px solid #00ffe1;
+      color: #00ffe1;
+      text-shadow: 0 0 5px #00ffe1;
+      cursor: pointer;
+      border-radius: 12px;
+      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
+    }
+    .start-button:hover {
+      background: #00ffe1;
+      color: #000;
+      transform: scale(1.05);
+    }
+    .functions {
+      margin-top: 2em;
+      text-align: left;
+      max-width: 400px;
+    }
+    .functions li {
+      margin-bottom: 0.5em;
+      list-style: none;
+    }
+    .functions li::before {
+      content: '🧠';
+      margin-right: 0.5em;
+    }
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8em;
+      color: #00ffe1;
+      opacity: 0.6;
+    }
+    .footer a {
+      color: #00ffe1;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .avatar {
+      position: absolute;
+      bottom: 120px;
+      right: 20px;
+      z-index: 2;
+      width: 100px;
+    }
+    .rocket {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      display: none;
+      z-index: 3;
+    }
+    .planet {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #00ffe1;
+      border-radius: 50%;
+      animation: orbit 6s linear infinite;
+    }
+    .planet:nth-child(1) { animation-delay: 0s; }
+    .planet:nth-child(2) { animation-delay: 2s; }
+    .planet:nth-child(3) { animation-delay: 4s; }
+
+    @keyframes orbit {
+      0% { transform: translate(-50%, -50%) rotate(0deg) translateX(100px) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg) translateX(100px) rotate(-360deg); }
+    }
+
+    .neural-quote {
+      position: absolute;
+      top: 30%;
+      width: 100%;
+      text-align: center;
+      font-size: 1.2em;
+      color: #00ffe1;
+      opacity: 0;
+      animation: showQuote 6s ease-in-out forwards;
+    }
+    .brain-voice {
+      position: absolute;
+      bottom: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 1px solid #00ffe1;
+      border-radius: 10px;
+      padding: 1em 2em;
+      color: #00ffe1;
+      font-size: 1.1em;
+      opacity: 0;
+      transition: opacity 1s;
+      z-index: 3;
+    }
+    .brain-voice.visible {
+      opacity: 1;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
+      50% { box-shadow: 0 0 20px #00ffe1; }
+    }
+    @keyframes showQuote {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="neuralCanvas"></canvas>
+
+  <img class="rocket" id="rocketGif" src="https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif" alt="Rocket Launch">
+  <img class="avatar" src="https://i.postimg.cc/sfKQm7MJ/comet.gif" alt="Avatar Comète">
+
+  <div class="planet" style="top: 50%; left: 50%;"></div>
+  <div class="planet" style="top: 50%; left: 50%; width: 12px; height: 12px;"></div>
+  <div class="planet" style="top: 50%; left: 50%; width: 8px; height: 8px;"></div>
+
+  <div class="dashboard">
+    <h1>🚀 NeuraX-Ultime </h1>
+    <p>Connexion à l’Univers Cérébral</p>
+    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
+    <ul class="functions">
+      <li>Exploration neuronale immersive</li>
+      <li>Navigation inter-modulaire</li>
+      <li>Visualisation en expansion galactique</li>
+      <li>Synthèse vocale intégrée</li>
+      <li>Promesses neuronales du futur</li>
+    </ul>
+  </div>
+
+  <div id="brainVoice" class="brain-voice"></div>
+
+  <div class="footer">
+    &copy; 2025 NeuraX-Ultime | Sav'art – Grand Architecte | <a href="logs.json">Logs neuronaux</a>
+  </div>
+
+  <script>
+    const phrases = [
+      "Connexion à NeuraX établie. Préparez-vous à voyager dans l’esprit galactique.",
+      "Le flux cérébral est maintenant activé. Visualisation neuronale en cours...",
+      "Bienvenue dans le noyau central. L’intelligence évolutive est à votre service.",
+      "Synapses connectées. Démarrage du cœur intelligent en expansion.",
+      "Interconnexion des modules achevée. Le voyage quantique commence."
+    ];
+
+    function launchNeuraX() {
+      const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = "fr-FR";
+      speechSynthesis.speak(utterance);
+
+      const brainVoice = document.getElementById("brainVoice");
+      brainVoice.textContent = phrase;
+      brainVoice.classList.add("visible");
+
+      const btn = document.querySelector('.start-button');
+      btn.textContent = "Cerveau activé ✔️";
+      btn.disabled = true;
+      btn.style.opacity = 0.5;
+
+      const rocket = document.getElementById('rocketGif');
+      rocket.style.display = 'block';
+      rocket.style.animation = 'flyRocket 5s ease-in-out';
+
+      setTimeout(() => {
+        brainVoice.classList.remove("visible");
+        rocket.style.display = 'none';
+      }, 5000);
+    }
+
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const nodes = Array.from({ length: 100 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ffe1';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ffe1';
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NeuraX-Ultime | Cerveau en Opération</title>
