@@ -1,151 +1,165 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NeuraX-Ultime | Cerveau en Opération</title>
-  <style>
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      color: #00ffe1;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-      position: relative;
-      height: 100vh;
-    }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-    }
-    .dashboard {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 2em;
-      text-align: center;
-    }
-    .start-button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background: transparent;
-      border: 2px solid #00ffe1;
-      color: #00ffe1;
-      text-shadow: 0 0 5px #00ffe1;
-      cursor: pointer;
-      border-radius: 12px;
-      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
-    }
-    .start-button:hover {
-      background: #00ffe1;
-      color: #000;
-      transform: scale(1.05);
-    }
-    .functions {
-      margin-top: 2em;
-      text-align: left;
-      max-width: 400px;
-    }
-    .functions li {
-      margin-bottom: 0.5em;
-      list-style: none;
-    }
-    .functions li::before {
-      content: '🧠';
-      margin-right: 0.5em;
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @keyframes pulse {
-      0%,
-      100% {
-        box-shadow: 0 0 10px #00ffe1;
-      }
-      50% {
-        box-shadow: 0 0 20px #00ffe1;
-      }
-    }
-    /* Avatar Styles */
-    #avatar {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 10;
-      filter: drop-shadow(0 0 6px #00ffe1);
-      animation: neonPulse 3s ease-in-out infinite;
-      cursor: pointer;
-      width: 80px;
-      height: 80px;
-    }
-    #avatar svg {
-      width: 100%;
-      height: 100%;
-      stroke-dasharray: 300;
-      stroke-dashoffset: 300;
-      animation: drawNeon 3s forwards;
-    }
-    @keyframes drawNeon {
-      to {
-        stroke-dashoffset: 0;
-      }
-    }
-    @keyframes neonPulse {
-      0%,
-      100% {
-        filter: drop-shadow(0 0 6px #00ffe1);
-        stroke: #00ffe1;
-      }
-      50% {
-        filter: drop-shadow(0 0 20px #00ffe1);
-        stroke: #00a9b8;
-      }
-    }
-    @keyframes eyeBlink {
-      0%,
-      20%,
-      100% {
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-    }
-    #right-eye line:nth-child(1) {
-      animation: eyeBlink 5s infinite;
-    }
-    #right-eye line:nth-child(2) {
-      animation: eyeBlink 5s infinite;
-      animation-delay: 0.25s;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Galaxie X - Cerveau IA Interconnecté</title>
+<style>
+  body, html {
+    margin: 0; height: 100%; overflow: hidden;
+    background: radial-gradient(ellipse at center, #0a0a1a 0%, #000000 80%);
+    color: #ddd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  #info {
+    position: absolute; top: 20px; left: 20px; max-width: 350px;
+    background: rgba(10,10,30,0.7);
+    padding: 15px; border-radius: 8px;
+    font-size: 14px; line-height: 1.4em;
+  }
+  a {
+    color: #00aaff; text-decoration: none;
+  }
+</style>
 </head>
 <body>
-  <canvas id="neuralCanvas"></canvas>
-  <div class="dashboard">
-    <h1>🧠 NeuraX-Ultime</h1>
-    <p>Tableau de bord neuronal en temps réel</p>
-    <button class="start-button" onclick="launchNeuraX()">
-      Activer le cerveau
-    </button>
-    <ul class="functions">
-      <li>Auto-réplication neuronale</li>
-      <li>Sauvegarde JSON automatique</li>
-      <li>Statistiqu
+<div id="info">
+  <h1>Galaxie X — Cerveau IA Interconnecté</h1>
+  <p>Bienvenue dans la constellation vivante de NeuraX.  
+  Cliquez sur un neurone pour explorer ses secrets.  
+  Déplacez la souris pour faire tourner la galaxie.</p>
+  <p><small>Une exploration poétique de l’intelligence artificielle en réseau.</small></p>
+  <p id="detail"></p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+<script>
 
+// Variables de la scène
+let scene, camera, renderer, controls;
+let neurons = [];
+let raycaster, mouse;
+let INTERSECTED;
+const neuronCount = 50;
+const neuronRadius = 1.5;
+
+init();
+animate();
+
+function init() {
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera.position.z = 60;
+
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Lumière douce, comme une étoile lointaine
+  const light = new THREE.PointLight(0x00ffff, 1, 200);
+  light.position.set(0, 0, 50);
+  scene.add(light);
+
+  // Génération des neurones (sphères lumineuses)
+  const geometry = new THREE.SphereGeometry(neuronRadius, 16, 16);
+  const material = new THREE.MeshBasicMaterial({color: 0x00aaff});
+
+  for(let i = 0; i < neuronCount; i++) {
+    const neuron = new THREE.Mesh(geometry, material.clone());
+    neuron.position.x = (Math.random() - 0.5) * 80;
+    neuron.position.y = (Math.random() - 0.5) * 80;
+    neuron.position.z = (Math.random() - 0.5) * 80;
+    neuron.userData = {id: i, name: `Chatbot ${i+1}`, description: generateDescription(i)};
+    scene.add(neuron);
+    neurons.push(neuron);
+  }
+
+  // Connexions lumineuses (lignes entre neurones proches)
+  const lineMaterial = new THREE.LineBasicMaterial({color: 0x005577, transparent:true, opacity: 0.3});
+  neurons.forEach((n1) => {
+    neurons.forEach((n2) => {
+      if(n1 !== n2 && n1.position.distanceTo(n2.position) < 20) {
+        const points = [];
+        points.push(n1.position);
+        points.push(n2.position);
+        const geometryLine = new THREE.BufferGeometry().setFromPoints(points);
+        const line = new THREE.Line(geometryLine, lineMaterial);
+        scene.add(line);
+      }
+    });
+  });
+
+  // Raycaster pour interaction clic/souris
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
+
+  window.addEventListener('resize', onWindowResize, false);
+  window.addEventListener('mousemove', onMouseMove, false);
+  window.addEventListener('click', onClick, false);
+}
+
+function generateDescription(i) {
+  const themes = [
+    "Analyse profonde des données",
+    "Communication instantanée multi-langues",
+    "Apprentissage automatique auto-adaptatif",
+    "Gestion des flux conversationnels",
+    "Optimisation des réponses",
+    "Synthèse vocale réaliste",
+    "Sécurité et confidentialité avancées",
+    "Exploration des données historiques",
+    "Reconnaissance des émotions",
+    "Gestion dynamique des ressources",
+  ];
+  return themes[i % themes.length];
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function onMouseMove(event) {
+  // Coordonnées souris normalisées -1 à 1
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onClick() {
+  if(INTERSECTED) {
+    const detail = document.getElementById('detail');
+    detail.innerHTML = `<strong>${INTERSECTED.userData.name}</strong> : <em>${INTERSECTED.userData.description}</em>`;
+  }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Rotation lente de toute la galaxie (ensemble des neurones)
+  scene.rotation.y += 0.0015;
+  scene.rotation.x += 0.0007;
+
+  // Détection des neurones sous la souris
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(neurons);
+
+  if(intersects.length > 0) {
+    if(INTERSECTED != intersects[0].object) {
+      if(INTERSECTED) INTERSECTED.material.color.set(0x00aaff);
+      INTERSECTED = intersects[0].object;
+      INTERSECTED.material.color.set(0xffff00);
+      document.body.style.cursor = 'pointer';
+    }
+  } else {
+    if(INTERSECTED) INTERSECTED.material.color.set(0x00aaff);
+    INTERSECTED = null;
+    document.body.style.cursor = 'default';
+  }
+
+  renderer.render(scene, camera);
+}
+
+</script>
+</body>
+</html>
