@@ -1,93 +1,11 @@
 body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  background-color: #f5f5f5;
-  color: #333;
-  transition: background-color 0.3s, color 0.3s;
+  background: radial-gradient(circle at center, #111 0%, #000 100%);
+  background-image: url("galaxy-stars.gif");
+  background-size: cover;
+  animation: starPulse 10s infinite;
 }
 
-body.dark {
-  background-color: #121212;
-  color: #e0e0e0;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1em;
-  background: #6200ea;
-  color: white;
-}
-
-#chatContainer {
-  max-width: 800px;
-  margin: 2em auto;
-  padding: 1em;
-}
-
-#messages {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
-.message {
-  padding: 1em;
-  border-radius: 10px;
-  animation: fadeIn 0.5s ease forwards;
-  max-width: 75%;
-}
-
-.user {
-  background: #0078d7;
-  color: white;
-  align-self: flex-end;
-}
-
-.bot {
-  background: #ccc;
-  color: black;
-  align-self: flex-start;
-}
-
-#loader {
-  text-align: center;
-  margin-top: 1em;
-  font-style: italic;
-}
-
-.hidden {
-  display: none;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-
-#chatForm {
-  display: flex;
-  margin-top: 1em;
-}
-
-#userInput {
-  flex-grow: 1;
-  padding: 0.5em;
-  border-radius: 5px;
-  border: 1px solid #aaa;
-}
-
-button {
-  margin-left: 1em;
-  padding: 0.5em 1em;
-  background: #6200ea;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#modelSelector {
-  margin-top: 1em;
+@keyframes starPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
 }
