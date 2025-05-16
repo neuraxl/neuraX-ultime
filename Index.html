@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NeuraX Activation</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1>⚡ Bienvenue dans NeuraX</h1>
-    <button class="start-button" onclick="launchNeuraX()">Démarrer le cerveau</button>
-    <div id="brainVoice" class="brain-voice">...</div>
-    <img id="rocketGif" src="https://media.giphy.com/media/Y0lTz9fJdFphW/giphy.gif" alt="Rocket Launch" />
-  </div>
+<div class="controls">
+  <label>Voix :
+    <select id="voiceSelect"></select>
+  </label>
+  <label>Vitesse :
+    <input type="range" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
+  </label>
+</div>
 
-  <script src="script.js"></script>
-</body>
-</html>
