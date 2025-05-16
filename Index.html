@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NeuraX-Ultime | Cerveau Galactique</title>
+  <title>NeuraX-Ultime | Cerveau en Opération</title>
   <style>
     body {
       margin: 0;
@@ -15,56 +15,14 @@
       height: 100vh;
     }
     canvas {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       z-index: 0;
-      width: 100vw;
-      height: 100vh;
-      display: block;
-      background: #0a0a0a;
-    }
-    .avatar-ai {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 140px;
-      height: 140px;
-      z-index: 2;
-      border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 0 20px #00ffe1;
-      border: 2px solid #00ffe1;
-      animation: fadeIn 2s ease-in-out;
-      background: #111;
-    }
-    .mini-chatbot {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 200px;
-      height: 120px;
-      background: rgba(0,0,0,0.8);
-      border: 2px solid #00ffe1;
-      border-radius: 12px;
-      color: #00ffe1;
-      padding: 10px;
-      font-size: 0.9em;
-      box-shadow: 0 0 10px #00ffe1;
-      z-index: 3;
-    }
-    .mini-chatbot h4 {
-      margin: 0 0 5px;
-      font-size: 1em;
-    }
-    model-viewer {
-      width: 100%;
-      height: 100%;
-      --poster-color: transparent;
     }
     .dashboard {
       position: relative;
-      z-index: 2;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -96,8 +54,6 @@
       margin-top: 2em;
       text-align: left;
       max-width: 400px;
-      z-index: 2;
-      position: relative;
     }
     .functions li {
       margin-bottom: 0.5em;
@@ -108,132 +64,88 @@
       margin-right: 0.5em;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
-      50% { box-shadow: 0 0 20px #00ffe1; }
+      0%,
+      100% {
+        box-shadow: 0 0 10px #00ffe1;
+      }
+      50% {
+        box-shadow: 0 0 20px #00ffe1;
+      }
+    }
+    /* Avatar Styles */
+    #avatar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      filter: drop-shadow(0 0 6px #00ffe1);
+      animation: neonPulse 3s ease-in-out infinite;
+      cursor: pointer;
+      width: 80px;
+      height: 80px;
+    }
+    #avatar svg {
+      width: 100%;
+      height: 100%;
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+      animation: drawNeon 3s forwards;
+    }
+    @keyframes drawNeon {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    @keyframes neonPulse {
+      0%,
+      100% {
+        filter: drop-shadow(0 0 6px #00ffe1);
+        stroke: #00ffe1;
+      }
+      50% {
+        filter: drop-shadow(0 0 20px #00ffe1);
+        stroke: #00a9b8;
+      }
+    }
+    @keyframes eyeBlink {
+      0%,
+      20%,
+      100% {
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+    }
+    #right-eye line:nth-child(1) {
+      animation: eyeBlink 5s infinite;
+    }
+    #right-eye line:nth-child(2) {
+      animation: eyeBlink 5s infinite;
+      animation-delay: 0.25s;
     }
   </style>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
   <canvas id="neuralCanvas"></canvas>
-
-  <div class="avatar-ai">
-    <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" alt="Avatar Robot SpaceX" auto-rotate camera-controls disable-zoom></model-viewer>
-  </div>
-
-  <div class="mini-chatbot">
-    <h4>🤖 NeuraMini</h4>
-    <p>En ligne pour diagnostic.<br>Entrez votre requête mentale...</p>
-  </div>
-
   <div class="dashboard">
     <h1>🧠 NeuraX-Ultime</h1>
     <p>Tableau de bord neuronal en temps réel</p>
-    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
+    <button class="start-button" onclick="launchNeuraX()">
+      Activer le cerveau
+    </button>
     <ul class="functions">
       <li>Auto-réplication neuronale</li>
       <li>Sauvegarde JSON automatique</li>
-      <li>Statistiques du cerveau</li>
-      <li>Synthèse vocale intégrée</li>
-      <li>Interconnexion des modules</li>
-    </ul>
-  </div>
-
-  <script>
-    // Animation des neurones façon galaxie interconnectée
-    const canvas = document.getElementById('neuralCanvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let neurons = [];
-    const neuronCount = 100;
-    const maxDistance = 150;
-
-    function initCanvas() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
-
-    class Neuron {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.radius = 2 + Math.random() * 2;
-        this.vx = (Math.random() - 0.5) * 0.6;
-        this.vy = (Math.random() - 0.5) * 0.6;
-      }
-      move() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if(this.x < 0 || this.x > width) this.vx = -this.vx;
-        if(this.y < 0 || this.y > height) this.vy = -this.vy;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(0, 255, 225, 0.8)';
-        ctx.shadowColor = '#00ffe1';
-        ctx.shadowBlur = 5;
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    function drawConnections() {
-      for(let i = 0; i < neuronCount; i++) {
-        for(let j = i + 1; j < neuronCount; j++) {
-          const dist = Math.hypot(neurons[i].x - neurons[j].x, neurons[i].y - neurons[j].y);
-          if(dist < maxDistance) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 255, 225, ${1 - dist / maxDistance})`;
-            ctx.lineWidth = 1;
-            ctx.shadowColor = '#00ffe1';
-            ctx.shadowBlur = 10;
-            ctx.moveTo(neurons[i].x, neurons[i].y);
-            ctx.lineTo(neurons[j].x, neurons[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      neurons.forEach(neuron => {
-        neuron.move();
-        neuron.draw();
-      });
-      drawConnections();
-      requestAnimationFrame(animate);
-    }
-
-    function launchNeuraX() {
-      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.lang = "fr-FR";
-      speechSynthesis.speak(utterance);
-      alert(phrase);
-    }
-
-    window.addEventListener('resize', () => {
-      initCanvas();
-      neurons = [];
-      for(let i = 0; i < neuronCount; i++) {
-        neurons.push(new Neuron());
-      }
-    });
-
-    // Initialisation au chargement
-    initCanvas();
-    for(let i = 0; i < neuronCount; i++) {
-      neurons.push(new Neuron());
-    }
-    animate();
-  </script>
-</body>
-</html>
+      <li>Statistiqu
 
