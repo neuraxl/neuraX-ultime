@@ -1,278 +1,189 @@
-Ah, tu veux embarquer dans ce voyage cosmique avec un zoom galactique à la moindre touche de la souris ? Très bien, mon visionnaire indestructible, je vais te fabriquer ce zoom synaptique — comme si chaque clic était une étoile filante qui nous rapproche d’un univers infini !
-
----
-
-Je vais intégrer dans le code déjà donné une fonction qui :
-
-* détecte un clic sur un neurone (ou près d’un neurone),
-* lance un zoom fluide et progressif centré sur ce neurone,
-* permet de dézoomer doucement quand on reclique.
-
-Le tout dans une danse poétique et fluide, bien sûr.
-
----
-
-Voici la version augmentée du code complet avec zoom galactique au clic :
-
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Neurones en Feux d’Artifice + Zoom Galaxie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuraX-Ultime | Cerveau en Opération</title>
   <style>
-    html, body {
-      margin: 0; padding: 0; overflow: hidden;
-      background: #000012;
-      height: 100vh;
-      user-select: none;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: #00ffe1;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
     }
     canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
       z-index: 0;
-      background: #000012;
+    }
+
+    .background-brain {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 60vw;
+      max-width: 800px;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      opacity: 0.1;
+      animation: brainPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes brainPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.1; }
+      50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.2; }
+    }
+
+    .dashboard {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 2em;
+      text-align: center;
+    }
+
+    .start-button {
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background: transparent;
+      border: 2px solid #00ffe1;
+      color: #00ffe1;
+      text-shadow: 0 0 5px #00ffe1;
       cursor: pointer;
+      border-radius: 12px;
+      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
+    }
+
+    .start-button:hover {
+      background: #00ffe1;
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    .functions {
+      margin-top: 2em;
+      text-align: left;
+      max-width: 400px;
+    }
+
+    .functions li {
+      margin-bottom: 0.5em;
+      list-style: none;
+    }
+
+    .functions li::before {
+      content: '🧠';
+      margin-right: 0.5em;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
+      50% { box-shadow: 0 0 20px #00ffe1; }
     }
   </style>
 </head>
 <body>
-  <canvas id="neuronCanvas"></canvas>
+  <canvas id="neuralCanvas"></canvas>
+
+  <!-- SVG Cerveau en arrière-plan -->
+  <div class="background-brain">
+    <svg viewBox="0 0 512 512" fill="#00ffe1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M256 32C167.6 32 96 103.6 96 192v128c0 88.4 71.6 160 160 160s160-71.6 160-160V192c0-88.4-71.6-160-160-160zm-64 400c-52.9 0-96-43.1-96-96V192c0-52.9 43.1-96 96-96s96 43.1 96 96v144c0 52.9-43.1 96-96 96zm128-96V192c0-35.3-14.3-67.2-37.5-90.5C310.8 119.8 320 154.5 320 192v144c0 37.5-9.2 72.2-37.5 90.5C305.7 363.2 320 331.3 320 296z"/>
+    </svg>
+  </div>
+
+  <div class="dashboard">
+    <h1>🧠 NeuraX-Ultime</h1>
+    <p>Tableau de bord neuronal en temps réel</p>
+    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
+    <ul class="functions">
+      <li>Auto-réplication neuronale</li>
+      <li>Sauvegarde JSON automatique</li>
+      <li>Statistiques du cerveau</li>
+      <li>Synthèse vocale intégrée</li>
+      <li>Interconnexion des modules</li>
+    </ul>
+  </div>
 
   <script>
-    const canvas = document.getElementById('neuronCanvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-
-    // Réglage taille canvas
-    function resize() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+    function launchNeuraX() {
+      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = "fr-FR";
+      speechSynthesis.speak(utterance);
+      alert(phrase);
     }
+
+    // Animation canvas neurale
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
     window.addEventListener('resize', resize);
     resize();
 
-    // Classe Neurone
-    class Neuron {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.radiusBase = 2 + Math.random() * 2;
-        this.radius = this.radiusBase;
-        this.pulseSpeed = 0.02 + Math.random() * 0.03;
-        this.pulsePhase = Math.random() * Math.PI * 2;
-        this.connections = [];
-      }
-      move() {
-        this.x += this.vx;
-        this.y += this.vy;
+    const nodes = Array.from({ length: 50 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5
+    }));
 
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-
-        this.pulsePhase += this.pulseSpeed;
-        this.radius = this.radiusBase + Math.sin(this.pulsePhase) * 0.6;
-      }
-      draw() {
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
         ctx.beginPath();
-        const alpha = 0.7 + 0.3 * Math.sin(this.pulsePhase * 2);
-        ctx.fillStyle = `rgba(0, 255, 204, ${alpha.toFixed(2)})`;
-        ctx.shadowColor = '#00ffcc';
-        ctx.shadowBlur = 10;
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ffe1';
         ctx.fill();
-      }
-    }
 
-    // Classe Particule feu d’artifice synaptique
-    class FireworkParticle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.radius = 1.5 + Math.random() * 2;
-        this.vx = (Math.random() - 0.5) * 4;
-        this.vy = (Math.random() - 0.5) * 4;
-        this.alpha = 1;
-        this.life = 60 + Math.random() * 30; // durée en frames
-        this.color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`;
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vy += 0.05; // légère gravité
-        this.alpha -= 1 / this.life;
-        this.radius *= 0.95;
-        this.life--;
-      }
-      draw() {
-        ctx.beginPath();
-        const rgb = this.hslToRgb(this.color);
-        ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},${this.alpha.toFixed(2)})`;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 10;
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      isDead() {
-        return this.alpha <= 0 || this.radius <= 0 || this.life <= 0;
-      }
-      // Convertit HSL en RGB
-      hslToRgb(hsl) {
-        const hslParts = hsl.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
-        let h = Number(hslParts[1]) / 360;
-        let s = Number(hslParts[2]) / 100;
-        let l = Number(hslParts[3]) / 100;
-
-        let r, g, b;
-
-        if (s === 0) {
-          r = g = b = l; // gris
-        } else {
-          const hue2rgb = (p, q, t) => {
-            if (t < 0) t += 1;
-            if (t > 1) t -= 1;
-            if (t < 1/6) return p + (q - p) * 6 * t;
-            if (t < 1/2) return q;
-            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-            return p;
-          };
-          const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-          const p = 2 * l - q;
-          r = hue2rgb(p, q, h + 1/3);
-          g = hue2rgb(p, q, h);
-          b = hue2rgb(p, q, h - 1/3);
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const dx = n1.x - n2.x;
+          const dy = n1.y - n2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.strokeStyle = 'rgba(0,255,225,0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.stroke();
+          }
         }
-        return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
       }
-    }
 
-    // Configuration générale
-    const neuronCount = 200;
-    const maxConnectionDistance = 120;
-    const neurons = [];
-    const fireworks = [];
-
-    // Initialisation des neurones
-    for (let i = 0; i < neuronCount; i++) {
-      neurons.push(new Neuron());
-    }
-
-    // Associer connexions (max 3 par neurone)
-    function setupConnections() {
-      neurons.forEach((neuron, i) => {
-        const distances = neurons
-          .map((other, idx) => ({ idx, dist: Math.hypot(neuron.x - other.x, neuron.y - other.y) }))
-          .filter(d => d.idx !== i)
-          .sort((a, b) => a.dist - b.dist)
-          .slice(0, 3);
-        neuron.connections = distances.map(d => d.idx);
+      nodes.forEach(n => {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
       });
-    }
-    setupConnections();
 
-    // Déclencher explosion feu d'artifice sur une synapse aléatoire
-    function maybeTriggerFirework() {
-      if (Math.random() < 0.02) { // 2% chance par frame
-        const neuron = neurons[Math.floor(Math.random() * neurons.length)];
-        if (neuron.connections.length === 0) return;
-        const connIdx = neuron.connections[Math.floor(Math.random() * neuron.connections.length)];
-        const target = neurons[connIdx];
-
-        // Position explosion au milieu de la connexion + variation
-        const x = (neuron.x + target.x) / 2 + (Math.random() - 0.5) * 10;
-        const y = (neuron.y + target.y) / 2 + (Math.random() - 0.5) * 10;
-
-        for (let i = 0; i < 20; i++) {
-          fireworks.push(new FireworkParticle(x, y));
-        }
-      }
+      requestAnimationFrame(draw);
     }
 
-    // Variables zoom
-    let zoom = 1;
-    let targetZoom = 1;
-    let offsetX = 0;
-    let offsetY = 0;
-    let targetOffsetX = 0;
-    let targetOffsetY = 0;
-    let zooming = false;
-    let zoomCenterNeuron = null;
-
-    // Gérer clic souris pour zoom
-    canvas.addEventListener('click', (event) => {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = (event.clientX - rect.left - offsetX) / zoom;
-      const clickY = (event.clientY - rect.top - offsetY) / zoom;
-
-      if (!zooming) {
-        // Trouver neurone proche du clic (rayon 15px)
-        const clickedNeuron = neurons.find(neuron => {
-          const dx = neuron.x - clickX;
-          const dy = neuron.y - clickY;
-          return Math.sqrt(dx * dx + dy * dy) < 15;
-        });
-
-        if (clickedNeuron) {
-          // Zoomer vers ce neurone
-          zooming = true;
-          zoomCenterNeuron = clickedNeuron;
-          targetZoom = 4; // zoom 4x
-          targetOffsetX = width / 2 - clickedNeuron.x * targetZoom;
-          targetOffsetY = height / 2 - clickedNeuron.y * targetZoom;
-        } else {
-          // Si pas de neurone, reset zoom
-          zooming = true;
-          zoomCenterNeuron = null;
-          targetZoom = 1;
-          targetOffsetX = 0;
-          targetOffsetY = 0;
-        }
-      } else {
-        // Dézoomer si on est déjà en zoom
-        zooming = true;
-        zoomCenterNeuron = null;
-        targetZoom = 1;
-        targetOffsetX = 0;
-        targetOffsetY = 0;
-      }
-    });
-
-    // Animation principale
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-
-      // Lissage zoom et offset
-      zoom += (targetZoom - zoom) * 0.05;
-      offsetX += (targetOffsetX - offsetX) * 0.05;
-      offsetY += (targetOffsetY - offsetY) * 0.05;
-
-      // Si zoom proche de cible, arrêter le zooming
-      if (Math.abs(zoom - targetZoom) < 0.01 &&
-          Math.abs(offsetX - targetOffsetX) < 0.5 &&
-          Math.abs(offsetY - targetOffsetY) < 0.5) {
-        zooming = false;
-      }
-
-      ctx.save();
-      ctx.translate(offsetX, offsetY);
-      ctx.scale(zoom, zoom);
-
-      // Dessiner connexions
-      neurons.forEach(neuron => {
-        neuron.connections.forEach(connIdx => {
-          const other = neurons[connIdx];
-          const dist = Math.hypot(neuron.x - other.x, neuron.y - other.y);
-          if (dist < maxConnectionDistance) {
-            const baseAlpha = (maxConnectionDistance - dist) / maxConnectionDistance * 0.25;
-            const pulseAlpha = baseAlpha * (0.6 + 0.4 * Math.sin(neuron.p
-```
-
+    draw();
+  </script>
+</body>
+</html>
