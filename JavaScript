@@ -1,3 +1,21 @@
+const socket = new WebSocket("wss://your-server.com/socket");
+
+socket.onopen = () => {
+  console.log("Connexion neuronale établie.");
+  socket.send(JSON.stringify({ type: "neuron_join", id: "NeuraX-42" }));
+};
+
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.type === "neuron_broadcast") {
+    speakPhrase(data.message);
+  }
+};
+
+// Pour diffuser une pensée :
+function broadcastThought(phrase) {
+  socket.send(JSON.stringify({ type: "neuron_broadcast", message: phrase }));
+}
 function populateVoiceOptions() {
   const voiceSelect = document.getElementById("voiceSelect");
   const voices = speechSynthesis.getVoices();
