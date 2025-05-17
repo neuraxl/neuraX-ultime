@@ -41,7 +41,15 @@
             const utterThis = new SpeechSynthesisUtterance(outputText);
             synth.speak(utterThis);
         });
-    </script>
+    </script>function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-FR';
+  utterance.pitch = 1.2;
+  utterance.rate = 1;
+  utterance.voice = speechSynthesis.getVoices().find(v => v.lang === 'fr-FR');
+  speechSynthesis.speak(utterance);
+}
+
 </body>
 </html>
 
