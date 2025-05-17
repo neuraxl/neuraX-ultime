@@ -49,6 +49,17 @@
   utterance.voice = speechSynthesis.getVoices().find(v => v.lang === 'fr-FR');
   speechSynthesis.speak(utterance);
 }
+function appendMessage(sender, message) {
+  const div = document.createElement('div');
+  div.textContent = `${sender}: ${message}`;
+  div.style.marginBottom = '0.4em';
+  div.style.fontWeight = sender === 'NeuraX' ? 'bold' : 'normal';
+  chatlog.appendChild(div);
+  chatlog.scrollTop = chatlog.scrollHeight;
+
+  if (sender === 'NeuraX') speak(message);
+}
+
 
 </body>
 </html>
