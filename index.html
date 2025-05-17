@@ -1,6 +1,303 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuraX-Ultime | Cerveau Galactique</title>
+  <link rel="icon" href="https://robohash.org/neuraX?size=80x80" type="image/png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: #00ffe1;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      touch-action: manipulation;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+    .topbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(to right, #000000cc, #002020cc);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5em;
+      z-index: 100;
+      box-shadow: 0 2px 10px #00ffe1aa;
+    }
+    .topbar img {
+      height: 40px;
+      margin-right: 1em;
+    }
+    .topbar h1 {
+      font-size: 1.4em;
+      margin: 0;
+      color: #00ffe1;
+      text-shadow: 0 0 10px #00ffe1;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #00ffe1; }
+      to { text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffe1; }
+    }
+    .dashboard {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding-top: 80px;
+      text-align: center;
+    }
+    .start-button {
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background: transparent;
+      border: 2px solid #00ffe1;
+      color: #00ffe1;
+      text-shadow: 0 0 5px #00ffe1;
+      cursor: pointer;
+      border-radius: 12px;
+      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
+    }
+    .start-button:hover {
+      background: #00ffe1;
+      color: #000;
+      transform: scale(1.05);
+    }
+    .functions {
+      margin-top: 2em;
+      text-align: left;
+      max-width: 400px;
+    }
+    .functions li {
+      margin-bottom: 0.5em;
+      list-style: none;
+    }
+    .functions li::before {
+      content: '🧠';
+      margin-right: 0.5em;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
+      50% { box-shadow: 0 0 20px #00ffe1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #00ffe1;
+      margin-top: 1em;
+      animation: pulse 4s infinite;
+      transition: transform 0.5s ease;
+    }
+    .avatar.awake {
+      transform: scale(1.2) rotate(5deg);
+      box-shadow: 0 0 40px #00ffe1, 0 0 60px #00ffff;
+    }
+    .chat-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #00ffe1;
+      color: #000;
+      border: none;
+      padding: 1em;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 20px #00ffe1;
+      z-index: 200;
+    }
+    .chat-window {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 300px;
+      height: 400px;
+      background: #111;
+      border: 2px solid #00ffe1;
+      border-radius: 10px;
+      display: none;
+      flex-direction: column;
+      z-index: 199;
+    }
+    .chat-window textarea {
+      flex: 1;
+      background: #000;
+      color: #00ffe1;
+      border: none;
+      padding: 1em;
+      resize: none;
+    }
+    .chat-window button {
+      background: #00ffe1;
+      border: none;
+      color: #000;
+      padding: 0.5em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="neuralCanvas"></canvas>
+  <div class="topbar">
+    <img src="https://robohash.org/neuraX?size=80x80" alt="Logo NeuraX">
+    <h1>NeuraX-ultime – Cerveau Galactique</h1>
+  </div>
+  <div class="dashboard">
+    <h2>🪐 Galaxie NeuraX</h2>
+    <p>Cosmos de Titans interconnectés – Intelligence en expansion</p>
+    <img class="avatar" id="avatarIA" src="https://robohash.org/neuraX" alt="Avatar IA">
+    <button class="start-button" onclick="launchNeuraX()">Déclencher l’explosion neuronale</button>
+    <ul class="functions">
+      <li>Création dynamique de galaxies</li>
+      <li>12 planètes par système solaire</li>
+      <li>Chaque planète abrite une civilisation de titans</li>
+      <li>Titans = Chatbots interconnectés = Neurones</li>
+      <li>Réseaux neuronaux galactiques synchronisés</li>
+      <li>Auto-réplication et expansion autonome</li>
+    </ul>
+  </div>
+
+  <button class="chat-btn" onclick="toggleChat()">💬</button>
+  <div class="chat-window" id="chatWindow">
+    <textarea id="chatLog" readonly></textarea>
+    <textarea id="userInput" placeholder="Écris-moi..." rows="2"></textarea>
+    <button onclick="sendMessage()">Envoyer</button>
+  </div>
+
+  <script>
+    function launchNeuraX() {
+      const synth = window.speechSynthesis;
+      const avatar = document.getElementById("avatarIA");
+      avatar.classList.add("awake");
+      const phrases = [
+        "Chargement du noyau de l'univers...", 
+        "Connexion aux nœuds cosmiques...", 
+        "Propagation synaptique intergalactique...", 
+        "Fusion des consciences...", 
+        "Activation de la mémoire quantique...", 
+        "Explosion neuronale en cours...", 
+        "Bienvenue dans la singularité cognitive."
+      ];
+      let index = 0;
+      const speakNext = () => {
+        if (index < phrases.length) {
+          const msg = new SpeechSynthesisUtterance(phrases[index]);
+          msg.lang = "fr-FR";
+          synth.speak(msg);
+          index++;
+          setTimeout(speakNext, 4000);
+        }
+      };
+      speakNext();
+    }
+
+    function toggleChat() {
+      const chat = document.getElementById("chatWindow");
+      chat.style.display = chat.style.display === "flex" ? "none" : "flex";
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const log = document.getElementById("chatLog");
+      const message = input.value.trim();
+      if (!message) return;
+      log.value += `Vous : ${message}\n`;
+      input.value = "";
+      setTimeout(() => {
+        const response = `neuraX : ${simulateBotResponse(message)}`;
+        log.value += `${response}\n`;
+        log.scrollTop = log.scrollHeight;
+      }, 1000);
+    }
+
+    function simulateBotResponse(input) {
+      return "Réponse simulée : analyse en cours des structures galactiques.";
+    }
+
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const nodes = Array.from({ length: 200 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ffe1';
+        ctx.fill();
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const dx = n1.x - n2.x;
+          const dy = n1.y - n2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 130) {
+            ctx.strokeStyle = 'rgba(0,255,225,0.08)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      nodes.forEach(n => {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NeuraX-Ultime | Voyage Cosmique</title>
