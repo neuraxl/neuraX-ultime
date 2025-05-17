@@ -1,3 +1,38 @@
+#neuralButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #00ffe1 0%, #003333 60%);
+  border: 3px solid #00ffe1;
+  color: #000;
+  font-size: 2em;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00ffe1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 20px #00ffe1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 0 35px #00ffe1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 20px #00ffe1;
+  }
+}
 body {
   background: radial-gradient(circle at center, #111 0%, #000 100%);
   background-image: url("galaxy-stars.gif");
