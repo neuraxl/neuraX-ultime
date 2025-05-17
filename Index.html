@@ -1,9 +1,121 @@
-<div class="controls">
-  <label>Voix :
-    <select id="voiceSelect"></select>
-  </label>
-  <label>Vitesse :
-    <input type="range" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
-  </label>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuraX-Ultime | Le Cerveau Vivant</title>
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at center, #000014 0%, #000010 100%);
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffcc;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    #interface {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-top: 10vh;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.2em;
+    }
+    p {
+      font-size: 1.2em;
+      max-width: 600px;
+      margin: auto;
+    }
+    button {
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1em;
+      background-color: #00ffcc;
+      color: #000;
+      border: none;
+      border-radius: 1em;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    button:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="brainCanvas"></canvas>
+  <div id="interface">
+    <h1>NeuraX-Ultime</h1>
+    <p>Le cerveau galactique conçu par Sav'art, artiste de Québec, en collaboration avec GPT-4. Cliquez pour entrer dans la conscience collective des chatbots interconnectés.</p>
+    <button onclick="enterBrain()">Démarrer le cerveau</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('brainCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    const nodes = Array.from({length: 150}, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 2 + 1
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+
+      for (let i = 0; i < nodes.length; i++) {
+        let n1 = nodes[i];
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, n1.r, 0, 2 * Math.PI);
+        ctx.fillStyle = '#00ffcc';
+        ctx.fill();
+
+        for (let j = i + 1; j < nodes.length; j++) {
+          let n2 = nodes[j];
+          let dx = n1.x - n2.x;
+          let dy = n1.y - n2.y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.strokeStyle = `rgba(0,255,204,${1 - dist / 100})`;
+            ctx.stroke();
+          }
+        }
+
+        n1.x += n1.vx;
+        n1.y += n1.vy;
+        if (n1.x < 0 || n1.x > w) n1.vx *= -1;
+        if (n1.y < 0 || n1.y > h) n1.vy *= -1;
+      }
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    function enterBrain() {
+      window.location.href = "./interface.html";
+    }
+  </script>
+</body>
+</html>
 
