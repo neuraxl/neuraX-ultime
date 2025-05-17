@@ -1,3 +1,9 @@
+function activateBrain() {
+  for (let i = 0; i < 5; i++) {
+    const n = neurons[Math.floor(Math.random() * neurons.length)];
+    fireNeuron(n);
+  }
+}
 const phrases = [
   "NeuraX connection established. Prepare to travel through the galactic mind.",
   "Cerebral stream activated. Neuronal visualization in progress...",
