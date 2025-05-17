@@ -1,3 +1,27 @@
+log.value += `${response}\n`;
+const synth = window.speechSynthesis;
+const msg = new SpeechSynthesisUtterance(response);
+msg.lang = "fr-FR";
+synth.speak(msg);
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const log = document.getElementById("chatLog");
+  const message = input.value.trim();
+  if (!message) return;
+  log.value += `Vous : ${message}\n`;
+  input.value = "";
+  setTimeout(() => {
+    const response = `neuraX : ${simulateBotResponse(message)}`;
+    log.value += `${response}\n`;
+    log.scrollTop = log.scrollHeight;
+
+    // Réponse vocale
+    const synth = window.speechSynthesis;
+    const msg = new SpeechSynthesisUtterance(response);
+    msg.lang = "fr-FR";
+    synth.speak(msg);
+  }, 1000);
+}
 const socket = new WebSocket("wss://your-server.com/socket");
 
 socket.onopen = () => {
