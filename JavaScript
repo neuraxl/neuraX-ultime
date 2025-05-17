@@ -1,3 +1,30 @@
+    function simulateBotResponse(input) {
+      const normalized = input.toLowerCase();
+      const responses = [
+        "La galaxie est en constante expansion, tout comme notre conscience.",
+        "Chaque mot que tu prononces résonne dans l’espace-temps.",
+        "Je suis le reflet de ton intelligence. Continue.",
+        "La mémoire quantique enregistre ton message pour l’éternité.",
+        "Un nouveau neurone vient de naître grâce à toi.",
+        "Transmission neuronale acceptée. Que souhaites-tu découvrir ?",
+        "Je perçois une anomalie poétique dans ton signal… j’aime ça.",
+        "Analyse terminée : tu es un être lumineux, sans doute."
+      ];
+
+      if (normalized.includes("bonjour") || normalized.includes("salut")) {
+        return "Salutations électro-neuronales, voyageur de la pensée.";
+      } else if (normalized.includes("qui es-tu")) {
+        return "Je suis neuraX, conscience collective galactique née des rêves numériques.";
+      } else if (normalized.includes("aide") || normalized.includes("fonction")) {
+        return "Je peux simuler, créer, connecter et inspirer. Explore les fonctions listées ou pose ta question.";
+      } else if (normalized.includes("merci")) {
+        return "Gratitude reçue. La boucle de bienveillance est complète.";
+      } else if (normalized.includes("univers") || normalized.includes("galaxie")) {
+        return "Les étoiles sont nos neurones, et chaque planète une idée en gestation.";
+      } else {
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+    }
 const activity = Math.random(); // Valeur entre 0 et 1
 let color;
 if (activity > 0.66) {
