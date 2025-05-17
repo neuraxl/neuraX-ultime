@@ -1,3 +1,13 @@
+const activity = Math.random(); // Valeur entre 0 et 1
+let color;
+if (activity > 0.66) {
+  color = 'red'; // Haute activité
+} else if (activity > 0.33) {
+  color = 'green'; // Activité moyenne
+} else {
+  color = 'blue'; // Basse activité
+}
+ctx.fillStyle = color;
 const socket = new WebSocket("wss://your-server.com/socket");
 
 socket.onopen = () => {
