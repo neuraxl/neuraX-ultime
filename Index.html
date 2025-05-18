@@ -1,3 +1,43 @@
+<canvas id="neuralCanvas"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+  // Ensure the canvas is fully loaded before initializing Three.js
+  window.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('neuralCanvas');
+    if (!canvas) {
+      console.error("Canvas element with id 'neuralCanvas' not found.");
+      return;
+    }
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const stars = new THREE.BufferGeometry();
+    const starCount = 1000;
+    const positions = new Float32Array(starCount * 3);
+
+    for (let i = 0; i < starCount * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 2000;
+    }
+
+    stars.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const starMaterial = new THREE.PointsMaterial({ color: 0x00ffe1, size: 2 });
+    const starField = new THREE.Points(stars, starMaterial);
+    scene.add(starField);
+
+    camera.position.z = 500;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      starField.rotation.y += 0.0005;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  });
+</script>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
