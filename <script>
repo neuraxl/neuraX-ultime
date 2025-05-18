@@ -59,4 +59,36 @@ function speakPhrase(phrase) {
 neura-x-ultime.vercel.app
 Resources
  Readme<link rel="stylesheet" href="css/style.css">
-<script src="js/script.js"></script>
+<script src="js/script.js"></script>      speak("Bienvenue dans la Galaxie NeuraX. Les systèmes neuronaux s’activent...");
+      // Animation ou logique de démarrage ici
+      console.log("NeuraX est lancé. L’univers s’ouvre.");
+    }
+
+    function toggleChat() {
+      const chat = document.getElementById("chatWindow");
+      chat.style.display = chat.style.display === "flex" ? "none" : "flex";
+    }
+
+    function sendMessage() {
+      const userInput = document.getElementById("userInput");
+      const chatLog = document.getElementById("chatLog");
+      const message = userInput.value.trim();
+      if (message) {
+        chatLog.value += "👤: " + message + "\n";
+        userInput.value = "";
+
+        // Réponse fictive de l'IA pour la démo
+        const response = "🧠: Réponse de NeuraX en cours de synchronisation...\n";
+        chatLog.value += response;
+
+        // Fait parler NeuraX avec la voix synthétique
+        speak("Réponse de NeuraX en cours de synchronisation.");
+        
+        // Scroll en bas automatiquement
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>
+
