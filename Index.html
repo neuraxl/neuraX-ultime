@@ -1,3 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NeuraX Core - Galaxie X1</title>
+  <style>
+    body {
+      margin: 0; padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #0ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      z-index: -1;
+    }
+    #startButton {
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background-color: #0ff;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #0ff;
+      transition: background-color 0.3s, transform 0.2s;
+      user-select: none;
+    }
+    #startButton:hover {
+      background-color: #0cc;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="brainCanvas"></canvas>
+  <button id="startButton">Démarrer le cerveau</button>
+
+  <script src="config.js"></script>
+  <script>
+    document.getElementById("startButton").addEventListener("click", () => {
+      if (window.brainConfig && typeof window.brainConfig.activerCerveau === "function") {
+        window.brainConfig.activerCerveau();
+      } else {
+        console.error("Le cerveau n'est pas prêt. Module brainConfig manquant.");
+      }
+    });
+  </script>
+</body>
+</html>
 <canvas id="neuralCanvas"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
