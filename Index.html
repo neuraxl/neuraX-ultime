@@ -3,6 +3,519 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraX-Ultime - Interface Intelligente</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .chat-container {
+            display: flex;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .main-chat {
+            flex-grow: 1;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: #e9eaeb;
+            align-self: flex-start;
+        }
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+        }
+        .chat-input button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .chat-input button:hover {
+            background-color: #1a252f;
+        }
+        .model-selector {
+            margin-bottom: 20px;
+        }
+        .model-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .model-option:hover {
+            background-color: #f0f2f5;
+        }
+        .model-option.active {
+            background-color: #e6e6e6;
+        }
+        .model-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .settings-panel {
+            margin-top: 20px;
+        }
+        .settings-panel h3 {
+            margin-bottom: 15px;
+        }
+        .settings-item {
+            margin-bottom: 15px;
+        }
+        .settings-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .settings-item select, .settings-item input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .stats-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 10px;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .model-badge {
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 10px;
+            color: white;
+            display: inline-block;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>NeuraX-Ultime</h1>
+            <p>Interface intelligente d'interconnexion avec les meilleurs modèles IA</p>
+        </div>
+        
+        <div class="chat-container">
+            <div class="sidebar">
+                <div class="model-selector">
+                    <h3>Modèles disponibles</h3>
+                    <div class="model-option active" data-model="neurax">
+                        <div class="model-indicator" style="background-color: #2c3e50;"></div>
+                        <span>NeuraX-Ultime (natif)</span>
+                    </div>
+                    <div class="model-option" data-model="gpt4">
+                        <div class="model-indicator" style="background-color: #10a37f;"></div>
+                        <span>GPT-4</span>
+                    </div>
+                    <div class="model-option" data-model="claude">
+                        <div class="model-indicator" style="background-color: #5436da;"></div>
+                        <span>Claude</span>
+                    </div>
+                    <div class="model-option" data-model="llama">
+                        <div class="model-indicator" style="background-color: #d49a3a;"></div>
+                        <span>Llama 3</span>
+                    </div>
+                    <div class="model-option" data-model="auto">
+                        <div class="model-indicator" style="background-color: #e74c3c;"></div>
+                        <span>Sélection Automatique</span>
+                    </div>
+                </div>
+                
+                <div class="settings-panel">
+                    <h3>Paramètres</h3>
+                    <div class="settings-item">
+                        <label for="routing-strategy">Stratégie de routage:</label>
+                        <select id="routing-strategy">
+                            <option value="accuracy">Précision maximale</option>
+                            <option value="speed">Vitesse maximale</option>
+                            <option value="balanced" selected>Équilibré</option>
+                            <option value="cost">Économie de coûts</option>
+                        </select>
+                    </div>
+                    <div class="settings-item">
+                        <label for="cache-duration">Mise en cache (jours):</label>
+                        <input type="number" id="cache-duration" value="7" min="0" max="30">
+                    </div>
+                    <div class="settings-item">
+                        <label for="api-keys">Gestion des clés API:</label>
+                        <button id="api-keys" class="settings-button">Configurer</button>
+                    </div>
+                </div>
+                
+                <div class="stats-panel">
+                    <h3>Statistiques</h3>
+                    <div class="stat-item">
+                        <span>Temps de réponse moyen:</span>
+                        <span id="avg-response-time">0.8s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Requêtes cachées:</span>
+                        <span id="cached-requests">24%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Modèle le plus utilisé:</span>
+                        <span id="most-used-model">NeuraX</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-chat">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        Bienvenue sur NeuraX-Ultime avec interconnexion multi-modèles! Comment puis-je vous aider aujourd'hui?
+                    </div>
+                </div>
+                
+                <div class="loading-indicator" id="loading-indicator">
+                    <div class="loading-spinner"></div>
+                    <p>Recherche du meilleur modèle pour votre requête...</p>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="user-input" placeholder="Écrivez votre message ici...">
+                    <button id="send-button">Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration des modèles disponibles
+        const models = {
+            neurax: {
+                name: "NeuraX-Ultime",
+                color: "#2c3e50",
+                strengths: ["général", "rapide", "natif"],
+                apiEndpoint: "/api/neurax",
+                responseTime: 0.5
+            },
+            gpt4: {
+                name: "GPT-4",
+                color: "#10a37f",
+                strengths: ["raisonnement", "créativité", "connaissances"],
+                apiEndpoint: "https://api.openai.com/v1/chat/completions",
+                responseTime: 2.0
+            },
+            claude: {
+                name: "Claude",
+                color: "#5436da",
+                strengths: ["compréhension", "nuance", "éthique"],
+                apiEndpoint: "https://api.anthropic.com/v1/messages",
+                responseTime: 1.5
+            },
+            llama: {
+                name: "Llama 3",
+                color: "#d49a3a",
+                strengths: ["efficacité", "open-source"],
+                apiEndpoint: "/api/llama",
+                responseTime: 0.8
+            },
+            auto: {
+                name: "Sélection Auto",
+                color: "#e74c3c",
+                strengths: ["adaptatif"],
+                apiEndpoint: "/api/router",
+                responseTime: 1.2
+            }
+        };
+
+        // Cache pour stocker les réponses 
+        const responseCache = new Map();
+        
+        // Éléments du DOM
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const modelOptions = document.querySelectorAll('.model-option');
+        
+        // Modèle actuellement sélectionné
+        let currentModel = "neurax";
+        
+        // Gestionnaire d'événements pour la sélection du modèle
+        modelOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Retirer la classe active de toutes les options
+                modelOptions.forEach(opt => opt.classList.remove('active'));
+                // Ajouter la classe active à l'option sélectionnée
+                this.classList.add('active');
+                // Mettre à jour le modèle courant
+                currentModel = this.getAttribute('data-model');
+                console.log(`Modèle sélectionné: ${models[currentModel].name}`);
+            });
+        });
+        
+        // Fonction pour ajouter un message dans le chat
+        function addMessage(text, isUser, modelUsed = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            
+            if (isUser) {
+                messageDiv.classList.add('user-message');
+                messageDiv.textContent = text;
+            } else {
+                messageDiv.classList.add('bot-message');
+                messageDiv.textContent = text;
+                
+                // Ajouter un badge pour indiquer quel modèle a été utilisé
+                if (modelUsed) {
+                    const modelBadge = document.createElement('span');
+                    modelBadge.classList.add('model-badge');
+                    modelBadge.textContent = models[modelUsed].name;
+                    modelBadge.style.backgroundColor = models[modelUsed].color;
+                    messageDiv.appendChild(modelBadge);
+                }
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Fonction pour détecter et router la requête au meilleur modèle
+        function determineOptimalModel(query) {
+            // Version simple: détection basée sur des mots-clés
+            const queryLower = query.toLowerCase();
+            
+            // Stratégie de routage
+            const strategy = document.getElementById('routing-strategy').value;
+            
+            if (strategy === 'speed') {
+                return 'neurax'; // Le plus rapide
+            } else if (strategy === 'cost') {
+                return 'llama'; // Le moins cher généralement
+            }
+            
+            // Analyser le contenu pour déterminer le modèle le plus adapté
+            if (queryLower.includes('code') || queryLower.includes('programme') || queryLower.includes('développement')) {
+                return 'gpt4';
+            } else if (queryLower.includes('expliquer') || queryLower.includes('comprendre') || queryLower.includes('concept')) {
+                return 'claude';
+            } else if (queryLower.includes('créer') || queryLower.includes('imaginer') || queryLower.includes('histoire')) {
+                return 'gpt4';
+            } else if (queryLower.includes('rapide') || queryLower.includes('simple')) {
+                return 'llama';
+            }
+            
+            // Par défaut, retourner le modèle natif
+            return 'neurax';
+        }
+        
+        // Simuler l'envoi d'une requête à l'API d'un modèle
+        async function sendToModel(modelKey, query) {
+            // Vérifier le cache d'abord
+            const cacheKey = `${modelKey}-${query}`;
+            if (responseCache.has(cacheKey)) {
+                console.log(`Réponse récupérée du cache pour ${models[modelKey].name}`);
+                return responseCache.get(cacheKey);
+            }
+            
+            // Simulation de requête API (à remplacer par de véritables appels API)
+            console.log(`Envoi au modèle ${models[modelKey].name}: "${query}"`);
+            
+            // Simuler un temps de réponse variable selon le modèle
+            await new Promise(resolve => setTimeout(resolve, models[modelKey].responseTime * 1000));
+            
+            // Génération de réponses simulées pour la démonstration
+            let response;
+            const modelInfo = models[modelKey];
+            
+            switch(modelKey) {
+                case 'neurax':
+                    response = `Voici ma réponse rapide en tant que modèle natif NeuraX-Ultime. Je traite généralement tout type de requêtes avec efficacité, mais sans spécialisation particulière.`;
+                    break;
+                case 'gpt4':
+                    response = `En tant que GPT-4, je peux offrir une analyse approfondie sur ce sujet. Mes forces sont particulièrement dans ${modelInfo.strengths.join(', ')}.`;
+                    break;
+                case 'claude':
+                    response = `Claude ici. J'ai analysé votre demande avec attention. Je suis particulièrement adapté pour ${modelInfo.strengths.join(', ')}, ce qui me permet de vous fournir cette réponse nuancée.`;
+                    break;
+                case 'llama': 
+                    response = `Réponse générée par Llama 3. J'ai traité votre demande avec ${modelInfo.strengths.join(' et ')}, permettant une réponse efficace et optimisée.`;
+                    break;
+                case 'auto':
+                    // Dans le cas auto, on détermine réellement le meilleur modèle
+                    const bestModel = determineOptimalModel(query);
+                    return sendToModel(bestModel, query);
+                default:
+                    response = "Je n'ai pas pu déterminer comment traiter votre demande.";
+            }
+            
+            // Mettre en cache la réponse
+            const cacheDuration = document.getElementById('cache-duration').value;
+            if (cacheDuration > 0) {
+                responseCache.set(cacheKey, { text: response, model: modelKey });
+                
+                // Expirer le cache après la durée configurée
+                setTimeout(() => {
+                    responseCache.delete(cacheKey);
+                }, cacheDuration * 24 * 60 * 60 * 1000);
+            }
+            
+            return { text: response, model: modelKey };
+        }
+        
+        // Gestionnaire d'événements pour l'envoi de messages
+        async function handleSendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Ajouter le message de l'utilisateur
+            addMessage(message, true);
+            userInput.value = '';
+            
+            // Afficher l'indicateur de chargement
+            loadingIndicator.style.display = 'block';
+            
+            let chosenModel = currentModel;
+            
+            try {
+                // Si modèle auto sélectionné, déterminer le meilleur modèle
+                if (chosenModel === 'auto') {
+                    // Montrer message de recherche du meilleur modèle
+                    console.log("Détermination du meilleur modèle pour cette requête...");
+                    chosenModel = determineOptimalModel(message);
+                }
+                
+                // Envoyer la requête au modèle choisi
+                const response = await sendToModel(chosenModel, message);
+                
+                // Masquer l'indicateur de chargement
+                loadingIndicator.style.display = 'none';
+                
+                // Ajouter la réponse
+                addMessage(response.text, false, response.model);
+                
+                // Mettre à jour les statistiques (démo)
+                document.getElementById('avg-response-time').textContent = 
+                    Math.round((models[response.model].responseTime + parseFloat(document.getElementById('avg-response-time').textContent)) / 2 * 10) / 10 + 's';
+                
+                const cachedPercent = Math.floor(Math.random() * 30) + 20;
+                document.getElementById('cached-requests').textContent = `${cachedPercent}%`;
+                
+                document.getElementById('most-used-model').textContent = models[response.model].name;
+                
+            } catch (error) {
+                console.error("Erreur lors de l'envoi du message:", error);
+                loadingIndicator.style.display = 'none';
+                addMessage("Désolé, une erreur est survenue lors du traitement de votre demande.", false);
+            }
+        }
+        
+        // Event listeners
+        sendButton.addEventListener('click', handleSendMessage);
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSendMessage();
+            }
+        });
+        
+        // Modal pour les clés API (à implémenter)
+        document.getElementById('api-keys').addEventListener('click', function() {
+            alert("Fonctionnalité de configuration des clés API à venir! Cette interface permettra d'enregistrer vos clés API pour OpenAI, Anthropic, etc.");
+        });
+        
+        // Implémenter système d'apprentissage pour améliorer le routage (démonstration)
+        function improveRoutingModel() {
+            console.log("Amélioration continue du modèle de routage basée sur les interactions...");
+            // Dans une vraie implémentation, cela pourrait utiliser des techniques d'apprentissage automatique
+        }
+        
+        // Améliorer le modèle de routage périodiquement
+        setInterval(improveRoutingModel, 60000);
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeuraX-ultime - Le Prototype Vivant</title>
     <style>
         :root {
