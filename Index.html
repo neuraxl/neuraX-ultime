@@ -1,9 +1,86 @@
-function changeMode() {
-    let hours = new Date().getHours();
-    if (hours > 18) {
-        document.body.classList.add("dark-mode");
-    } else {
-        document.body.classList.remove("dark-mode");
-    }
-}
-window.onload = changeMode;
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>neuraX-ultime — Le Sanctuaire Quantique</title>
+<style>
+  body, html { margin:0; height:100%; overflow:hidden; background:#000; color:#eee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  #threejs-canvas { position: fixed; top:0; left:0; width: 100%; height: 100%; z-index: 0; }
+  #dashboard { position: fixed; top: 10px; right: 10px; width: 350px; height: 90vh; background: rgba(10,10,30,0.85); border-radius: 10px; padding: 15px; overflow-y: auto; z-index: 1; }
+  #prediction-text { margin-bottom: 20px; font-size: 1.1em; line-height: 1.4; }
+  #archive { font-size: 0.9em; }
+  button { background: #1a1aff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+  button:hover { background: #4040ff; }
+</style>
+</head>
+<body>
+  <canvas id="threejs-canvas"></canvas>
+
+  <div id="dashboard">
+    <div id="prediction-text">Bienvenue, architecte. Le futur danse déjà.</div>
+    <button onclick="playOracle()">Écouter l’Oracle</button>
+    <hr />
+    <h3>Archives</h3>
+    <div id="archive">Chargement des oracles passés...</div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+<script>
+  // Initialisation de Three.js : scène, caméra, rendu
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('threejs-canvas'), antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Lumière ambiante
+  const ambientLight = new THREE.AmbientLight(0x404040);
+  scene.add(ambientLight);
+
+  // Points lumineux (simples particules)
+  const particles = new THREE.BufferGeometry();
+  const particleCount = 500;
+  const positions = new Float32Array(particleCount * 3);
+  for(let i = 0; i < particleCount * 3; i++) {
+    positions[i] = (Math.random() - 0.5) * 100;
+  }
+  particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  const particleMaterial = new THREE.PointsMaterial({ color: 0x1a1aff, size: 0.5 });
+  const points = new THREE.Points(particles, particleMaterial);
+  scene.add(points);
+
+  camera.position.z = 50;
+
+  // Animation des particules (pulsation)
+  let pulse = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    pulse += 0.02;
+    points.material.size = 0.5 + 0.3 * Math.sin(pulse);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Synthèse vocale - lecture simple
+  function playOracle() {
+    const text = document.getElementById('prediction-text').textContent;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'fr-FR';
+    // Variation selon l’humeur (exemple simplifié)
+    utterance.pitch = 1.2;
+    utterance.rate = 1;
+    speechSynthesis.speak(utterance);
+  }
+
+  // Simulation simplifiée des archives (à relier au backend)
+  const archives = [
+    "Prédiction 1 : L’étoile de demain scintillera plus fort.",
+    "Prédiction 2 : Le flux quantique révèle un choix décisif.",
+    "Prédiction 3 : Un voile se lève, la vérité s’approche.",
+  ];
+  const archiveDiv = document.getElementById('archive');
+  archiveDiv.innerHTML = archives.map((a, i) => `<p><strong>Oracle #${i+1}</strong> : ${a}</p>`).join('');
+</script>
+
+</body>
+</html>
