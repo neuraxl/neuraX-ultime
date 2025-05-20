@@ -1,6 +1,15 @@
+async function askAI() {
+    let userInput = document.getElementById("userInput").value;
+    let responseText = "Je réfléchis...";
 
-function changeMode() {
-    document.body.classList.toggle("dark-mode");
-    alert("Mode activé !");
+    let response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
+        body: JSON.stringify({ model: "gpt-4", prompt: userInput })
+    });
+
+    let data = await response.json();
+    responseText = data.choices[0].text;
+
+    document.getElementById("response").innerText = responseText;
 }
-    
