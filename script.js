@@ -1,66 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuraX-ultime</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #output { margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <h1>NeuraX-ultime - Chatbot Créatif</h1>
-    <textarea id="inputText" placeholder="Posez une question à NeuraX" rows="4" cols="50"></textarea>
-    <button id="sendBtn">Envoyer</button>
+async function askAI() {
+    let userInput = document.getElementById("userInput").value;
+    let responseText = "Je réfléchis...";
 
-    <div id="output"></div>
+    let response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
+        body: JSON.stringify({ model: "gpt-4", prompt: userInput })
+    });
 
-    <script>
-        const sendBtn = document.getElementById('sendBtn');
-        const inputText = document.getElementById('inputText');
-        const outputDiv = document.getElementById('output');
+    let data = await response.json();
+    responseText = data.choices[0].text;
 
-        sendBtn.addEventListener('click', async () => {
-            const userInput = inputText.value;
-
-            // Appel au backend
-            const response = await fetch('http://localhost:3000/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: userInput })
-            });
-            const data = await response.json();
-            const outputText = data.choices[0].text;
-
-            // Affichage du texte de la réponse
-            outputDiv.innerText = outputText;
-
-            // Synthèse vocale
-            const synth = window.speechSynthesis;
-            const utterThis = new SpeechSynthesisUtterance(outputText);
-            synth.speak(utterThis);
-        });
-    </script>function speak(text) {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'fr-FR';
-  utterance.pitch = 1.2;
-  utterance.rate = 1;
-  utterance.voice = speechSynthesis.getVoices().find(v => v.lang === 'fr-FR');
-  speechSynthesis.speak(utterance);
-}
-function appendMessage(sender, message) {
-  const div = document.createElement('div');
-  div.textContent = `${sender}: ${message}`;
-  div.style.marginBottom = '0.4em';
-  div.style.fontWeight = sender === 'NeuraX' ? 'bold' : 'normal';
-  chatlog.appendChild(div);
-  chatlog.scrollTop = chatlog.scrollHeight;
-
-  if (sender === 'NeuraX') speak(message);
+    document.getElementById("response").innerText = responseText;
 }
 
+// Ajout de la reconnaissance vocale
+window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = 'fr-FR';
 
-</body>
-</html>
+recognition.onresult = (event) => {
+    document.getElementById("userInput").value = event.results[0][0].transcript;
+    askAI();
+};
 
+document.getElementById("voiceButton").addEventListener("click", () => {
+    recognition.start();
+});
