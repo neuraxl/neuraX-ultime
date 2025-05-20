@@ -1,6 +1,255 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuraX-Ultime | Cerveau en Opération</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: #00ffe1;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .dashboard {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 2em;
+      text-align: center;
+    }
+    .start-button {
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background: transparent;
+      border: 2px solid #00ffe1;
+      color: #00ffe1;
+      text-shadow: 0 0 5px #00ffe1;
+      cursor: pointer;
+      border-radius: 12px;
+      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
+    }
+    .start-button:hover {
+      background: #00ffe1;
+      color: #000;
+      transform: scale(1.05);
+    }
+    .functions {
+      margin-top: 2em;
+      text-align: left;
+      max-width: 400px;
+    }
+    .functions li {
+      margin-bottom: 0.5em;
+      list-style: none;
+    }
+    .functions li::before {
+      content: '🧠';
+      margin-right: 0.5em;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
+      50% { box-shadow: 0 0 20px #00ffe1; }
+    }
+
+    #universe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 2em;
+      padding: 2em;
+    }
+    .galaxy, .planet {
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, #00ffe1, #005555);
+      border-radius: 50%;
+      box-shadow: 0 0 20px #00ffe1;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.5s, opacity 0.5s;
+    }
+    .zoomed {
+      transform: scale(2);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="neuralCanvas"></canvas>
+  <div class="dashboard">
+    <h1>🧠 NeuraX-Ultime</h1>
+    <p>Tableau de bord neuronal en temps réel</p>
+    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
+    <ul class="functions">
+      <li>Auto-réplication neuronale</li>
+      <li>Sauvegarde JSON automatique</li>
+      <li>Statistiques du cerveau</li>
+      <li>Synthèse vocale intégrée</li>
+      <li>Interconnexion des modules</li>
+      <li>Connexion GPT-4 via API</li>
+      <li>Base de données neuronale évolutive</li>
+    </ul>
+  </div>
+  <div id="universe"></div>
+  <script>
+    async function queryGPT(prompt) {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer VOTRE_CLE_API'
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await response.json();
+      return data.choices[0].message.content;
+    }
+
+    function saveNeuralState(state) {
+      const stateJSON = JSON.stringify(state);
+      localStorage.setItem('neural_state', stateJSON);
+      // Pour envoyer à un serveur :
+      /*
+      fetch('https://votre-serveur.com/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: stateJSON
+      });
+      */
+    }
+
+    const brainState = {
+      memory: [],
+      stats: {
+        activations: 0,
+        queries: 0
+      }
+    };
+
+    function launchNeuraX() {
+      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
+      const utterance = new SpeechSynthesisUtterance(phrase);
+      utterance.lang = "fr-FR";
+      speechSynthesis.speak(utterance);
+      brainState.stats.activations++;
+      saveNeuralState(brainState);
+      generateGalaxies(5);
+    }
+
+    function generateGalaxies(count) {
+      const universe = document.getElementById('universe');
+      universe.innerHTML = '';
+      for (let i = 1; i <= count; i++) {
+        const galaxy = document.createElement('div');
+        galaxy.className = 'galaxy';
+        galaxy.textContent = '🌌 G' + i;
+        galaxy.onclick = () => zoomToSystem(galaxy, i);
+        universe.appendChild(galaxy);
+      }
+    }
+
+    function zoomToSystem(element, id) {
+      element.classList.add('zoomed');
+      setTimeout(() => {
+        const universe = document.getElementById('universe');
+        universe.innerHTML = '';
+        for (let i = 1; i <= 12; i++) {
+          const planet = document.createElement('div');
+          planet.className = 'planet';
+          planet.textContent = '🪐 P' + i;
+          planet.onclick = () => openCivilizationWindow(i);
+          universe.appendChild(planet);
+        }
+      }, 1000);
+    }
+
+    async function openCivilizationWindow(planetId) {
+      brainState.stats.queries++;
+      const thought = await queryGPT(`Décris brièvement la civilisation sur la planète P${planetId}`);
+      saveNeuralState(brainState);
+      const newWindow = window.open('', '_blank', 'width=600,height=400');
+      newWindow.document.write(`
+        <html>
+        <head>
+          <title>Civilisation de P${planetId}</title>
+          <style>
+            body { font-family: sans-serif; background: #0a0a0a; color: #00ffe1; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
+            h1 { font-size: 2em; }
+            p { font-size: 1em; margin-top: 1em; }
+          </style>
+        </head>
+        <body>
+          <div>
+            <h1>Bienvenue dans la civilisation de P${planetId}!</h1>
+            <p>${thought}</p>
+          </div>
+        </body>
+        </html>
+      `);
+      newWindow.document.close();
+    }
+
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const nodes = Array.from({ length: 50 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ffe1';
+        ctx.fill();
+        for (let j = i + 1; j < nodes.length
+<!DOCTYPE html>
+<html lang="fr">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot Futuriste</title>
