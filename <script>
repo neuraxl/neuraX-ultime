@@ -1,24 +1,16 @@
+async function askAI() {
+    let userInput = document.getElementById("userInput").value;
+    let responseText = "Je réfléchis...";
 
-    function sendMessage() {
-      const userInput = document.getElementById("userInput");
-      const chatLog = document.getElementById("chatLog");
-      const message = userInput.value.trim();
-      if (message) {
-        chatLog.value += "👤: " + message + "\n";
-        userInput.value = "";
+    let response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
+        body: JSON.stringify({ model: "gpt-4", prompt: userInput })
+    });
 
-        // Réponse fictive de l'IA pour la démo
-        const response = "🧠: Réponse de NeuraX en cours de synchronisation...\n";
-        chatLog.value += response;
+    let data = await response.json();
+    responseText = data.choices[0].text;
 
-        // Fait parler NeuraX avec la voix synthétique
-        speak("Réponse de NeuraX en cours de synchronisation.");
-        
-        // Scroll en bas automatiquement
-        chatLog.scrollTop = chatLog.scrollHeight;
-      }
-    }
-  </script>
-</body>
-</html>
+    document.getElementById("response").innerText = responseText;
+}
 
