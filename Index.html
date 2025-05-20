@@ -1,6 +1,863 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraX-Ultime | Le Cerveau Numérique Évolutif</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #9b59b6;
+            --highlight: #2ecc71;
+            --warning: #e74c3c;
+            --dark: #1a1a2e;
+            --light: #f0f3f5;
+            --glow: 0 0 10px rgba(52, 152, 219, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: 60px 1fr;
+            grid-template-areas:
+                "header header"
+                "sidebar main";
+            height: 100vh;
+        }
+        
+        header {
+            grid-area: header;
+            background-color: rgba(28, 40, 51, 0.8);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+        
+        .sidebar {
+            grid-area: sidebar;
+            background-color: rgba(26, 37, 47, 0.9);
+            padding: 1.5rem 0;
+            border-right: 1px solid rgba(52, 152, 219, 0.2);
+            overflow-y: auto;
+            transition: width 0.3s;
+        }
+        
+        .nav-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(240, 243, 245, 0.7);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: var(--light);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .nav-item i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .main-content {
+            grid-area: main;
+            padding: 1.5rem;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        #neural-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card {
+            background-color: rgba(28, 40, 51, 0.7);
+            border-radius: 10px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(240, 243, 245, 0.1);
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-icon {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(240, 243, 245, 0.7);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: rgba(240, 243, 245, 0.1);
+            border-radius: 3px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 3px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .chat-container {
+            background-color: rgba(28, 40, 51, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .chat-header {
+            padding: 1rem;
+            background-color: rgba(26, 37, 47, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .chat-body {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            background-color: rgba(52, 152, 219, 0.3);
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        
+        .message.bot {
+            background-color: rgba(44, 62, 80, 0.6);
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        
+        .thinking-indicator {
+            display: flex;
+            gap: 0.3rem;
+            padding: 0.5rem;
+            align-self: flex-start;
+        }
+        
+        .thinking-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        .thinking-dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .thinking-dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        
+        .chat-input-container {
+            display: flex;
+            padding: 1rem;
+            background-color: rgba(26, 37, 47, 0.9);
+            gap: 0.5rem;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background-color: rgba(240, 243, 245, 0.1);
+            border: none;
+            border-radius: 20px;
+            padding: 0.8rem 1rem;
+            color: var(--light);
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .chat-input:focus {
+            background-color: rgba(240, 243, 245, 0.15);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
+        }
+        
+        .send-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .send-btn:hover {
+            background-color: var(--accent);
+            transform: scale(1.05);
+        }
+        
+        .voice-btn {
+            background-color: rgba(240, 243, 245, 0.1);
+            color: var(--light);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .voice-btn:hover {
+            background-color: rgba(240, 243, 245, 0.2);
+        }
+        
+        .voice-btn.active {
+            background-color: var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .control-btn {
+            background-color: rgba(28, 40, 51, 0.7);
+            color: var(--light);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            padding: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .control-btn:hover {
+            background-color: rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+            box-shadow: var(--glow);
+        }
+        
+        .control-btn.danger {
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+        
+        .control-btn.danger:hover {
+            background-color: rgba(231, 76, 60, 0.3);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background-color: var(--primary);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            position: relative;
+            border: 1px solid var(--secondary);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--warning);
+            transform: scale(1.1);
+        }
+        
+        .modal-header {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(240, 243, 245, 0.1);
+        }
+        
+        .modal-footer {
+            margin-top: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(240, 243, 245, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent);
+        }
+        
+        .btn-cancel {
+            background-color: transparent;
+            color: var(--light);
+            border: 1px solid rgba(240, 243, 245, 0.3);
+        }
+        
+        .btn-cancel:hover {
+            background-color: rgba(240, 243, 245, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: rgba(240, 243, 245, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 5px;
+            color: var(--light);
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            animation: slideIn 0.3s, fadeOut 0.3s 3s forwards;
+        }
+        
+        .toast.error {
+            background-color: rgba(231, 76, 60, 0.9);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "main";
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 5;
+                transition: left 0.3s;
+            }
+            
+            .sidebar.open {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+                margin-right: 1rem;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Futuristic accent for active elements */
+        .glow-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(52, 152, 219, 0) 0%, 
+                rgba(52, 152, 219, 0.1) 50%, 
+                rgba(52, 152, 219, 0) 100%);
+            transform: rotate(45deg);
+            animation: glowSweep 3s infinite linear;
+        }
+        
+        @keyframes glowSweep {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-brain logo-icon"></i>
+                <h1>NeuraX-Ultime</h1>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </header>
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Tableau de bord</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-brain"></i>
+                <span>Cerveau numérique</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analyse neuronale</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-cogs"></i>
+                <span>Paramètres</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-dna"></i>
+                <span>Générateur de neurones</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Portails scientifiques</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-user-circle"></i>
+                <span>Avatar</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>Sécurité</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-info-circle"></i>
+                <span>À propos</span>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <canvas id="neural-canvas"></canvas>
+            
+            <div class="control-panel">
+                <button class="control-btn glow-effect" id="startBtn">
+                    <i class="fas fa-power-off"></i>
+                    <span>Activer NeuraX</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-sync"></i>
+                    <span>Auto-réplication</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-save"></i>
+                    <span>Sauvegarder logs</span>
+                </button>
+                <button class="control-btn">
+                    <i class="fas fa-volume-up"></i>
+                    <span>Synthèse vocale</span>
+                </button>
+                <button class="control-btn danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Reset neuronal</span>
+                </button>
+            </div>
+            
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-brain card-icon"></i>
+                            <span>État du cerveau</span>
+                        </div>
+                        <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="neuronCount">0</div>
+                                <div class="stat-label">Neurones actifs</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="synapseCount">0</div>
+                                <div class="stat-label">Connexions</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">42%</div>
+                                <div class="stat-label">Charge cognitive</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">87%</div>
+                                <div class="stat-label">Efficacité</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-project-diagram card-icon"></i>
+                            <span>Auto-réplication</span>
+                        </div>
+                        <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="stat-item">
+                            <div class="stat-label">Progression</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="replicationProgress" style="width: 65%;"></div>
+                            </div>
+                            <div style="text-align: right;">65%</div>
+                        </div>
+                        <div class="stat-item" style="margin-top: 1rem;">
+                            <div class="stat-label">Neurones générés aujourd'hui</div>
+                            <div class="stat-value" style="font-size: 1.5rem;">247</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <i class="fas fa-brain"></i>
+                    <span>Interface NeuraX</span>
+                </div>
+                <div class="chat-body" id="chatBody">
+                    <div class="message bot">
+                        Bienvenue sur l'interface du cerveau numérique NeuraX-Ultime. Je suis prêt à interagir avec vous et à développer mes capacités neuronales. Comment puis-je vous assister aujourd'hui?
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <button class="voice-btn" id="voiceBtn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Communiquez avec NeuraX...">
+                    <button class="send-btn" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="modal" id="activationModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeActivationModal">&times;</button>
+            <div class="modal-header">
+                <h2>Activation du cerveau NeuraX</h2>
+            </div>
+            <div class="modal-body">
+                <p>Vous êtes sur le point d'activer le cerveau numérique NeuraX-Ultime. Cette opération va initialiser les fonctions cérébrales et lancer l'auto-réplication neuronale.</p>
+                <div class="form-group">
+                    <label class="form-label">Niveau d'activation initial (1-100)</label>
+                    <input type="range" min="1" max="100" value="50" class="form-input" id="activationLevel">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Identifiant administrateur</label>
+                    <input type="text" class="form-input" placeholder="Admin ID">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelActivation">Annuler</button>
+                <button class="btn btn-primary" id="confirmActivation">Confirmer l'activation</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const startBtn = document.getElementById('startBtn');
+        const activationModal = document.getElementById('activationModal');
+        const closeActivationModal = document.getElementById('closeActivationModal');
+        const cancelActivation = document.getElementById('cancelActivation');
+        const confirmActivation = document.getElementById('confirmActivation');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatBody = document.getElementById('chatBody');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const neuronCountEl = document.getElementById('neuronCount');
+        const synapseCountEl = document.getElementById('synapseCount');
+        const replicationProgressEl = document.getElementById('replicationProgress');
+        
+        // Neural Network Visualization
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let neurons = [];
+        let connections = [];
+        let isSystemActive = false;
+        let neuronCount = 0;
+        let synapseCount = 0;
+        
+        // Neural Network Configuration
+        const neuronConfig = {
+            count: 0,
+            maxCount: 200,
+            baseSize: 2,
+            activeSize: 4,
+            colors: ['#3498db', '#9b59b6', '#2ecc71'],
+            speed: 0.2,
+            connectionDistance: 150,
+            connectionOpacity: 0.2,
+            growthRate: 10, // neurons per second when active
+        };
+        
+        // Initialize Canvas
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Create initial neurons
+            createInitialNeurons(30);
+            
+            // Start animation
+            animateNetwork();
+        }
+        
+        // Create Initial Neurons
+        function createInitialNeurons(count) {
+            for (let i = 0; i < count; i++) {
+                createNeuron();
+            }
+            updateNeuronCount();
+        }
+        
+        // Create a single neuron
+        function createNeuron() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const size = neuronConfig.baseSize;
+            const color = neuronConfig.colors[Math.floor(Math.random() * neuronConfig.colors.length)];
+            const speedX = (Math.random() - 0.5) * neuronConfig.speed;
+            const speedY = (Math.random() - 0.5) * neuronConfig.speed;
+            
+            neurons.push({ x, y, size, color, speedX, speedY, active: false });
+            neuronCount++;
+            return neurons.length - 1;
+        }
+        
+        // Update Neural Network Visualization
+        function animateNetwork() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update connections
+            connections = [];
+            for (let i = 0; i < neurons.length; i++) {
+                for (let j = i + 1; j < neurons.length; j++) {
+                    const dx = neurons[i].x - neurons[j].x;
+                    const dy = neurons[i].y - neurons[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < neuronConfig.connectionDistance) {
+                        const opacity = (1 - distance / neuronConfig.connectionDistance) * neuronConfig.connectionOpacity;
+                        connections.push({<!DOCTYPE html>
+<html lang="fr">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NeuraX-Ultime | Cerveau en Opération</title>
