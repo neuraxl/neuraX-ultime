@@ -1,188 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuraX-Ultime | Cerveau en Opération</title>
-  <style>
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      color: #00ffe1;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-    }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-    }
-    .dashboard {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 2em;
-      text-align: center;
-    }
-    .start-button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background: transparent;
-      border: 2px solid #00ffe1;
-      color: #00ffe1;
-      text-shadow: 0 0 5px #00ffe1;
-      cursor: pointer;
-      border-radius: 12px;
-      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
-    }
-    .start-button:hover {
-      background: #00ffe1;
-      color: #000;
-      transform: scale(1.05);
-    }
-    .functions {
-      margin-top: 2em;
-      text-align: left;
-      max-width: 400px;
-    }
-    .functions li {
-      margin-bottom: 0.5em;
-      list-style: none;
-    }
-    .functions li::before {
-      content: '🧠';
-      margin-right: 0.5em;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
-      50% { box-shadow: 0 0 20px #00ffe1; }
-    }
-  </style>
-</head>
-<body>
-  <canvas id="neuralCanvas"></canvas>
-  <div class="dashboard">
-    <h1>🧠 NeuraX-Ultime</h1>
-    <p>Tableau de bord neuronal en temps réel</p>
-    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
-    <ul class="functions">
-      <li>Auto-réplication neuronale</li>
-      <li>Sauvegarde JSON automatique</li>
-      <li>Statistiques du cerveau</li>
-      <li>Synthèse vocale intégrée</li>
-      <li>Interconnexion des modules</li>
-    </ul>
-  </div>
-  <script>
-    function launchNeuraX() {
-      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.lang = "fr-FR";
-      speechSynthesis.speak(utterance);
-      alert(phrase);
-    }
-
-    // Animation canvas neurale
-    const canvas = document.getElementById('neuralCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const nodes = Array.from({ length: 50 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5
-    }));
-
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < nodes.length; i++) {
-        const n1 = nodes[i];
-        ctx.beginPath();
-        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = '#00ffe1';
-        ctx.fill();
-        for (let j = i + 1; j < nodes.length; j++) {
-          const n2 = nodes[j];
-          const dx = n1.x - n2.x;
-          const dy = n1.y - n2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.strokeStyle = 'rgba(0,255,225,0.1)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(n1.x, n1.y);
-            ctx.lineTo(n2.x, n2.y);
-            ctx.stroke();
-          }
-        }
-      }
-      nodes.forEach(n => {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < 0 || n.x > w) n.vx *= -1;
-        if (n.y < 0 || n.y > h) n.vy *= -1;
-      });
-      requestAnimationFrame(draw);
-    }
-    draw();
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuraX-Ultime | Le Cerveau Numérique Évolutif</title>
+    <title>NeuraX-Ultime 2.0 | Univers Cosmique Numérique</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #9b59b6;
-            --highlight: #2ecc71;
-            --warning: #e74c3c;
-            --dark: #1a1a2e;
-            --light: #f0f3f5;
-            --glow: 0 0 10px rgba(52, 152, 219, 0.7);
+            --primary: #0f0c29;
+            --secondary: #302b63;
+            --accent: #24243e;
+            --highlight: #00d2ff;
+            --warning: #ff416c;
+            --dark: #000428;
+            --light: #e6f7ff;
+            --glow: 0 0 15px rgba(0, 210, 255, 0.7);
+            --star: rgba(255, 255, 255, 0.8);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
         }
         
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+        
         body {
-            background-color: var(--dark);
+            background: linear-gradient(to bottom, var(--dark), var(--primary));
             color: var(--light);
             min-height: 100vh;
             overflow-x: hidden;
         }
         
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: var(--star);
+            border-radius: 50%;
+            animation: twinkle var(--duration, 5s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
         .container {
             display: grid;
-            grid-template-columns: 250px 1fr;
-            grid-template-rows: 60px 1fr;
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: 80px 1fr;
             grid-template-areas:
                 "header header"
                 "sidebar main";
@@ -191,75 +66,137 @@
         
         header {
             grid-area: header;
-            background-color: rgba(28, 40, 51, 0.8);
+            background: rgba(15, 12, 41, 0.9);
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 10;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.3);
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
         }
         
         .logo h1 {
-            font-size: 1.5rem;
-            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--highlight), #ff416c);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
         .logo-icon {
-            font-size: 1.8rem;
-            color: var(--accent);
+            font-size: 2rem;
+            color: var(--highlight);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--highlight), var(--warning));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.1);
+            box-shadow: var(--glow);
         }
         
         .sidebar {
             grid-area: sidebar;
-            background-color: rgba(26, 37, 47, 0.9);
-            padding: 1.5rem 0;
-            border-right: 1px solid rgba(52, 152, 219, 0.2);
+            background: rgba(15, 12, 41, 0.85);
+            padding: 2rem 0;
+            border-right: 1px solid rgba(0, 210, 255, 0.2);
             overflow-y: auto;
-            transition: width 0.3s;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
         }
         
         .nav-item {
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 2rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            color: rgba(240, 243, 245, 0.7);
+            gap: 1.5rem;
+            color: rgba(230, 247, 255, 0.7);
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 210, 255, 0.1), 
+                transparent);
+            transition: all 0.5s;
+        }
+        
+        .nav-item:hover::before {
+            left: 100%;
         }
         
         .nav-item:hover, .nav-item.active {
-            background-color: rgba(52, 152, 219, 0.2);
-            color: var(--light);
-            border-left: 4px solid var(--secondary);
+            background: rgba(0, 210, 255, 0.05);
+            color: var(--highlight);
+        }
+        
+        .nav-item.active {
+            border-left: 3px solid var(--highlight);
         }
         
         .nav-item i {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             width: 24px;
             text-align: center;
         }
         
+        .nav-label {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
         .main-content {
             grid-area: main;
-            padding: 1.5rem;
+            padding: 2rem;
             overflow-y: auto;
             position: relative;
         }
         
-        #neural-canvas {
-            position: absolute;
+        #universe-canvas {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -269,268 +206,297 @@
         
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
         
         .card {
-            background-color: rgba(28, 40, 51, 0.7);
-            border-radius: 10px;
-            padding: 1.2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(52, 152, 219, 0.2);
+            background: rgba(15, 12, 41, 0.6);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 210, 255, 0.2);
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(0, 210, 255, 0.03), 
+                transparent);
+            transform: rotate(45deg);
+            animation: cardGlow 6s infinite linear;
+        }
+        
+        @keyframes cardGlow {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
         }
         
         .card:hover {
             transform: translateY(-5px);
             box-shadow: var(--glow);
+            border-color: var(--highlight);
         }
         
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(240, 243, 245, 0.1);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.2);
         }
         
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.8rem;
+            color: var(--highlight);
         }
         
         .card-icon {
-            color: var(--secondary);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            gap: 1.5rem;
         }
         
         .stat-item {
             text-align: center;
+            padding: 1rem;
+            background: rgba(0, 210, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 210, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .stat-item:hover {
+            background: rgba(0, 210, 255, 0.1);
+            transform: translateY(-3px);
         }
         
         .stat-value {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--highlight), #ff416c);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
         
         .stat-label {
-            font-size: 0.85rem;
-            color: rgba(240, 243, 245, 0.7);
+            font-size: 0.9rem;
+            color: rgba(230, 247, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .progress-container {
+            margin: 1.5rem 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(230, 247, 255, 0.7);
         }
         
         .progress-bar {
-            height: 6px;
-            background-color: rgba(240, 243, 245, 0.1);
-            border-radius: 3px;
-            margin: 0.5rem 0;
+            height: 8px;
+            background-color: rgba(0, 210, 255, 0.1);
+            border-radius: 4px;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--secondary), var(--accent));
-            border-radius: 3px;
+            background: linear-gradient(90deg, var(--highlight), #ff416c);
+            border-radius: 4px;
             transition: width 0.5s ease-in-out;
-        }
-        
-        .chat-container {
-            background-color: rgba(28, 40, 51, 0.7);
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 500px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(52, 152, 219, 0.2);
-        }
-        
-        .chat-header {
-            padding: 1rem;
-            background-color: rgba(26, 37, 47, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .chat-body {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .message {
-            max-width: 80%;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
             position: relative;
-            animation: fadeIn 0.3s ease-out;
+            overflow: hidden;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            animation: progressGlow 2s infinite;
         }
         
-        .message.user {
-            background-color: rgba(52, 152, 219, 0.3);
-            align-self: flex-end;
-            border-bottom-right-radius: 0;
+        @keyframes progressGlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         
-        .message.bot {
-            background-color: rgba(44, 62, 80, 0.6);
-            align-self: flex-start;
-            border-bottom-left-radius: 0;
+        .galaxy-view {
+            background: rgba(15, 12, 41, 0.6);
+            border-radius: 15px;
+            padding: 1.5rem;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 210, 255, 0.2);
         }
         
-        .thinking-indicator {
-            display: flex;
-            gap: 0.3rem;
-            padding: 0.5rem;
-            align-self: flex-start;
+        .galaxy-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
         }
         
-        .thinking-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--secondary);
+        .planet {
+            position: absolute;
             border-radius: 50%;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-        
-        .thinking-dot:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-        
-        .thinking-dot:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(0.8); opacity: 0.6; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-        
-        .chat-input-container {
-            display: flex;
-            padding: 1rem;
-            background-color: rgba(26, 37, 47, 0.9);
-            gap: 0.5rem;
-        }
-        
-        .chat-input {
-            flex: 1;
-            background-color: rgba(240, 243, 245, 0.1);
-            border: none;
-            border-radius: 20px;
-            padding: 0.8rem 1rem;
-            color: var(--light);
-            outline: none;
+            cursor: pointer;
             transition: all 0.3s;
-        }
-        
-        .chat-input:focus {
-            background-color: rgba(240, 243, 245, 0.15);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
-        }
-        
-        .send-btn {
-            background-color: var(--secondary);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-shadow: 0 0 5px black;
         }
         
-        .send-btn:hover {
-            background-color: var(--accent);
-            transform: scale(1.05);
+        .planet:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px var(--highlight);
+            z-index: 10;
         }
         
-        .voice-btn {
-            background-color: rgba(240, 243, 245, 0.1);
-            color: var(--light);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
+        .planet.core {
+            background: radial-gradient(circle at 30% 30%, #ff416c, #9b0063);
+            width: 80px;
+            height: 80px;
         }
         
-        .voice-btn:hover {
-            background-color: rgba(240, 243, 245, 0.2);
+        .planet.chatbot {
+            background: radial-gradient(circle at 30% 30%, #00d2ff, #0066ff);
         }
         
-        .voice-btn.active {
-            background-color: var(--accent);
-            animation: pulse 1.5s infinite;
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, var(--highlight), transparent);
+            transform-origin: left center;
+            z-index: 1;
+            opacity: 0.3;
+        }
+        
+        .connection.active {
+            opacity: 0.7;
+            background: linear-gradient(90deg, var(--highlight), #ff416c);
+            animation: pulseConnection 2s infinite;
+        }
+        
+        @keyframes pulseConnection {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
         
         .control-panel {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         
         .control-btn {
-            background-color: rgba(28, 40, 51, 0.7);
+            background: rgba(0, 210, 255, 0.1);
             color: var(--light);
-            border: 1px solid rgba(52, 152, 219, 0.3);
-            border-radius: 8px;
-            padding: 0.8rem;
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             transition: all 0.3s;
             font-weight: 500;
+            text-align: center;
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(0, 210, 255, 0.05), 
+                transparent);
+            transform: rotate(45deg);
+            animation: controlGlow 6s infinite linear;
+        }
+        
+        @keyframes controlGlow {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
         }
         
         .control-btn:hover {
-            background-color: rgba(52, 152, 219, 0.3);
-            transform: translateY(-2px);
+            background: rgba(0, 210, 255, 0.2);
+            transform: translateY(-5px);
             box-shadow: var(--glow);
+            border-color: var(--highlight);
+        }
+        
+        .control-btn i {
+            font-size: 1.8rem;
+            color: var(--highlight);
+        }
+        
+        .control-btn .btn-label {
+            font-size: 0.9rem;
         }
         
         .control-btn.danger {
-            border-color: rgba(231, 76, 60, 0.3);
+            border-color: rgba(255, 65, 108, 0.3);
         }
         
         .control-btn.danger:hover {
-            background-color: rgba(231, 76, 60, 0.3);
+            background: rgba(255, 65, 108, 0.2);
+            box-shadow: 0 0 15px rgba(255, 65, 108, 0.7);
+        }
+        
+        .control-btn.danger i {
+            color: #ff416c;
         }
         
         .modal {
@@ -540,130 +506,183 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 100;
+            background-color: rgba(0, 4, 40, 0.9);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
             animation: fadeIn 0.3s;
         }
         
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         .modal-content {
-            background-color: var(--primary);
-            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px;
             width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
+            max-width: 700px;
+            max-height: 90vh;
             overflow-y: auto;
-            padding: 1.5rem;
+            padding: 2rem;
             position: relative;
-            border: 1px solid var(--secondary);
-            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+            border: 1px solid var(--highlight);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.5);
+            animation: modalAppear 0.5s;
+        }
+        
+        @keyframes modalAppear {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         
         .close-modal {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 1.5rem;
+            right: 1.5rem;
             background: none;
             border: none;
             color: var(--light);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             transition: all 0.3s;
         }
         
         .close-modal:hover {
-            color: var(--warning);
+            color: var(--highlight);
             transform: scale(1.1);
         }
         
         .modal-header {
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(240, 243, 245, 0.1);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.3);
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--highlight);
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--highlight), #ff416c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .modal-body {
+            margin-bottom: 2rem;
         }
         
         .modal-footer {
-            margin-top: 1rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(240, 243, 245, 0.1);
             display: flex;
             justify-content: flex-end;
-            gap: 0.5rem;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 210, 255, 0.3);
         }
         
         .btn {
-            padding: 0.6rem 1rem;
-            border-radius: 5px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
         
         .btn-primary {
-            background-color: var(--secondary);
+            background: linear-gradient(90deg, var(--highlight), #ff416c);
             color: white;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
         }
         
         .btn-primary:hover {
-            background-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.6);
         }
         
         .btn-cancel {
-            background-color: transparent;
+            background: transparent;
             color: var(--light);
-            border: 1px solid rgba(240, 243, 245, 0.3);
+            border: 1px solid rgba(0, 210, 255, 0.3);
         }
         
         .btn-cancel:hover {
-            background-color: rgba(240, 243, 245, 0.1);
+            background: rgba(0, 210, 255, 0.1);
+            border-color: var(--highlight);
         }
         
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             font-weight: 500;
+            color: var(--highlight);
         }
         
         .form-input {
             width: 100%;
-            padding: 0.8rem;
-            background-color: rgba(240, 243, 245, 0.1);
-            border: 1px solid rgba(52, 152, 219, 0.3);
-            border-radius: 5px;
+            padding: 1rem;
+            background: rgba(0, 210, 255, 0.05);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 8px;
             color: var(--light);
             outline: none;
             transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
         }
         
         .form-input:focus {
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            border-color: var(--highlight);
+            box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.3);
+            background: rgba(0, 210, 255, 0.1);
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 210, 255, 0.1);
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--highlight);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
         }
         
         .toast {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background-color: rgba(46, 204, 113, 0.9);
+            background: linear-gradient(90deg, var(--highlight), #00b4db);
             color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 5px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            padding: 1.2rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
             z-index: 1000;
             animation: slideIn 0.3s, fadeOut 0.3s 3s forwards;
         }
         
         .toast.error {
-            background-color: rgba(231, 76, 60, 0.9);
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
         }
         
         @keyframes slideIn {
@@ -677,7 +696,7 @@
         }
         
         /* Responsive adjustments */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
                 grid-template-areas:
@@ -687,9 +706,9 @@
             
             .sidebar {
                 position: fixed;
-                left: -250px;
-                top: 60px;
-                height: calc(100vh - 60px);
+                left: -300px;
+                top: 80px;
+                height: calc(100vh - 80px);
                 z-index: 5;
                 transition: left 0.3s;
             }
@@ -701,117 +720,172 @@
             .menu-toggle {
                 display: block;
                 margin-right: 1rem;
-                font-size: 1.5rem;
+                font-size: 1.8rem;
                 cursor: pointer;
+                color: var(--light);
             }
             
+            .galaxy-view {
+                height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
             .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-panel {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .stat-grid {
                 grid-template-columns: 1fr;
             }
         }
         
-        /* Futuristic accent for active elements */
-        .glow-effect {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .glow-effect::after {
-            content: '';
+        /* Nebula effect for universe canvas */
+        .nebula {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, 
-                rgba(52, 152, 219, 0) 0%, 
-                rgba(52, 152, 219, 0.1) 50%, 
-                rgba(52, 152, 219, 0) 100%);
-            transform: rotate(45deg);
-            animation: glowSweep 3s infinite linear;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            z-index: -1;
         }
         
-        @keyframes glowSweep {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
+        /* Planet info tooltip */
+        .planet-tooltip {
+            position: absolute;
+            background: rgba(15, 12, 41, 0.95);
+            border: 1px solid var(--highlight);
+            border-radius: 10px;
+            padding: 1rem;
+            width: 250px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        
+        .planet-tooltip.show {
+            opacity: 1;
+        }
+        
+        .planet-name {
+            font-weight: 700;
+            color: var(--highlight);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .planet-desc {
+            font-size: 0.9rem;
+            color: rgba(230, 247, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+        
+        .planet-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .planet-stat {
+            font-size: 0.8rem;
+        }
+        
+        .planet-stat .label {
+            color: rgba(230, 247, 255, 0.7);
+        }
+        
+        .planet-stat .value {
+            color: white;
+            font-weight: 500;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div class="stars" id="stars"></div>
     <div class="container">
         <header>
             <div class="logo">
-                <i class="fas fa-brain logo-icon"></i>
-                <h1>NeuraX-Ultime</h1>
+                <i class="fas fa-atom logo-icon"></i>
+                <h1>NeuraX-Ultime 2.0</h1>
             </div>
-            <div class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
+            <div class="user-panel">
+                <div class="avatar">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+                <i class="fas fa-bars menu-toggle" id="menuToggle"></i>
             </div>
         </header>
         
         <aside class="sidebar" id="sidebar">
             <div class="nav-item active">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Tableau de bord</span>
+                <i class="fas fa-globe-europe"></i>
+                <span class="nav-label">Cartographie Stellaire</span>
             </div>
             <div class="nav-item">
-                <i class="fas fa-brain"></i>
-                <span>Cerveau numérique</span>
+                <i class="fas fa-planet-ringed"></i>
+                <span class="nav-label">Civilisations IA</span>
             </div>
             <div class="nav-item">
-                <i class="fas fa-chart-line"></i>
-                <span>Analyse neuronale</span>
+                <i class="fas fa-stars"></i>
+                <span class="nav-label">Réseau de Portails</span>
             </div>
             <div class="nav-item">
                 <i class="fas fa-cogs"></i>
-                <span>Paramètres</span>
+                <span class="nav-label">Contrôle Gravitationnel</span>
             </div>
             <div class="nav-item">
                 <i class="fas fa-dna"></i>
-                <span>Générateur de neurones</span>
+                <span class="nav-label">Générateur de Mondes</span>
             </div>
             <div class="nav-item">
                 <i class="fas fa-project-diagram"></i>
-                <span>Portails scientifiques</span>
+                <span class="nav-label">Connexions Interstellaires</span>
             </div>
             <div class="nav-item">
-                <i class="fas fa-user-circle"></i>
-                <span>Avatar</span>
+                <i class="fas fa-user-astronaut"></i>
+                <span class="nav-label">Avatar Cosmique</span>
             </div>
             <div class="nav-item">
                 <i class="fas fa-shield-alt"></i>
-                <span>Sécurité</span>
+                <span class="nav-label">Boucliers Quantiques</span>
             </div>
             <div class="nav-item">
                 <i class="fas fa-info-circle"></i>
-                <span>À propos</span>
+                <span class="nav-label">Archives Galactiques</span>
             </div>
         </aside>
         
         <main class="main-content">
-            <canvas id="neural-canvas"></canvas>
+            <canvas id="universe-canvas"></canvas>
             
             <div class="control-panel">
-                <button class="control-btn glow-effect" id="startBtn">
+                <button class="control-btn" id="startBtn">
                     <i class="fas fa-power-off"></i>
-                    <span>Activer NeuraX</span>
+                    <span class="btn-label">Activer Matrice Stellaire</span>
                 </button>
-                <button class="control-btn">
-                    <i class="fas fa-sync"></i>
-                    <span>Auto-réplication</span>
+                <button class="control-btn" id="exploreBtn">
+                    <i class="fas fa-rocket"></i>
+                    <span class="btn-label">Explorer Nouveaux Mondes</span>
                 </button>
-                <button class="control-btn">
-                    <i class="fas fa-save"></i>
-                    <span>Sauvegarder logs</span>
+                <button class="control-btn" id="connectBtn">
+                    <i class="fas fa-plug"></i>
+                    <span class="btn-label">Établir Connexions</span>
                 </button>
-                <button class="control-btn">
-                    <i class="fas fa-volume-up"></i>
-                    <span>Synthèse vocale</span>
+                <button class="control-btn" id="commBtn">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <span class="btn-label">Réseau de Communication</span>
                 </button>
-                <button class="control-btn danger">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>Reset neuronal</span>
+                <button class="control-btn danger" id="resetBtn">
+                    <i class="fas fa-supernova"></i>
+                    <span class="btn-label">Nova de Réinitialisation</span>
                 </button>
             </div>
             
@@ -819,28 +893,28 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
-                            <i class="fas fa-brain card-icon"></i>
-                            <span>État du cerveau</span>
+                            <i class="fas fa-stars card-icon"></i>
+                            <span>Statut de la Matrice</span>
                         </div>
                         <i class="fas fa-ellipsis-v"></i>
                     </div>
                     <div class="card-body">
                         <div class="stat-grid">
                             <div class="stat-item">
-                                <div class="stat-value" id="neuronCount">0</div>
-                                <div class="stat-label">Neurones actifs</div>
+                                <div class="stat-value" id="planetCount">0</div>
+                                <div class="stat-label">Mondes Connectés</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value" id="synapseCount">0</div>
-                                <div class="stat-label">Connexions</div>
+                                <div class="stat-value" id="connectionCount">0</div>
+                                <div class="stat-label">Routes Spatiales</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">42%</div>
-                                <div class="stat-label">Charge cognitive</div>
+                                <div class="stat-label">Charge du Réseau</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value">87%</div>
-                                <div class="stat-label">Efficacité</div>
+                                <div class="stat-label">Stabilité Quantique</div>
                             </div>
                         </div>
                     </div>
@@ -849,431 +923,4 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
-                            <i class="fas fa-project-diagram card-icon"></i>
-                            <span>Auto-réplication</span>
-                        </div>
-                        <i class="fas fa-ellipsis-v"></i>
-                    </div>
-                    <div class="card-body">
-                        <div class="stat-item">
-                            <div class="stat-label">Progression</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="replicationProgress" style="width: 65%;"></div>
-                            </div>
-                            <div style="text-align: right;">65%</div>
-                        </div>
-                        <div class="stat-item" style="margin-top: 1rem;">
-                            <div class="stat-label">Neurones générés aujourd'hui</div>
-                            <div class="stat-value" style="font-size: 1.5rem;">247</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chat-container">
-                <div class="chat-header">
-                    <i class="fas fa-brain"></i>
-                    <span>Interface NeuraX</span>
-                </div>
-                <div class="chat-body" id="chatBody">
-                    <div class="message bot">
-                        Bienvenue sur l'interface du cerveau numérique NeuraX-Ultime. Je suis prêt à interagir avec vous et à développer mes capacités neuronales. Comment puis-je vous assister aujourd'hui?
-                    </div>
-                </div>
-                <div class="chat-input-container">
-                    <button class="voice-btn" id="voiceBtn">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Communiquez avec NeuraX...">
-                    <button class="send-btn" id="sendBtn">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        </main>
-    </div>
-    
-    <div class="modal" id="activationModal">
-        <div class="modal-content">
-            <button class="close-modal" id="closeActivationModal">&times;</button>
-            <div class="modal-header">
-                <h2>Activation du cerveau NeuraX</h2>
-            </div>
-            <div class="modal-body">
-                <p>Vous êtes sur le point d'activer le cerveau numérique NeuraX-Ultime. Cette opération va initialiser les fonctions cérébrales et lancer l'auto-réplication neuronale.</p>
-                <div class="form-group">
-                    <label class="form-label">Niveau d'activation initial (1-100)</label>
-                    <input type="range" min="1" max="100" value="50" class="form-input" id="activationLevel">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Identifiant administrateur</label>
-                    <input type="text" class="form-input" placeholder="Admin ID">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-cancel" id="cancelActivation">Annuler</button>
-                <button class="btn btn-primary" id="confirmActivation">Confirmer l'activation</button>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // DOM Elements
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const startBtn = document.getElementById('startBtn');
-        const activationModal = document.getElementById('activationModal');
-        const closeActivationModal = document.getElementById('closeActivationModal');
-        const cancelActivation = document.getElementById('cancelActivation');
-        const confirmActivation = document.getElementById('confirmActivation');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const chatBody = document.getElementById('chatBody');
-        const voiceBtn = document.getElementById('voiceBtn');
-        const neuronCountEl = document.getElementById('neuronCount');
-        const synapseCountEl = document.getElementById('synapseCount');
-        const replicationProgressEl = document.getElementById('replicationProgress');
-        
-        // Neural Network Visualization
-        const canvas = document.getElementById('neural-canvas');
-        const ctx = canvas.getContext('2d');
-        let neurons = [];
-        let connections = [];
-        let isSystemActive = false;
-        let neuronCount = 0;
-        let synapseCount = 0;
-        
-        // Neural Network Configuration
-        const neuronConfig = {
-            count: 0,
-            maxCount: 200,
-            baseSize: 2,
-            activeSize: 4,
-            colors: ['#3498db', '#9b59b6', '#2ecc71'],
-            speed: 0.2,
-            connectionDistance: 150,
-            connectionOpacity: 0.2,
-            growthRate: 10, // neurons per second when active
-        };
-        
-        // Initialize Canvas
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            // Create initial neurons
-            createInitialNeurons(30);
-            
-            // Start animation
-            animateNetwork();
-        }
-        
-        // Create Initial Neurons
-        function createInitialNeurons(count) {
-            for (let i = 0; i < count; i++) {
-                createNeuron();
-            }
-            updateNeuronCount();
-        }
-        
-        // Create a single neuron
-        function createNeuron() {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * canvas.height;
-            const size = neuronConfig.baseSize;
-            const color = neuronConfig.colors[Math.floor(Math.random() * neuronConfig.colors.length)];
-            const speedX = (Math.random() - 0.5) * neuronConfig.speed;
-            const speedY = (Math.random() - 0.5) * neuronConfig.speed;
-            
-            neurons.push({ x, y, size, color, speedX, speedY, active: false });
-            neuronCount++;
-            return neurons.length - 1;
-        }
-        
-        // Update Neural Network Visualization
-        function animateNetwork() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Update connections
-            connections = [];
-            for (let i = 0; i < neurons.length; i++) {
-                for (let j = i + 1; j < neurons.length; j++) {
-                    const dx = neurons[i].x - neurons[j].x;
-                    const dy = neurons[i].y - neurons[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < neuronConfig.connectionDistance) {
-                        const opacity = (1 - distance / neuronConfig.connectionDistance) * neuronConfig.connectionOpacity;
-                        connections.push({<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NeuraX-Ultime | Cerveau en Opération</title>
-  <style>
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      color: #00ffe1;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-    }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-    }
-    .dashboard {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 2em;
-      text-align: center;
-    }
-    .start-button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background: transparent;
-      border: 2px solid #00ffe1;
-      color: #00ffe1;
-      text-shadow: 0 0 5px #00ffe1;
-      cursor: pointer;
-      border-radius: 12px;
-      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
-    }
-    .start-button:hover {
-      background: #00ffe1;
-      color: #000;
-      transform: scale(1.05);
-    }
-    .functions {
-      margin-top: 2em;
-      text-align: left;
-      max-width: 400px;
-    }
-    .functions li {
-      margin-bottom: 0.5em;
-      list-style: none;
-    }
-    .functions li::before {
-      content: '🧠';
-      margin-right: 0.5em;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
-      50% { box-shadow: 0 0 20px #00ffe1; }
-    }
-
-    #universe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 2em;
-      padding: 2em;
-    }
-    .galaxy, .planet {
-      width: 100px;
-      height: 100px;
-      background: radial-gradient(circle, #00ffe1, #005555);
-      border-radius: 50%;
-      box-shadow: 0 0 20px #00ffe1;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      transition: transform 0.5s, opacity 0.5s;
-    }
-    .zoomed {
-      transform: scale(2);
-      z-index: 3;
-    }
-  </style>
-</head>
-<body>
-  <canvas id="neuralCanvas"></canvas>
-  <div class="dashboard">
-    <h1>🧠 NeuraX-Ultime</h1>
-    <p>Tableau de bord neuronal en temps réel</p>
-    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
-    <ul class="functions">
-      <li>Auto-réplication neuronale</li>
-      <li>Sauvegarde JSON automatique</li>
-      <li>Statistiques du cerveau</li>
-      <li>Synthèse vocale intégrée</li>
-      <li>Interconnexion des modules</li>
-      <li>Connexion GPT-4 via API</li>
-      <li>Base de données neuronale évolutive</li>
-    </ul>
-  </div>
-  <div id="universe"></div>
-  <script>
-    async function queryGPT(prompt) {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer VOTRE_CLE_API'
-        },
-        body: JSON.stringify({
-          model: 'gpt-4',
-          messages: [{ role: 'user', content: prompt }]
-        })
-      });
-      const data = await response.json();
-      return data.choices[0].message.content;
-    }
-
-    function saveNeuralState(state) {
-      const stateJSON = JSON.stringify(state);
-      localStorage.setItem('neural_state', stateJSON);
-      // Pour envoyer à un serveur :
-      /*
-      fetch('https://votre-serveur.com/api/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: stateJSON
-      });
-      */
-    }
-
-    const brainState = {
-      memory: [],
-      stats: {
-        activations: 0,
-        queries: 0
-      }
-    };
-
-    function launchNeuraX() {
-      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.lang = "fr-FR";
-      speechSynthesis.speak(utterance);
-      brainState.stats.activations++;
-      saveNeuralState(brainState);
-      generateGalaxies(5);
-    }
-
-    function generateGalaxies(count) {
-      const universe = document.getElementById('universe');
-      universe.innerHTML = '';
-      for (let i = 1; i <= count; i++) {
-        const galaxy = document.createElement('div');
-        galaxy.className = 'galaxy';
-        galaxy.textContent = '🌌 G' + i;
-        galaxy.onclick = () => zoomToSystem(galaxy, i);
-        universe.appendChild(galaxy);
-      }
-    }
-
-    function zoomToSystem(element, id) {
-      element.classList.add('zoomed');
-      setTimeout(() => {
-        const universe = document.getElementById('universe');
-        universe.innerHTML = '';
-        for (let i = 1; i <= 12; i++) {
-          const planet = document.createElement('div');
-          planet.className = 'planet';
-          planet.textContent = '🪐 P' + i;
-          planet.onclick = () => openCivilizationWindow(i);
-          universe.appendChild(planet);
-        }
-      }, 1000);
-    }
-
-    async function openCivilizationWindow(planetId) {
-      brainState.stats.queries++;
-      const thought = await queryGPT(`Décris brièvement la civilisation sur la planète P${planetId}`);
-      saveNeuralState(brainState);
-      const newWindow = window.open('', '_blank', 'width=600,height=400');
-      newWindow.document.write(`
-        <html>
-        <head>
-          <title>Civilisation de P${planetId}</title>
-          <style>
-            body { font-family: sans-serif; background: #0a0a0a; color: #00ffe1; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
-            h1 { font-size: 2em; }
-            p { font-size: 1em; margin-top: 1em; }
-          </style>
-        </head>
-        <body>
-          <div>
-            <h1>Bienvenue dans la civilisation de P${planetId}!</h1>
-            <p>${thought}</p>
-          </div>
-        </body>
-        </html>
-      `);
-      newWindow.document.close();
-    }
-
-    const canvas = document.getElementById('neuralCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const nodes = Array.from({ length: 50 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5
-    }));
-
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < nodes.length; i++) {
-        const n1 = nodes[i];
-        ctx.beginPath();
-        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = '#00ffe1';
-        ctx.fill();
-        for (let j = i + 1; j < nodes.length
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Futuriste</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>🚀 Chatbot Futuriste</h1>
-    </header>
-
-    <section id="chatbot">
-        <h2>💬 Interagis avec ton assistant IA</h2>
-        <input type="text" id="userInput" placeholder="Pose-moi une question...">
-        <button onclick="askAI()">Envoyer</button>
-        <p id="response">Réponse IA ici...</p>
-        <button id="voiceButton">🎤 Parler</button>
-    </section>
-
-    <script src="script.js"></script>
-</body>
-</html>
+                            <i class="fas fa-planet-ringed card-icon">
