@@ -1,3 +1,75 @@
+// NeuraX - Tableau de bord cérébral animé
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BrainCircuit } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function NeuraXDashboard() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white p-6">
+      <h1 className="text-5xl font-extrabold text-center mb-8 animate-pulse">
+        🧠 NeuraX - Interface Cérébrale
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="bg-gray-950 border border-gray-700 shadow-2xl">
+          <CardContent className="p-4">
+            <motion.div
+              className="flex items-center gap-4"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <BrainCircuit className="w-10 h-10 text-cyan-400 animate-spin-slow" />
+              <div>
+                <h2 className="text-xl font-semibold">Activité Neuronale</h2>
+                <p className="text-gray-400 text-sm">Oscillation des flux cérébraux</p>
+              </div>
+            </motion.div>
+            <div className="mt-6 h-32 bg-gradient-to-r from-cyan-400/30 to-purple-400/30 rounded-xl animate-pulse" />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-950 border border-gray-700 shadow-2xl">
+          <CardContent className="p-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <h2 className="text-xl font-semibold mb-2">Statistiques Cognitives</h2>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li>🧬 Neurones actifs : 1 024</li>
+                <li>🔋 Charge mentale : 87%</li>
+                <li>⏱ Temps de réponse : 0.24 sec</li>
+                <li>📡 Interconnexions : 12 487 nœuds</li>
+              </ul>
+            </motion.div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-950 border border-gray-700 shadow-2xl col-span-full">
+          <CardContent className="p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="flex justify-between items-center"
+            >
+              <div>
+                <h2 className="text-xl font-semibold">Contrôle du système</h2>
+                <p className="text-gray-400 text-sm">Démarrer ou ajuster les flux neuronaux</p>
+              </div>
+              <Button className="bg-cyan-600 hover:bg-cyan-700 text-white text-lg px-6 py-2 rounded-full">
+                Activer le Cerveau
+              </Button>
+            </motion.div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
