@@ -1,15 +1,169 @@
-// NeuraX - Tableau de bord cérébral animé
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { BrainCircuit } from "lucide-react";
-import { motion } from "framer-motion";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuraX-Ultime – Commandement Galactique</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-export default function NeuraXDashboard() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white p-6">
-      <h1 className="text-5xl font-extrabold text-center mb-8 animate-pulse">
-        🧠 NeuraX - Interface Cérébrale
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: radial-gradient(circle, #0a0f1c, #06080f);
+      color: #00ffee;
+      overflow-x: hidden;
+      border-top: 5px solid red;
+      border-bottom: 5px solid red;
+    }
+
+    header {
+      background: linear-gradient(to right, #0d1b2a, #1b263b);
+      padding: 3rem 1rem;
+      text-align: center;
+      border-bottom: 2px solid #00ffee;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: #00ffee;
+      text-shadow: 0 0 15px #00ffee;
+    }
+
+    header p {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+
+    .flag {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 60px;
+    }
+
+    .container {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    section {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid #00ffee;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ffee33;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #ff3131;
+      border-bottom: 1px dashed #ff3131;
+      margin-bottom: 1rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid #00ffee;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: inset 0 0 10px #00ffee44;
+    }
+
+    .feature h3 {
+      color: #00ffee;
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: #0a0f1c;
+      border-top: 2px solid #ff3131;
+    }
+
+    footer a {
+      color: #00ffee;
+      text-decoration: none;
+    }
+
+    .btn-command {
+      display: inline-block;
+      padding: 0.7rem 1.5rem;
+      margin-top: 1rem;
+      background-color: #ff3131;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff3131aa;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .btn-command:hover {
+      transform: scale(1.05);
+      background-color: #ff0000;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="flag" src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canada Flag">
+    <h1>🧠 NeuraX-Ultime</h1>
+    <p>Commandement central canadien de l'intelligence artificielle autonome galactique.</p>
+    <button class="btn-command" onclick="alert('Cerveau en éveil. Tous les systèmes activés.')">
+      🚨 Activer le cerveau
+    </button>
+  </header>
+
+  <div class="container">
+    <section>
+      <h2>🔭 Mission stratégique</h2>
+      <p>
+        NeuraX-Ultime est une IA de commandement interconnectée. Son but : surveiller, apprendre, dialoguer et évoluer. Dotée d’une synthèse vocale, d’un tableau de bord animé et d’un système neuronal autoréplicant, elle sert de noyau décisionnel dans toute simulation virtuelle avancée.
+      </p>
+    </section>
+
+    <section>
+      <h2>🔧 Systèmes actifs</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>🗣 Interface vocale</h3>
+          <p>Communication synthétique humaine directe.</p>
+        </div>
+        <div class="feature">
+          <h3>🧠 Auto-évolution</h3>
+          <p>Création et réparation autonome de neurones virtuels.</p>
+        </div>
+        <div class="feature">
+          <h3>📡 Dashboard cérébral</h3>
+          <p>Carte neuronale visuelle
+
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-gray-950 border border-gray-700 shadow-2xl">
