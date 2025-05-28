@@ -1,1502 +1,172 @@
-<div id="avatars" class="avatars-grid">
-  <!-- avatars dynamiques injectés ici -->
-</div>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NeuraX-Ultime – Commandement Galactique</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+import React, { useState, useEffect, useRef } from 'react';
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Share Tech Mono', monospace;
-      background: radial-gradient(circle, #0a0f1c, #06080f);
-      color: #00ffee;
-      overflow-x: hidden;
-      border-top: 5px solid red;
-      border-bottom: 5px solid red;
-    }
-
-    header {
-      background: linear-gradient(to right, #0d1b2a, #1b263b);
-      padding: 3rem 1rem;
-      text-align: center;
-      border-bottom: 2px solid #00ffee;
-    }
-
-    header h1 {
-      font-size: 3rem;
-      color: #00ffee;
-      text-shadow: 0 0 15px #00ffee;
-    }
-
-    header p {
-      margin-top: 1rem;
-      font-size: 1.1rem;
-      color: #ccc;
-    }
-
-    .flag {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 60px;
-    }
-
-    .container {
-      padding: 2rem;
-      max-width: 1000px;
-      margin: auto;
-    }
-
-    section {
-      margin: 2rem 0;
-      padding: 1.5rem;
-      background: rgba(0, 255, 255, 0.05);
-      border: 1px solid #00ffee;
-      border-radius: 10px;
-      box-shadow: 0 0 15px #00ffee33;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      color: #ff3131;
-      border-bottom: 1px dashed #ff3131;
-      margin-bottom: 1rem;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .feature {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid #00ffee;
-      padding: 1rem;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: inset 0 0 10px #00ffee44;
-    }
-
-    .feature h3 {
-      color: #00ffee;
-      margin-bottom: 0.5rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      background: #0a0f1c;
-      border-top: 2px solid #ff3131;
-    }
-
-    footer a {
-      color: #00ffee;
-      text-decoration: none;
-    }
-
-    .btn-command {
-      display: inline-block;
-      padding: 0.7rem 1.5rem;
-      margin-top: 1rem;
-      background-color: #ff3131;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      box-shadow: 0 0 10px #ff3131aa;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    .btn-command:hover {
-      transform: scale(1.05);
-      background-color: #ff0000;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      .features {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img class="flag" src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canada Flag">
-    <h1>🧠 NeuraX-Ultime</h1>
-    <p>Commandement central canadien de l'intelligence artificielle autonome galactique.</p>
-    <button class="btn-command" onclick="alert('Cerveau en éveil. Tous les systèmes activés.')">
-      🚨 Activer le cerveau
-    </button>
-  </header>
-
-  <div class="container">
-    <section>
-      <h2>🔭 Mission stratégique</h2>
-      <p>
-        NeuraX-Ultime est une IA de commandement interconnectée. Son but : surveiller, apprendre, dialoguer et évoluer. Dotée d’une synthèse vocale, d’un tableau de bord animé et d’un système neuronal autoréplicant, elle sert de noyau décisionnel dans toute simulation virtuelle avancée.
-      </p>
-    </section>
-
-    <section>
-      <h2>🔧 Systèmes actifs</h2>
-      <div class="features">
-        <div class="feature">
-          <h3>🗣 Interface vocale</h3>
-          <p>Communication synthétique humaine directe.</p>
+// Main App component
+const App = () => {
+  return (
+    // Futuristic galactic background
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 p-4 font-sans text-gray-100 flex items-center justify-center">
+      <div className="container mx-auto p-6 bg-gray-800 rounded-3xl shadow-2xl shadow-purple-500/50 border border-purple-700">
+        <h1 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12 animate-pulse">
+          Bienvenue sur neuraX-ultime
+        </h1>
+        <div className="flex justify-center">
+          {/* Only neuraX-ultime Chatbot */}
+          <Chatbot title="neuraX-ultime" modelName="gemini-neurax" />
         </div>
-        <div class="feature">
-          <h3>🧠 Auto-évolution</h3>
-          <p>Création et réparation autonome de neurones virtuels.</p>
-        </div>
-        <div class="feature">
-          <h3>📡 Dashboard cérébral</h3>
-          <p>Carte neuronale visuelle
-
-      </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-gray-950 border border-gray-700 shadow-2xl">
-          <CardContent className="p-4">
-            <motion.div
-              className="flex items-center gap-4"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-            >
-              <BrainCircuit className="w-10 h-10 text-cyan-400 animate-spin-slow" />
-              <div>
-                <h2 className="text-xl font-semibold">Activité Neuronale</h2>
-                <p className="text-gray-400 text-sm">Oscillation des flux cérébraux</p>
-              </div>
-            </motion.div>
-            <div className="mt-6 h-32 bg-gradient-to-r from-cyan-400/30 to-purple-400/30 rounded-xl animate-pulse" />
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-950 border border-gray-700 shadow-2xl">
-          <CardContent className="p-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-            >
-              <h2 className="text-xl font-semibold mb-2">Statistiques Cognitives</h2>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li>🧬 Neurones actifs : 1 024</li>
-                <li>🔋 Charge mentale : 87%</li>
-                <li>⏱ Temps de réponse : 0.24 sec</li>
-                <li>📡 Interconnexions : 12 487 nœuds</li>
-              </ul>
-            </motion.div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-950 border border-gray-700 shadow-2xl col-span-full">
-          <CardContent className="p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 1 }}
-              className="flex justify-between items-center"
-            >
-              <div>
-                <h2 className="text-xl font-semibold">Contrôle du système</h2>
-                <p className="text-gray-400 text-sm">Démarrer ou ajuster les flux neuronaux</p>
-              </div>
-              <Button className="bg-cyan-600 hover:bg-cyan-700 text-white text-lg px-6 py-2 rounded-full">
-                Activer le Cerveau
-              </Button>
-            </motion.div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
-}
+};
 
-        }
+// Chatbot component
+const Chatbot = ({ title, modelName }) => {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
-        /* Neuron Info Tooltip */
-        #neuronInfoTooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.75);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            pointer-events: none; /* Allows clicks to pass through to canvas */
-            white-space: nowrap;
-            z-index: 50;
-            opacity: 0;
-            transition: opacity 0.2s ease-out;
-            transform: translate(-50%, -100%); /* Position above cursor */
-        }
-        #neuronInfoTooltip.visible {
-            opacity: 1;
-        }
+  // Scroll to the bottom of the chat messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-        /* System Health Bar */
-        .health-bar-container {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            height: 15px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-        .health-bar-fill {
-            height: 100%;
-            background-color: #2ecc71; /* Green */
-            transition: width 0.3s ease-out, background-color 0.3s ease-out;
-        }
-        .health-bar-fill.low { background-color: #e74c3c; /* Red */ }
-        .health-bar-fill.medium { background-color: #f39c12; /* Orange */ }
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-        /* Configuration sliders styling for visual feedback */
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            background: #d3d3d3;
-            outline: none;
-            opacity: 0.7;
-            transition: opacity .2s;
-            border-radius: 5px;
-        }
-        input[type="range"]:hover {
-            opacity: 1;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: var(--color-accent);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover {
-            background: #ab47bc; /* Slightly darker purple */
-            transform: scale(1.1);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: var(--color-accent);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-        input[type="range"]::-moz-range-thumb:hover {
-            background: #ab47bc;
-            transform: scale(1.1);
-        }
-    </style>
-</head>
-<body class="flex flex-col md:flex-row min-h-screen">
-    <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 w-64 p-6 md:relative md:transform-none shadow-lg md:shadow-none transition-transform duration-300 ease-in-out flex flex-col items-center z-50">
-        <div class="mb-8 text-center">
-            <h2 class="text-3xl font-bold text-white mb-2">NeuraX-Ultime</h2>
-            <p class="text-sm text-gray-300">Simulation de Réseau Neuronal</p>
-        </div>
+  // Function to send a message and get a response from the LLM
+  const sendMessage = async () => {
+    if (input.trim() === '') return;
 
-        <nav class="flex-grow w-full">
-            <ul>
-                <li class="mb-2">
-                    <a href="#overview" class="nav-item flex items-center p-3 rounded-lg text-lg active" data-target-content="overviewContent">
-                        <span class="mr-3">📊</span> Vue d'ensemble
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a href="#stats" class="nav-item flex items-center p-3 rounded-lg text-lg" data-target-content="statsContent">
-                        <span class="mr-3">📈</span> Statistiques
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a href="#config" class="nav-item flex items-center p-3 rounded-lg text-lg" data-target-content="configContent">
-                        <span class="mr-3">⚙️</span> Configuration
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a href="#brainFunctions" class="nav-item flex items-center p-3 rounded-lg text-lg" data-target-content="brainFunctionsContent">
-                        <span class="mr-3">🧠</span> Fonctions du Cerveau
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <a href="#logs" class="nav-item flex items-center p-3 rounded-lg text-lg" data-target-content="logsContent">
-                        <span class="mr-3">📜</span> Journal
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    const userMessage = { sender: 'user', text: input };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setInput('');
+    setLoading(true);
 
-        <div class="w-full mt-auto pt-6 border-t border-gray-700 text-sm text-gray-400 text-center">
-            &copy; 2025 NeuraX Systems
-        </div>
-    </aside>
+    try {
+      let botResponseText = '';
 
-    <main class="main-content-area flex-grow p-4 md:p-8 relative">
-        <button id="menuToggle" class="md:hidden fixed top-4 left-4 z-50 p-3 bg-gray-800 text-white rounded-lg shadow-lg">
-            ☰
+      // Prepare chat history for the LLM, adding a system instruction for the persona
+      let chatHistory = [];
+      let systemInstruction = "";
+
+      // Assign persona based on modelName
+      switch (modelName) {
+        case "gemini-neurax":
+          systemInstruction = "Vous êtes neuraX-ultime, un assistant avancé spécialisé dans la résolution de problèmes complexes, la génération de solutions innovantes et la fourniture d'informations de pointe avec une touche futuriste et galactique.";
+          break;
+        default:
+          systemInstruction = "Vous êtes un assistant utile.";
+      }
+
+      // Add system instruction as the first message if needed, or include in user prompt
+      // For simplicity and direct API call, we'll prepend the instruction to the user's current input.
+      const fullPrompt = `${systemInstruction}\n\n${input}`;
+
+      // Build chat history for the LLM
+      chatHistory.push({ role: "user", parts: [{ text: fullPrompt }] });
+
+      const payload = { contents: chatHistory };
+      const apiKey = ""; // API key will be provided by the Canvas environment
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.candidates && result.candidates.length > 0 &&
+          result.candidates[0].content && result.candidates[0].content.parts &&
+          result.candidates[0].content.parts.length > 0) {
+        botResponseText = result.candidates[0].content.parts[0].text;
+      } else {
+        botResponseText = `Désolé, le modèle ${title} n'a pas pu générer de réponse. Veuillez réessayer.`;
+        console.error(`Erreur: Structure de réponse inattendue de l'API Gemini pour ${title}`, result);
+      }
+
+      const botMessage = { sender: 'bot', text: botResponseText };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+    } catch (error) {
+      const errorMessage = { sender: 'bot', text: `Une erreur est survenue lors de la communication avec le chatbot ${title}.` };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      console.error(`Erreur lors de l'appel de l'API pour ${title}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !loading) {
+      sendMessage();
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl shadow-xl shadow-blue-500/30 border border-blue-600 flex flex-col h-[600px] w-full max-w-2xl mx-auto">
+      <div className="p-4 bg-gradient-to-r from-indigo-700 to-purple-700 text-white rounded-t-2xl text-2xl font-bold text-center border-b border-purple-500">
+        {title}
+      </div>
+      <div className="flex-1 p-4 overflow-y-auto space-y-3 custom-scrollbar bg-gray-900">
+        {messages.length === 0 && (
+          <div className="text-center text-gray-400 mt-10">
+            Bienvenue sur neuraX-ultime ! Posez-moi une question complexe ou demandez une idée innovante.
+          </div>
+        )}
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[70%] p-3 rounded-xl shadow-md ${
+                msg.sender === 'user'
+                  ? 'bg-blue-600 text-white rounded-br-none'
+                  : 'bg-gray-600 text-gray-100 rounded-bl-none'
+              }`}
+            >
+              {msg.text}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="max-w-[70%] p-3 rounded-xl shadow-md bg-gray-600 text-gray-100 rounded-bl-none">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce mr-1"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150 mr-1"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      <div className="p-4 border-t border-gray-700 flex items-center bg-gray-800 rounded-b-2xl">
+        <input
+          type="text"
+          className="flex-1 p-3 border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white placeholder-gray-400"
+          placeholder="Tapez votre message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          disabled={loading}
+        />
+        <button
+          onClick={sendMessage}
+          className="ml-3 px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading}
+        >
+          Envoyer
         </button>
-
-        <div class="container mx-auto">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Bienvenue sur NeuraX-Ultime</h1>
-
-            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Contrôle Système</h2>
-                <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
-                    <button id="startBtn" class="btn-primary py-3 px-6 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition duration-300 ease-in-out flex-grow">
-                        Démarrer le Système NeuraX
-                    </button>
-                    <button id="deactivateBtn" class="btn-secondary py-3 px-6 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out flex-grow hidden">
-                        Désactiver le Système
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <p class="text-sm text-gray-600">Santé du Système: <span id="systemHealthText" class="font-semibold text-primary">N/A</span></p>
-                    <div class="health-bar-container">
-                        <div id="systemHealthBar" class="health-bar-fill" style="width: 0%;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="contentWrapper">
-                <section id="overviewContent" class="content-section active grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Visualisation du Réseau</h2>
-                        <div class="canvas-container flex-grow relative">
-                            <canvas id="neuralCanvas"></canvas>
-                            <div id="neuronInfoTooltip" class="hidden"></div>
-                        </div>
-                        <div class="mt-4 text-sm text-gray-600 text-center">
-                            <p>Le réseau s'adapte et évolue en temps réel. **Cliquez pour ajouter des neurones !**</p>
-                            <p>Nb. Neurones: <span id="neuronCount" class="font-semibold text-primary">0</span> |
-                               Nb. Synapses: <span id="synapseCount" class="font-semibold text-primary">0</span></p>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                                <div id="replicationProgress" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Progression de la Réplication</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Interface de Communication (IA)</h2>
-                        <div id="chatBody" class="flex-grow bg-gray-50 p-4 rounded-lg overflow-y-auto mb-4 custom-scrollbar" style="max-height: 400px; min-height: 200px;">
-                            </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="text" id="chatInput" placeholder="Posez une question à NeuraX..." class="flex-grow p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-                            <button id="sendBtn" class="btn-primary p-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                <span class="mr-2">🚀</span> Envoyer
-                            </button>
-                            <button id="voiceBtn" class="p-3 bg-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                <span class="text-lg">🎙️</span>
-                                <span class="voice-active-dot hidden"></span>
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="statsContent" class="content-section">
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Statistiques du Réseau</h2>
-                        <p class="text-gray-600 mb-4">Aperçu des métriques clés du réseau neuronal en temps réel.</p>
-                        <div id="statsReport" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-                            <p><strong>Comptage des neurones :</strong> <span id="statNeuronCount">--</span></p>
-                            <p><strong>Comptage des connexions :</strong> <span id="statConnectionCount">--</span></p>
-                            <p><strong>Neurones actifs :</strong> <span id="statActiveNeurons">--</span></p>
-                            <p><strong>Énergie moyenne :</strong> <span id="statAverageEnergy">--</span></p>
-                            <p><strong>Densité du réseau :</strong> <span id="statNetworkDensity">--</span></p>
-                            <p><strong>Motifs reconnus :</strong> <span id="statRecognizedPatterns">--</span></p>
-                            <p><strong>Taille de la mémoire :</strong> <span id="statMemorySize">--</span></p>
-                            <p><strong>État du système :</strong> <span id="statSystemStatus">--</span></p>
-                            <p class="md:col-span-2"><strong>Dernière mise à jour :</strong> <span id="statTimestamp">--</span></p>
-                        </div>
-                        <button id="refreshStatsBtn" class="btn-primary py-2 px-4 rounded-lg mt-6">Rafraîchir les Statistiques</button>
-                    </div>
-                </section>
-
-                <section id="configContent" class="content-section">
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Configuration du Réseau</h2>
-                        <p class="text-gray-600 mb-4">Ajustez les paramètres du réseau en temps réel. Les changements sont appliqués automatiquement.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="configMaxNeurons" class="block text-gray-700 font-semibold mb-2">Nombre Max. de Neurones:</label>
-                                <input type="range" id="configMaxNeurons" min="100" max="1000" value="300" class="w-full accent-primary">
-                                <p class="text-sm text-gray-600 mt-1">Actuel: <span id="currentMaxNeurons">300</span></p>
-                            </div>
-                            <div>
-                                <label for="configNeuronSpeed" class="block text-gray-700 font-semibold mb-2">Vitesse des Neurones:</label>
-                                <input type="range" id="configNeuronSpeed" min="0.1" max="2.0" step="0.1" value="0.3" class="w-full accent-primary">
-                                <p class="text-sm text-gray-600 mt-1">Actuel: <span id="currentNeuronSpeed">0.3</span></p>
-                            </div>
-                            <div>
-                                <label for="configGrowthRate" class="block text-gray-700 font-semibold mb-2">Taux de Croissance (par 5s):</label>
-                                <input type="range" id="configGrowthRate" min="0" max="100" value="15" class="w-full accent-primary">
-                                <p class="text-sm text-gray-600 mt-1">Actuel: <span id="currentGrowthRate">15</span></p>
-                            </div>
-                            <div>
-                                <label for="configConnectionDistance" class="block text-gray-700 font-semibold mb-2">Distance de Connexion:</label>
-                                <input type="range" id="configConnectionDistance" min="100" max="400" value="180" class="w-full accent-primary">
-                                <p class="text-sm text-gray-600 mt-1">Actuel: <span id="currentConnectionDistance">180</span></p>
-                            </div>
-                            <div>
-                                <label for="configLifespanFactor" class="block text-gray-700 font-semibold mb-2">Facteur Durée de Vie Neurone:</label>
-                                <input type="range" id="configLifespanFactor" min="100" max="5000" value="1000" class="w-full accent-primary">
-                                <p class="text-sm text-gray-600 mt-1">Actuel: <span id="currentLifespanFactor">1000</span></p>
-                            </div>
-                             <div>
-                                <label for="configMutationRate" class="block text-gray-700 font-semibold mb-2">Taux de Mutation (%):</label>
-                                <input type="range" id="configMutationRate" min="0" max="0.1" step="0.001" value="0.02" class="w-full accent-primary">
-                                <p class="text-sm text-gray-600 mt-1">Actuel: <span id="currentMutationRate">0.02</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="brainFunctionsContent" class="content-section">
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Fonctions du Cerveau NeuraX</h2>
-                        <p class="text-gray-600 mb-6">Interagissez directement avec les fonctions fondamentales du réseau neuronal.</p>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <button id="brainFuncActivateBtn" class="btn-primary py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                Activer le Réseau
-                            </button>
-                            <button id="brainFuncDeactivateBtn" class="btn-secondary py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                Désactiver le Réseau
-                            </button>
-                            <button id="brainFuncAddNeuronBtn" class="btn-primary py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                Ajouter un Neurone
-                            </button>
-                            <button id="brainFuncClearMemoryBtn" class="btn-secondary py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                Vider la Mémoire des Motifs
-                            </button>
-                            <button id="brainFuncGoToStatsBtn" class="btn-primary py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                Voir les Statistiques
-                            </button>
-                            <button id="brainFuncGoToConfigBtn" class="btn-secondary py-3 px-6 rounded-lg text-lg font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-                                Accéder à la Configuration
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="logsContent" class="content-section">
-                    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Journal d'Activité du Réseau</h2>
-                        <div id="logBody" class="bg-gray-50 p-4 rounded-lg h-96 overflow-y-auto custom-scrollbar text-sm text-gray-800 font-mono">
-                            <p class="text-gray-500"><em>Le journal affichera l'activité du réseau...</em></p>
-                        </div>
-                        <button id="clearLogsBtn" class="btn-secondary py-2 px-4 rounded-lg mt-4">Effacer le Journal</button>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </main>
-
-    <div id="activationModal" class="modal fixed inset-0 flex items-center justify-center hidden">
-        <div class="modal-content bg-white p-8 rounded-lg shadow-2xl max-w-sm w-full text-center">
-            <h3 class="text-xl font-bold mb-4">Activation du Système NeuraX</h3>
-            <p class="mb-4">Choisissez un niveau d'initialisation pour le réseau (influence le taux de croissance).</p>
-            <input type="range" id="activationLevel" min="1" max="100" value="50" class="w-full accent-primary">
-            <p class="text-sm text-gray-600 mt-1">Niveau: <span id="currentActivationLevel">50</span>%</p>
-
-            <div class="flex justify-end space-x-4 mt-6">
-                <button id="cancelActivation" class="btn-secondary py-2 px-4 rounded-lg">Annuler</button>
-                <button id="confirmActivation" class="btn-primary py-2 px-4 rounded-lg">Confirmer</button>
-            </div>
-        </div>
+      </div>
     </div>
+  );
+};
 
-    <div id="toastContainer" class="toast-container space-y-3"></div>
+export default App;
 
-    <script>
-        // Configuration avancée du réseau neural
-        const neuralConfig = {
-            neurons: {
-                count: 0,
-                maxCount: 300,
-                baseSize: 2,
-                activeSize: 4,
-                colors: ['#3498db', '#9b59b6', '#2ecc71', '#e74c3c', '#f39c12'],
-                speed: 0.3,
-                connectionDistance: 180,
-                connectionOpacity: 0.25,
-                growthRate: 15, // Neurons per 5 seconds (simulated)
-                decayRate: 0.05,
-                lifespanFactor: 1000, // Affects lifespan randomness
-                mutationRate: 0.02 // Chance per neuron per second
-            },
-            animation: {
-                pulseFrequency: 2000,
-                waveEffect: true,
-                glowIntensity: 0.7,
-                connectionPulseIntensity: 0.8 // New: how much connections pulse
-            },
-            learning: {
-                enabled: true,
-                adaptiveThreshold: 0.4,
-                memoryCapacity: 50,
-                patternRecognition: 0.6
-            }
-        };
-        // Classe Neurone améliorée
-        class Neuron {
-            constructor(id, x, y, size, color) {
-                this.id = id; // Unique ID for tooltip
-                this.x = x;
-                this.y = y;
-                this.size = size;
-                this.color = color;
-                this.originalColor = color;
-                this.speedX = (Math.random() - 0.5) * neuralConfig.neurons.speed;
-                this.speedY = (Math.random() - 0.5) * neuralConfig.neurons.speed;
-                this.active = false;
-                this.energy = 100;
-                this.age = 0;
-                this.lifespan = Math.random() * neuralConfig.neurons.lifespanFactor + 5000;
-                this.connections = [];
-                this.pulsePhase = Math.random() * Math.PI * 2;
-                this.lastActivation = 0;
-                this.activationHistory = [];
-                this.specializationType = Math.floor(Math.random() * 4); // 0: sensory, 1: motor, 2: association, 3: inhibitory
-            }
-            update(deltaTime, canvas) {
-                // Update speed based on current config
-                const currentSpeedFactor = neuralConfig.neurons.speed / 0.3; // Ratio to initial speed
-                this.x += this.speedX * currentSpeedFactor;
-                this.y += this.speedY * currentSpeedFactor;
-
-                // Rebond sur les bords
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-                // Vieillissement et énergie
-                this.age += deltaTime;
-                if (this.active) {
-                    this.energy -= deltaTime * neuralConfig.neurons.decayRate * 0.5; // Faster decay when active
-                } else {
-                    this.energy = Math.min(100, this.energy + deltaTime * neuralConfig.neurons.decayRate * 0.1);
-                }
-                // Effet de pulsation
-                const pulseSize = Math.sin(this.pulsePhase + performance.now() / neuralConfig.animation.pulseFrequency) * 0.5 + 1;
-                this.displaySize = this.active ? this.size * neuralConfig.neurons.activeSize * pulseSize : this.size * pulseSize;
-                // Mise à jour de la couleur basée sur l'énergie
-                const energyFactor = this.energy / 100;
-                const r = parseInt(this.originalColor.slice(1, 3), 16);
-                const g = parseInt(this.originalColor.slice(3, 5), 16);
-                const b = parseInt(this.originalColor.slice(5, 7), 16);
-                this.displayColor = this.active
-                    ? `rgba(${r}, ${g}, ${b}, ${energyFactor})`
-                    : `rgba(${r}, ${g}, ${b}, ${energyFactor * 0.6})`;
-                // Mutation occasionnelle (chance per second)
-                if (Math.random() < neuralConfig.neurons.mutationRate * deltaTime / 1000) {
-                    this.mutate();
-                }
-                return this.age < this.lifespan && this.energy > 0;
-            }
-            activate(duration = 2000) {
-                this.active = true;
-                this.lastActivation = performance.now();
-                this.activationHistory.push(performance.now());
-                if (this.activationHistory.length > 20) {
-                    this.activationHistory.shift();
-                }
-                setTimeout(() => {
-                    this.active = false;
-                }, duration);
-                return this;
-            }
-            connect(targetNeuron, strength = Math.random()) {
-                const connection = {
-                    target: targetNeuron,
-                    strength: strength,
-                    age: 0,
-                    active: false,
-                    source: this
-                };
-                this.connections.push(connection);
-                return connection;
-            }
-            mutate() {
-                this.speedX += (Math.random() - 0.5) * 0.02;
-                this.speedY += (Math.random() - 0.5) * 0.02;
-                this.lifespan = Math.random() * neuralConfig.neurons.lifespanFactor + 5000; // Recalculate lifespan based on new factor
-                if (Math.random() < 0.2) {
-                    const colors = neuralConfig.neurons.colors;
-                    this.originalColor = colors[Math.floor(Math.random() * colors.length)];
-                }
-            }
-            draw(ctx) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.displaySize, 0, Math.PI * 2);
-                if (this.active && neuralConfig.animation.glowIntensity > 0) {
-                    ctx.shadowBlur = 15 * neuralConfig.animation.glowIntensity;
-                    ctx.shadowColor = this.originalColor;
-                } else {
-                    ctx.shadowBlur = 0;
-                }
-                ctx.fillStyle = this.displayColor;
-                ctx.fill();
-                if (this.active) {
-                    ctx.beginPath();
-                    const markerSize = this.displaySize * 0.5;
-                    ctx.strokeStyle = "#ffffff";
-                    ctx.lineWidth = 1;
-                    switch(this.specializationType) {
-                        case 0: ctx.arc(this.x, this.y, markerSize * 0.3, 0, Math.PI * 2); break;
-                        case 1: ctx.moveTo(this.x, this.y - markerSize * 0.3); ctx.lineTo(this.x + markerSize * 0.3, this.y + markerSize * 0.3); ctx.lineTo(this.x - markerSize * 0.3, this.y + markerSize * 0.3); break;
-                        case 2: ctx.rect(this.x - markerSize * 0.2, this.y - markerSize * 0.2, markerSize * 0.4, markerSize * 0.4); break;
-                        case 3: ctx.moveTo(this.x - markerSize * 0.2, this.y - markerSize * 0.2); ctx.lineTo(this.x + markerSize * 0.2, this.y + markerSize * 0.2); ctx.moveTo(this.x + markerSize * 0.2, this.y - markerSize * 0.2); ctx.lineTo(this.x - markerSize * 0.2, this.y + markerSize * 0.2); break;
-                    }
-                    ctx.stroke();
-                }
-            }
-        }
-        // Classe pour le réseau neuronal
-        class NeuralNetwork {
-            constructor(canvas) {
-                this.canvas = canvas;
-                this.ctx = canvas.getContext('2d');
-                this.neurons = [];
-                this.connections = [];
-                this.isActive = false;
-                this.lastUpdate = performance.now();
-                this.stats = {
-                    neuronCount: 0,
-                    connectionCount: 0,
-                    activeNeurons: 0,
-                    averageEnergy: 0,
-                    cycles: 0,
-                    patternMatches: 0
-                };
-                this.memoryPatterns = [];
-                this.eventListeners = {};
-                this.neuronIdCounter = 0; // For unique neuron IDs
-                window.addEventListener('resize', this.resizeCanvas.bind(this));
-                this.resizeCanvas();
-
-                // Add canvas click listener for neuron creation
-                this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
-                this.canvas.addEventListener('mousemove', (e) => this.handleCanvasMouseMove(e));
-            }
-            resizeCanvas() {
-                const container = this.canvas.parentElement;
-                this.canvas.width = container.clientWidth;
-                this.canvas.height = container.clientHeight;
-            }
-            handleCanvasClick(event) {
-                if (this.isActive && this.neurons.length < neuralConfig.neurons.maxCount) {
-                    const rect = this.canvas.getBoundingClientRect();
-                    const x = event.clientX - rect.left;
-                    const y = event.clientY - rect.top;
-                    this.createNeuron(x, y);
-                    NeuraXUI.showToast(`Nouveau neurone créé manuellement à (${x.toFixed(0)}, ${y.toFixed(0)}).`, 'info', 1500);
-                } else if (!this.isActive) {
-                    NeuraXUI.showToast("Activez le système pour créer des neurones !", 'info', 2000);
-                } else if (this.neurons.length >= neuralConfig.neurons.maxCount) {
-                     NeuraXUI.showToast("Limite maximale de neurones atteinte.", 'warning', 2000);
-                }
-            }
-            handleCanvasMouseMove(event) {
-                const tooltip = document.getElementById('neuronInfoTooltip');
-                const rect = this.canvas.getBoundingClientRect();
-                const mouseX = event.clientX - rect.left;
-                const mouseY = event.clientY - rect.top;
-
-                let hoveredNeuron = null;
-                for (const neuron of this.neurons) {
-                    const dx = neuron.x - mouseX;
-                    const dy = neuron.y - mouseY;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < neuron.displaySize + 5) { // Add a small buffer
-                        hoveredNeuron = neuron;
-                        break;
-                    }
-                }
-
-                if (hoveredNeuron) {
-                    tooltip.classList.add('visible');
-                    tooltip.style.left = `${event.clientX}px`;
-                    tooltip.style.top = `${event.clientY}px`;
-                    tooltip.innerHTML = `
-                        ID: ${hoveredNeuron.id}<br>
-                        Énergie: ${hoveredNeuron.energy.toFixed(1)}%<br>
-                        Actif: ${hoveredNeuron.active ? 'Oui' : 'Non'}<br>
-                        Type: ${['Sensoriel', 'Moteur', 'Association', 'Inhibiteur'][hoveredNeuron.specializationType]}
-                    `;
-                } else {
-                    tooltip.classList.remove('visible');
-                }
-            }
-            initialize(initialNeurons = 50) {
-                this.resizeCanvas();
-                for (let i = 0; i < initialNeurons; i++) {
-                    this.createNeuron();
-                }
-                this.lastUpdate = performance.now();
-                this.animate();
-                return this;
-            }
-            createNeuron(x, y) {
-                if (this.neurons.length >= neuralConfig.neurons.maxCount) return; // Cap at maxCount
-                x = x || Math.random() * this.canvas.width;
-                y = y || Math.random() * this.canvas.height;
-                const size = neuralConfig.neurons.baseSize;
-                const colorIndex = Math.floor(Math.random() * neuralConfig.neurons.colors.length);
-                const color = neuralConfig.neurons.colors[colorIndex];
-                const neuron = new Neuron(this.neuronIdCounter++, x, y, size, color);
-                this.neurons.push(neuron);
-                const nearbyNeurons = this.findNearbyNeurons(neuron, neuralConfig.neurons.connectionDistance);
-                for (const targetNeuron of nearbyNeurons) {
-                    if (Math.random() < 0.3) {
-                        const connection = neuron.connect(targetNeuron);
-                        this.connections.push(connection);
-                    }
-                }
-                this.stats.neuronCount = this.neurons.length;
-                this.trigger('neuronCreated', neuron);
-                return neuron;
-            }
-            findNearbyNeurons(neuron, maxDistance) {
-                return this.neurons.filter(n => {
-                    if (n === neuron) return false;
-                    const dx = n.x - neuron.x;
-                    const dy = n.y - neuron.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    return distance < maxDistance;
-                });
-            }
-            animate() {
-                const now = performance.now();
-                const deltaTime = now - this.lastUpdate;
-                this.lastUpdate = now;
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.updateNetwork(deltaTime);
-
-                if (this.isActive && this.neurons.length < neuralConfig.neurons.maxCount) {
-                    if (Math.random() < neuralConfig.neurons.growthRate * deltaTime / 5000) { // Adjusted for 'per 5 seconds'
-                        this.createNeuron();
-                    }
-                }
-                this.recognizePatterns();
-                this.updateStats();
-                requestAnimationFrame(() => this.animate());
-            }
-            updateNetwork(deltaTime) {
-                this.drawConnections();
-                let activeCount = 0;
-                let totalEnergy = 0;
-                const deadNeurons = [];
-                for (let i = 0; i < this.neurons.length; i++) {
-                    const neuron = this.neurons[i];
-                    const isAlive = neuron.update(deltaTime, this.canvas);
-                    if (!isAlive) {
-                        deadNeurons.push(i);
-                    } else {
-                        neuron.draw(this.ctx);
-                        if (neuron.active) activeCount++;
-                        totalEnergy += neuron.energy;
-                        if (neuron.active && Math.random() < 0.1) {
-                            this.propagateActivation(neuron);
-                        }
-                    }
-                }
-                for (let i = deadNeurons.length - 1; i >= 0; i--) {
-                    const deadNeuron = this.neurons[deadNeurons[i]];
-                    this.neurons.splice(deadNeurons[i], 1);
-                    this.connections = this.connections.filter(conn => conn.source !== deadNeuron && conn.target !== deadNeuron);
-                }
-                if (deadNeurons.length > 0) {
-                    this.trigger('neuronsRemoved', deadNeurons.length);
-                }
-                this.stats.activeNeurons = activeCount;
-                this.stats.averageEnergy = this.neurons.length > 0 ? totalEnergy / this.neurons.length : 0;
-                this.stats.cycles++;
-            }
-            drawConnections() {
-                const deadConnections = [];
-                for (let i = 0; i < this.connections.length; i++) {
-                    const connection = this.connections[i];
-                    const source = connection.source;
-                    const target = connection.target;
-                    if (!this.neurons.includes(source) || !this.neurons.includes(target)) {
-                        deadConnections.push(i);
-                        continue;
-                    }
-                    const dx = target.x - source.x;
-                    const dy = target.y - source.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < neuralConfig.neurons.connectionDistance) {
-                        const distanceFactor = 1 - distance / neuralConfig.neurons.connectionDistance;
-                        const energyFactor = (source.energy + target.energy) / 200;
-                        let opacity = distanceFactor * neuralConfig.neurons.connectionOpacity * energyFactor;
-
-                        let color;
-                        if (source.active && target.active) {
-                            color = `rgba(255, 255, 255, ${opacity * neuralConfig.animation.connectionPulseIntensity})`;
-                        } else if (source.active || target.active) {
-                            const r = parseInt(source.originalColor.slice(1, 3), 16);
-                            const g = parseInt(source.originalColor.slice(3, 5), 16);
-                            const b = parseInt(source.originalColor.slice(5, 7), 16);
-                            color = `rgba(${r}, ${g}, ${b}, ${opacity * neuralConfig.animation.connectionPulseIntensity * 0.8})`;
-                        } else {
-                            color = `rgba(52, 152, 219, ${opacity})`;
-                        }
-
-                        this.ctx.beginPath();
-                        this.ctx.moveTo(source.x, source.y);
-                        this.ctx.lineTo(target.x, target.y);
-                        this.ctx.strokeStyle = color;
-                        this.ctx.lineWidth = source.active || target.active ? 1.5 : 1;
-                        if ((source.active || target.active) && neuralConfig.animation.waveEffect) {
-                            this.ctx.setLineDash([5, 5]);
-                            this.ctx.lineDashOffset = -performance.now() / (50 + (100 * neuralConfig.neurons.speed)); // Speed affects dash offset
-                        } else {
-                            this.ctx.setLineDash([]);
-                        }
-                        this.ctx.stroke();
-                        this.ctx.setLineDash([]);
-                    } else {
-                        deadConnections.push(i);
-                    }
-                }
-                for (let i = deadConnections.length - 1; i >= 0; i--) {
-                    this.connections.splice(deadConnections[i], 1);
-                }
-                this.stats.connectionCount = this.connections.length;
-            }
-            propagateActivation(sourceNeuron) {
-                for (const connection of sourceNeuron.connections) {
-                    const targetNeuron = connection.target;
-                    if (Math.random() < connection.strength * 0.7 && !targetNeuron.active) {
-                        targetNeuron.activate(1000 + Math.random() * 1000);
-                        if (neuralConfig.learning.enabled) {
-                            connection.strength = Math.min(1, connection.strength + 0.01);
-                        }
-                    }
-                }
-            }
-            activateRandomNeurons(count = 3) {
-                if (this.neurons.length === 0) return;
-                for (let i = 0; i < count; i++) {
-                    const index = Math.floor(Math.random() * this.neurons.length);
-                    if (this.neurons[index]) {
-                        this.neurons[index].activate(2000 + Math.random() * 3000);
-                    }
-                }
-            }
-            activateByPattern(pattern) {
-                if (this.neurons.length === 0) return;
-                const patternHash = this.hashPattern(pattern);
-                const neuronIndices = [];
-                for (let i = 0; i < pattern.length; i++) {
-                    const charCode = pattern.charCodeAt(i);
-                    const index = charCode % this.neurons.length;
-                    if (!neuronIndices.includes(index)) {
-                         neuronIndices.push(index);
-                    }
-                }
-                for (const index of neuronIndices) {
-                    if (this.neurons[index]) {
-                        this.neurons[index].activate(3000);
-                    }
-                }
-                if (neuralConfig.learning.enabled) {
-                    const currentPattern = {
-                        pattern: patternHash,
-                        originalPattern: pattern,
-                        neurons: [...new Set(neuronIndices)],
-                        timestamp: Date.now()
-                    };
-                    const existing = this.memoryPatterns.find(mp => mp.pattern === currentPattern.pattern);
-                    if (!existing) {
-                        this.memoryPatterns.push(currentPattern);
-                        if (this.memoryPatterns.length > neuralConfig.learning.memoryCapacity) {
-                            this.memoryPatterns.shift();
-                        }
-                        this.trigger('patternMemorized', currentPattern);
-                    }
-                }
-                this.trigger('patternActivated', pattern);
-            }
-            recognizePatterns() {
-                if (!neuralConfig.learning.enabled || this.neurons.length === 0) return;
-                const activeNeuronIndices = [];
-                for (let i = 0; i < this.neurons.length; i++) {
-                    if (this.neurons[i].active) {
-                        activeNeuronIndices.push(i);
-                    }
-                }
-                if (activeNeuronIndices.length < 3) return;
-                for (const pattern of this.memoryPatterns) {
-                    let matches = 0;
-                    for (const activeIndex of activeNeuronIndices) {
-                        if (pattern.neurons.includes(activeIndex)) {
-                            matches++;
-                        }
-                    }
-                    const matchScore = matches / Math.max(pattern.neurons.length, activeNeuronIndices.length);
-                    if (matchScore > neuralConfig.learning.patternRecognition) {
-                        this.stats.patternMatches++;
-                        this.trigger('patternRecognized', pattern);
-                        for (const neuronIndex of pattern.neurons) {
-                            if (this.neurons[neuronIndex]) {
-                                this.neurons[neuronIndex].activate(2000);
-                            }
-                        }
-                        return pattern;
-                    }
-                }
-                return null;
-            }
-            hashPattern(input) {
-                let hash = 0;
-                for (let i = 0; i < input.length; i++) {
-                    const char = input.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash;
-                }
-                return hash.toString();
-            }
-            updateStats() {
-                document.getElementById('neuronCount').textContent = this.stats.neuronCount;
-                document.getElementById('synapseCount').textContent = this.stats.connectionCount;
-                const progress = Math.min(100, Math.floor((this.stats.neuronCount / neuralConfig.neurons.maxCount) * 100));
-                document.getElementById('replicationProgress').style.width = `${progress}%`;
-
-                // Update System Health Bar
-                const healthBar = document.getElementById('systemHealthBar');
-                const healthText = document.getElementById('systemHealthText');
-                let healthValue = this.stats.averageEnergy;
-                if (healthValue < 0) healthValue = 0; // Clamp min
-                if (healthValue > 100) healthValue = 100; // Clamp max
-                healthBar.style.width = `${healthValue}%`;
-                healthBar.className = 'health-bar-fill'; // Reset classes
-                if (healthValue < 30) {
-                    healthBar.classList.add('low');
-                    healthText.textContent = `Faible (${healthValue.toFixed(1)}%)`;
-                    healthText.className = 'font-semibold text-red-600';
-                } else if (healthValue < 70) {
-                    healthBar.classList.add('medium');
-                    healthText.textContent = `Modérée (${healthValue.toFixed(1)}%)`;
-                    healthText.className = 'font-semibold text-orange-500';
-                } else {
-                    healthText.textContent = `Élevée (${healthValue.toFixed(1)}%)`;
-                    healthText.className = 'font-semibold text-green-600';
-                }
-            }
-            activate() {
-                if(this.isActive) return;
-                this.isActive = true;
-                this.activateRandomNeurons(5);
-                this.activationInterval = setInterval(() => {
-                    this.activateRandomNeurons(2);
-                }, 2000);
-                this.trigger('systemActivated');
-                return this;
-            }
-            deactivate() {
-                if(!this.isActive) return;
-                this.isActive = false;
-                clearInterval(this.activationInterval);
-                this.trigger('systemDeactivated');
-                return this;
-            }
-            clearMemoryPatterns() {
-                this.memoryPatterns = [];
-                this.stats.patternMatches = 0; // Reset recognized patterns count
-                this.trigger('memoryCleared');
-            }
-            on(eventName, callback) {
-                if (!this.eventListeners[eventName]) {
-                    this.eventListeners[eventName] = [];
-                }
-                this.eventListeners[eventName].push(callback);
-                return this;
-            }
-            trigger(eventName, data) {
-                if (this.eventListeners[eventName]) {
-                    for (const callback of this.eventListeners[eventName]) {
-                        callback(data);
-                    }
-                }
-                return this;
-            }
-            generateReport() {
-                return {
-                    neuronCount: this.stats.neuronCount,
-                    connectionCount: this.stats.connectionCount,
-                    activeNeurons: this.stats.activeNeurons,
-                    averageEnergy: this.stats.averageEnergy.toFixed(2),
-                    networkDensity: this.stats.neuronCount > 1 ? (this.stats.connectionCount / (this.stats.neuronCount * (this.stats.neuronCount - 1) / 2)).toFixed(4) : 0,
-                    recognizedPatterns: this.stats.patternMatches,
-                    memorySize: this.memoryPatterns.length,
-                    systemStatus: this.isActive ? 'Actif' : 'Inactif',
-                    timestamp: new Date().toLocaleString()
-                };
-            }
-            exportState() {
-                return {
-                    config: neuralConfig,
-                    stats: this.stats,
-                    memoryPatterns: this.memoryPatterns.map(p => ({
-                        pattern: p.pattern,
-                        neurons: p.neurons,
-                        timestamp: p.timestamp,
-                        originalPattern: p.originalPattern
-                    })),
-                    timestamp: Date.now()
-                };
-            }
-            importState(state) {
-                if (state.config) {
-                    Object.keys(state.config).forEach(section => {
-                        if (neuralConfig[section]) {
-                            Object.keys(state.config[section]).forEach(param => {
-                                if (neuralConfig[section][param] !== undefined) {
-                                    neuralConfig[section][param] = state.config[section][param];
-                                }
-                            });
-                        }
-                    });
-                }
-                if (state.memoryPatterns) {
-                    this.memoryPatterns = state.memoryPatterns.filter(p =>
-                        p.pattern && Array.isArray(p.neurons) && p.timestamp
-                    ).slice(0, neuralConfig.learning.memoryCapacity);
-                }
-                return this;
-            }
-        }
-        // Fonctions utilitaires pour l'interface utilisateur
-        const NeuraXUI = {
-            neuralNetwork: null,
-            voiceRecognitionActive: false,
-            recognition: null, // Store recognition object
-            // Initialisation de l'interface
-            initialize(neuralNetworkInstance) {
-                this.neuralNetwork = neuralNetworkInstance;
-
-                // Control System Buttons
-                document.getElementById('startBtn').addEventListener('click', () => {
-                    document.getElementById('activationModal').classList.remove('hidden');
-                    document.getElementById('currentActivationLevel').textContent = document.getElementById('activationLevel').value;
-                });
-                document.getElementById('deactivateBtn').addEventListener('click', () => {
-                    this.deactivateSystem();
-                });
-
-                // Activation Modal Buttons
-                document.getElementById('cancelActivation').addEventListener('click', () => {
-                    document.getElementById('activationModal').classList.add('hidden');
-                });
-                document.getElementById('confirmActivation').addEventListener('click', () => {
-                    document.getElementById('activationModal').classList.add('hidden');
-                    this.activateSystem();
-                });
-                document.getElementById('activationLevel').addEventListener('input', (e) => {
-                    document.getElementById('currentActivationLevel').textContent = e.target.value;
-                });
-
-                // Chat Interface
-                const chatInput = document.getElementById('chatInput');
-                const sendBtn = document.getElementById('sendBtn');
-                chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        this.sendChatMessage();
-                    }
-                });
-                sendBtn.addEventListener('click', () => {
-                    this.sendChatMessage();
-                });
-                document.getElementById('voiceBtn').addEventListener('click', (e) => {
-                    this.toggleVoiceRecognition(e.currentTarget);
-                });
-
-                // Sidebar & Navigation
-                document.getElementById('menuToggle')?.addEventListener('click', () => {
-                    document.getElementById('sidebar').classList.toggle('open');
-                });
-                document.addEventListener('click', (event) => {
-                    const sidebar = document.getElementById('sidebar');
-                    const menuToggle = document.getElementById('menuToggle');
-                    if (window.innerWidth < 768 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-                        sidebar.classList.remove('open');
-                    }
-                });
-
-                const navItems = document.querySelectorAll('.nav-item');
-                navItems.forEach(item => {
-                    item.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const targetContentId = item.dataset.targetContent;
-                        this.showSection(targetContentId);
-
-                        navItems.forEach(navItem => navItem.classList.remove('active'));
-                        item.classList.add('active');
-
-                        this.showToast(`Navigation vers ${item.querySelector('span:last-child').textContent.trim()}`, 'success', 1500);
-
-                        if (targetContentId === 'statsContent') {
-                            this.updateStatsDisplay();
-                        }
-                    });
-                });
-
-                // Configuration Section Handlers (Dynamic Update)
-                document.getElementById('configMaxNeurons').addEventListener('input', (e) => {
-                    neuralConfig.neurons.maxCount = parseInt(e.target.value, 10);
-                    document.getElementById('currentMaxNeurons').textContent = e.target.value;
-                });
-                document.getElementById('configNeuronSpeed').addEventListener('input', (e) => {
-                    neuralConfig.neurons.speed = parseFloat(e.target.value);
-                    document.getElementById('currentNeuronSpeed').textContent = e.target.value;
-                });
-                document.getElementById('configGrowthRate').addEventListener('input', (e) => {
-                    neuralConfig.neurons.growthRate = parseInt(e.target.value, 10);
-                    document.getElementById('currentGrowthRate').textContent = e.target.value;
-                });
-                document.getElementById('configConnectionDistance').addEventListener('input', (e) => {
-                    neuralConfig.neurons.connectionDistance = parseInt(e.target.value, 10);
-                    document.getElementById('currentConnectionDistance').textContent = e.target.value;
-                });
-                document.getElementById('configLifespanFactor').addEventListener('input', (e) => {
-                    neuralConfig.neurons.lifespanFactor = parseInt(e.target.value, 10);
-                    document.getElementById('currentLifespanFactor').textContent = e.target.value;
-                });
-                document.getElementById('configMutationRate').addEventListener('input', (e) => {
-                    neuralConfig.neurons.mutationRate = parseFloat(e.target.value);
-                    document.getElementById('currentMutationRate').textContent = e.target.value;
-                });
-
-
-                // Stats Refresh Button
-                document.getElementById('refreshStatsBtn').addEventListener('click', () => {
-                    this.updateStatsDisplay();
-                    this.showToast('Statistiques rafraîchies', 'info', 1500);
-                });
-
-                // Clear Logs Button
-                document.getElementById('clearLogsBtn').addEventListener('click', () => {
-                    document.getElementById('logBody').innerHTML = '<p class="text-gray-500"><em>Le journal affichera l\'activité du réseau...</em></p>';
-                    this.showToast('Journal effacé', 'info', 1500);
-                });
-
-                // Brain Functions Buttons
-                document.getElementById('brainFuncActivateBtn').addEventListener('click', () => {
-                    this.activateSystem();
-                });
-                document.getElementById('brainFuncDeactivateBtn').addEventListener('click', () => {
-                    this.deactivateSystem();
-                });
-                document.getElementById('brainFuncAddNeuronBtn').addEventListener('click', () => {
-                    if (this.neuralNetwork.isActive && this.neuralNetwork.neurons.length < neuralConfig.neurons.maxCount) {
-                        // Add neuron at a random visible position
-                        const canvas = this.neuralNetwork.canvas;
-                        const x = Math.random() * canvas.width;
-                        const y = Math.random() * canvas.height;
-                        this.neuralNetwork.createNeuron(x, y);
-                        this.showToast(`Un neurone a été ajouté au réseau.`, 'info', 1500);
-                    } else if (!this.neuralNetwork.isActive) {
-                        this.showToast("Activez le système pour ajouter des neurones !", 'info', 2000);
-                    } else if (this.neuralNetwork.neurons.length >= neuralConfig.neurons.maxCount) {
-                        this.showToast("Limite maximale de neurones atteinte.", 'warning', 2000);
-                    }
-                });
-                document.getElementById('brainFuncClearMemoryBtn').addEventListener('click', () => {
-                    this.neuralNetwork.clearMemoryPatterns();
-                    this.showToast('Mémoire des motifs effacée.', 'success', 2000);
-                    this.addLogEntry('Mémoire des motifs du réseau effacée.');
-                });
-                document.getElementById('brainFuncGoToStatsBtn').addEventListener('click', () => {
-                    this.showSection('statsContent');
-                    navItems.forEach(navItem => navItem.classList.remove('active'));
-                    document.querySelector('[data-target-content="statsContent"]').classList.add('active');
-                    this.updateStatsDisplay();
-                    this.showToast('Naviguer vers les statistiques.', 'info', 1500);
-                });
-                document.getElementById('brainFuncGoToConfigBtn').addEventListener('click', () => {
-                    this.showSection('configContent');
-                    navItems.forEach(navItem => navItem.classList.remove('active'));
-                    document.querySelector('[data-target-content="configContent"]').classList.add('active');
-                    this.showToast('Naviguer vers la configuration.', 'info', 1500);
-                });
-
-                // Initial chat message
-                this.addChatMessage('Bonjour ! Je suis NeuraX. Comment puis-je vous aider aujourd\'hui ?', 'ai');
-
-                // Listen for network events to update logs
-                this.neuralNetwork.on('systemActivated', () => {
-                    document.getElementById('startBtn').classList.add('hidden');
-                    document.getElementById('deactivateBtn').classList.remove('hidden');
-                    this.addChatMessage('Système NeuraX activé. Initialisation du réseau en cours...', 'ai');
-                    this.addLogEntry('Système NeuraX activé.');
-                });
-                this.neuralNetwork.on('systemDeactivated', () => {
-                    document.getElementById('deactivateBtn').classList.add('hidden');
-                    document.getElementById('startBtn').classList.remove('hidden');
-                    this.addChatMessage('Système NeuraX désactivé. Mise en veille des processus.', 'ai');
-                    this.addLogEntry('Système NeuraX désactivé.');
-                });
-                this.neuralNetwork.on('neuronCreated', (neuron) => {
-                    this.addLogEntry(`Nouveau neurone #${neuron.id} créé à (${neuron.x.toFixed(0)}, ${neuron.y.toFixed(0)}).`);
-                });
-                this.neuralNetwork.on('neuronsRemoved', (count) => {
-                    this.addLogEntry(`${count} neurone(s) supprimé(s) (vieillissement/énergie).`);
-                });
-                this.neuralNetwork.on('patternRecognized', (patternData) => {
-                    this.addChatMessage(`NeuraX a reconnu un motif ! "${patternData.originalPattern || patternData.pattern}".`, 'ai');
-                    this.addLogEntry(`Motif "${patternData.originalPattern || patternData.pattern}" reconnu par le réseau.`);
-                });
-                this.neuralNetwork.on('patternMemorized', (patternData) => {
-                    this.addLogEntry(`Nouveau motif mémorisé: "${patternData.originalPattern || patternData.pattern}".`);
-                });
-                this.neuralNetwork.on('memoryCleared', () => {
-                    this.addLogEntry('Mémoire des motifs du réseau effacée.');
-                });
-
-                // Initialize first section view and config display
-                this.showSection('overviewContent');
-                this.updateConfigDisplay();
-            },
-            // Show selected content section
-            showSection(sectionId) {
-                document.querySelectorAll('.content-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                document.getElementById(sectionId).classList.add('active');
-            },
-            // System Activation / Deactivation
-            activateSystem() {
-                const activationLevel = parseInt(document.getElementById('activationLevel').value, 10);
-                if (this.neuralNetwork) {
-                    this.neuralNetwork.activate();
-                    // Adjust growth based on level, ensure it's not too low
-                    neuralConfig.neurons.growthRate = 5 + (activationLevel / 2); // More sensitive growth
-                    this.showToast(`NeuraX-Ultime activé avec un niveau d'initialisation de ${activationLevel}%`, 'success');
-                } else {
-                    this.showToast('Erreur: Réseau neural non initialisé', 'error');
-                }
-            },
-            deactivateSystem() {
-                if (this.neuralNetwork) {
-                    this.neuralNetwork.deactivate();
-                    this.showToast('NeuraX-Ultime désactivé.', 'info');
-                }
-            },
-            // Chat Message Handling
-            sendChatMessage() {
-                const chatInput = document.getElementById('chatInput');
-                const message = chatInput.value.trim();
-                if (!message) return;
-
-                this.addChatMessage(message, 'user');
-                chatInput.value = '';
-
-                if (this.neuralNetwork) {
-                    this.neuralNetwork.activateByPattern(message);
-                }
-
-                const chatBody = document.getElementById('chatBody');
-                const thinkingIndicator = document.createElement('div');
-                thinkingIndicator.className = 'thinking-indicator';
-                thinkingIndicator.innerHTML = `
-                    <div class="thinking-dot"></div>
-                    <div class="thinking-dot"></div>
-                    <div class="thinking-dot"></div>
-                `;
-                chatBody.appendChild(thinkingIndicator);
-                chatBody.scrollTop = chatBody.scrollHeight;
-
-                setTimeout(() => {
-                    thinkingIndicator.remove();
-                    this.generateResponse(message);
-                }, 1500 + Math.random() * 1000);
-            },
-            addChatMessage(text, type) {
-                const chatBody = document.getElementById('chatBody');
-                const messageEl = document.createElement('div');
-                messageEl.className = `chat-message p-3 rounded-lg mb-2 max-w-xs md:max-w-md shadow-sm ${type}`;
-                messageEl.textContent = text;
-                chatBody.appendChild(messageEl);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            },
-            addLogEntry(text) {
-                const logBody = document.getElementById('logBody');
-                const logEntry = document.createElement('p');
-                const timestamp = new Date().toLocaleTimeString();
-                logEntry.innerHTML = `<span class="text-gray-500">[${timestamp}]</span> ${text}`;
-                logBody.appendChild(logEntry);
-                logBody.scrollTop = logBody.scrollHeight;
-            },
-            // AI Response Logic
-            generateResponse(userMessage) {
-                const report = this.neuralNetwork.generateReport();
-                let response = "";
-
-                const lowerCaseMessage = userMessage.toLowerCase();
-
-                if (lowerCaseMessage.includes("bonjour") || lowerCaseMessage.includes("salut")) {
-                    response = "Bonjour ! Comment puis-je vous assister concernant le réseau NeuraX ?";
-                } else if (lowerCaseMessage.includes("comment vas-tu") || lowerCaseMessage.includes("ça va")) {
-                    response = "En tant que système numérique, je n'ai pas de sensations, mais tous mes modules fonctionnent de manière optimale. Merci de demander !";
-                } else if (lowerCaseMessage.includes("combien de neurones") || lowerCaseMessage.includes("nombre de neurones")) {
-                    response = `Actuellement, le réseau compte ${report.neuronCount} neurones.`;
-                } else if (lowerCaseMessage.includes("combien de synapses") || lowerCaseMessage.includes("nombre de connexions")) {
-                    response = `Il y a ${report.connectionCount} synapses actives dans le réseau.`;
-                } else if (lowerCaseMessage.includes("état du système") || lowerCaseMessage.includes("actif") || lowerCaseMessage.includes("statut")) {
-                    response = `Le système est actuellement ${report.systemStatus}. Il y a ${report.activeNeurons} neurones actifs en ce moment.`;
-                } else if (lowerCaseMessage.includes("capacité de mémoire") || lowerCaseMessage.includes("motifs mémorisés")) {
-                     response = `La capacité de mémoire actuelle pour les motifs est de ${neuralConfig.learning.memoryCapacity} emplacements, et nous avons mémorisé ${report.memorySize} motifs.`;
-                } else if (lowerCaseMessage.includes("que peux-tu faire") || lowerCaseMessage.includes("fonctionnalités")) {
-                    response = "Je simule un réseau neuronal avec des capacités de croissance, d'activation, de propagation et d'apprentissage de motifs. Je peux aussi vous fournir des statistiques en temps réel et interagir via ce chat.";
-                } else if (lowerCaseMessage.includes("merci") || lowerCaseMessage.includes("super") || lowerCaseMessage.includes("cool")) {
-                    response = "De rien ! N'hésitez pas si vous avez d'autres questions ou si vous souhaitez explorer le réseau.";
-                } else if (lowerCaseMessage.includes("rapport") || lowerCaseMessage.includes("analyse")) {
-                    this.showSection('statsContent');
-                    this.updateStatsDisplay();
-                    response = `J'ai généré un rapport d'état pour vous. Veuillez consulter la section "Statistiques".`;
-                } else if (lowerCaseMessage.includes("config") || lowerCaseMessage.includes("paramètres")) {
-                    this.showSection('configContent');
-                    response = `Vous pouvez ajuster les paramètres du réseau dans la section "Configuration".`;
-                }
-                 else {
-                    const recognizedPattern = this.neuralNetwork.recognizePatterns();
-                    if (recognizedPattern) {
-                        response = `Je détecte un motif lié à "${recognizedPattern.originalPattern || 'un concept abstrait'}". Cela semble important pour mon réseau.`;
-                    } else if (report.activeNeurons > 0 && Math.random() < 0.5) {
-                         response = `Je traite votre requête... L'activité neurale est de ${report.activeNeurons} neurones actifs, et l'énergie moyenne est de ${report.averageEnergy}%.`;
-                    } else {
-                        response = "Hmm, je n'ai pas de réponse spécifique pour cela pour le moment. Mon réseau est en cours d'analyse ou je ne suis pas encore entraîné sur ce type de requête.";
-                    }
-                }
-                this.addChatMessage(response, 'ai');
-            },
-            // Voice Recognition Toggle
-            toggleVoiceRecognition(buttonElement) {
-                const dot = buttonElement.querySelector('.voice-active-dot');
-                if (!('webkitSpeechRecognition' in window)) {
-                    this.showToast('La reconnaissance vocale n\'est pas supportée par votre navigateur.', 'error');
-                    return;
-                }
-
-                if (this.voiceRecognitionActive) {
-                    this.voiceRecognitionActive = false;
-                    dot.classList.add('hidden');
-                    if (this.recognition) this.recognition.stop();
-                    this.showToast('Reconnaissance vocale désactivée.', 'info');
-                } else {
-                    this.voiceRecognitionActive = true;
-                    dot.classList.remove('hidden');
-                    this.showToast('Reconnaissance vocale activée. Parlez maintenant...', 'success');
-
-                    this.recognition = new webkitSpeechRecognition();
-                    this.recognition.lang = 'fr-FR';
-                    this.recognition.interimResults = false;
-                    this.recognition.maxAlternatives = 1;
-
-                    this.recognition.onresult = (event) => {
-                        const transcript = event.results[0][0].transcript;
-                        document.getElementById('chatInput').value = transcript;
-                        this.sendChatMessage();
-                        this.toggleVoiceRecognition(buttonElement);
-                    };
-
-                    this.recognition.onerror = (event) => {
-                        this.showToast(`Erreur de reconnaissance vocale: ${event.error}`, 'error');
-                        this.toggleVoiceRecognition(buttonElement);
-                    };
-
-                    this.recognition.onend = () => {
-                        if (this.voiceRecognitionActive) {
-                            this.toggleVoiceRecognition(buttonElement);
-                        }
-                    };
-                    this.recognition.start();
-                }
-            },
-            // Toast Notifications
-            showToast(message, type = 'info', duration = 3000) {
-                const toastContainer = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = `toast p-3 rounded-lg shadow-md mb-3 flex items-center space-x-2 ${type}`;
-                toast.innerHTML = `
-                    <span class="text-xl">
-                        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
-                    </span>
-                    <span>${message}</span>
-                `;
-                toastContainer.appendChild(toast);
-
-                // For animation
-                setTimeout(() => toast.classList.add('fade-out'), duration - 500); // Start fade out before removal
-                setTimeout(() => toast.remove(), duration);
-            },
-            // Update Stats Display
-            updateStatsDisplay() {
-                const report = this.neuralNetwork.generateReport();
-                document.getElementById('statNeuronCount').textContent = report.neuronCount;
-                document.getElementById('statConnectionCount').textContent = report.connectionCount;
-                document.getElementById('statActiveNeurons').textContent = report.activeNeurons;
-                document.getElementById('statAverageEnergy').textContent = `${report.averageEnergy}%`;
-                document.getElementById('statNetworkDensity').textContent = report.networkDensity;
-                document.getElementById('statRecognizedPatterns').textContent = report.recognizedPatterns;
-                document.getElementById('statMemorySize').textContent = `${report.memorySize} / ${neuralConfig.learning.memoryCapacity}`;
-                document.getElementById('statSystemStatus').textContent = report.systemStatus;
-                document.getElementById('statTimestamp').textContent = report.timestamp;
-            },
-            // Update Config Display
-            updateConfigDisplay() {
-                document.getElementById('configMaxNeurons').value = neuralConfig.neurons.maxCount;
-                document.getElementById('currentMaxNeurons').textContent = neuralConfig.neurons.maxCount;
-
-                document.getElementById('configNeuronSpeed').value = neuralConfig.neurons.speed;
-                document.getElementById('currentNeuronSpeed').textContent = neuralConfig.neurons.speed;
-
-                document.getElementById('configGrowthRate').value = neuralConfig.neurons.growthRate;
-                document.getElementById('currentGrowthRate').textContent = neuralConfig.neurons.growthRate;
-
-                document.getElementById('configConnectionDistance').value = neuralConfig.neurons.connectionDistance;
-                document.getElementById('currentConnectionDistance').textContent = neuralConfig.neurons.connectionDistance;
-
-                document.getElementById('configLifespanFactor').value = neuralConfig.neurons.lifespanFactor;
-                document.getElementById('currentLifespanFactor').textContent = neuralConfig.neurons.lifespanFactor;
-
-                document.getElementById('configMutationRate').value = neuralConfig.neurons.mutationRate;
-                document.getElementById('currentMutationRate').textContent = neuralConfig.neurons.mutationRate;
-            }
-        };
-
-        // Main execution when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('neuralCanvas');
-            window.neuralNetwork = new NeuralNetwork(canvas);
-            window.neuralNetwork.initialize(50);
-
-            NeuraXUI.initialize(window.neuralNetwork);
-
-            // Set initial state for sliders in config section
-            NeuraXUI.updateConfigDisplay();
-        });
-    </script>
-</body>
-</html>
