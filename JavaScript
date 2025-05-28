@@ -1,3 +1,30 @@
+function getAvatar(mood) {
+  switch(mood) {
+    case "onirique": return "💭";
+    case "rationnel": return "📊";
+    case "chaotique": return "⚡";
+    default: return "🧠";
+  }
+}
+
+function updateAvatars(logs) {
+  const container = document.getElementById('avatars');
+  container.innerHTML = '';
+  const lastByBot = {};
+
+  logs.forEach(log => {
+    lastByBot[log.bot] = log;
+  });
+
+  for (const bot in lastByBot) {
+    const log = lastByBot[bot];
+    const moodIcon = getAvatar(log.mood);
+    const div = document.createElement('div');
+    div.className = 'avatar mood-' + log.mood;
+    div.innerHTML = `<div style="font-size: 40px">${moodIcon}</div><span>${bot}</span>`;
+    container.appendChild(div);
+  }
+}
 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 recognition.lang = 'fr-FR';
