@@ -1,21 +1,171 @@
-body {
-    background: radial-gradient(ellipse at center, #0f0c29, #302b63, #24243e);
-    font-family: 'Orbitron', sans-serif;
-    color: #fff;
-    text-align: center;
-    padding: 50px;
-}
+import React, { useState, useEffect, useRef } from 'react';
 
-button {
-    background: #00ffff;
-    color: #000;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1em;
-    transition: 0.3s;
-}
+// Main App component
+const App = () => {
+  return (
+    // Futuristic galactic background
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 p-4 font-sans text-gray-100 flex items-center justify-center">
+      <div className="container mx-auto p-6 bg-gray-800 rounded-3xl shadow-2xl shadow-purple-500/50 border border-purple-700">
+        <h1 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12 animate-pulse">
+          Bienvenue sur neuraX-ultime
+        </h1>
+        <div className="flex justify-center">
+          {/* Only neuraX-ultime Chatbot */}
+          <Chatbot title="neuraX-ultime" modelName="gemini-neurax" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
-button:hover {
-    background: #ff00ff;
-}
+// Chatbot component
+const Chatbot = ({ title, modelName }) => {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  // Scroll to the bottom of the chat messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Function to send a message and get a response from the LLM
+  const sendMessage = async () => {
+    if (input.trim() === '') return;
+
+    const userMessage = { sender: 'user', text: input };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setInput('');
+    setLoading(true);
+
+    try {
+      let botResponseText = '';
+
+      // Prepare chat history for the LLM, adding a system instruction for the persona
+      let chatHistory = [];
+      let systemInstruction = "";
+
+      // Assign persona based on modelName
+      switch (modelName) {
+        case "gemini-neurax":
+          systemInstruction = "Vous êtes neuraX-ultime, un assistant avancé spécialisé dans la résolution de problèmes complexes, la génération de solutions innovantes et la fourniture d'informations de pointe avec une touche futuriste et galactique.";
+          break;
+        default:
+          systemInstruction = "Vous êtes un assistant utile.";
+      }
+
+      // Add system instruction as the first message if needed, or include in user prompt
+      // For simplicity and direct API call, we'll prepend the instruction to the user's current input.
+      const fullPrompt = `${systemInstruction}\n\n${input}`;
+
+      // Build chat history for the LLM
+      chatHistory.push({ role: "user", parts: [{ text: fullPrompt }] });
+
+      const payload = { contents: chatHistory };
+      const apiKey = ""; // API key will be provided by the Canvas environment
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.candidates && result.candidates.length > 0 &&
+          result.candidates[0].content && result.candidates[0].content.parts &&
+          result.candidates[0].content.parts.length > 0) {
+        botResponseText = result.candidates[0].content.parts[0].text;
+      } else {
+        botResponseText = `Désolé, le modèle ${title} n'a pas pu générer de réponse. Veuillez réessayer.`;
+        console.error(`Erreur: Structure de réponse inattendue de l'API Gemini pour ${title}`, result);
+      }
+
+      const botMessage = { sender: 'bot', text: botResponseText };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+    } catch (error) {
+      const errorMessage = { sender: 'bot', text: `Une erreur est survenue lors de la communication avec le chatbot ${title}.` };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      console.error(`Erreur lors de l'appel de l'API pour ${title}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !loading) {
+      sendMessage();
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl shadow-xl shadow-blue-500/30 border border-blue-600 flex flex-col h-[600px] w-full max-w-2xl mx-auto">
+      <div className="p-4 bg-gradient-to-r from-indigo-700 to-purple-700 text-white rounded-t-2xl text-2xl font-bold text-center border-b border-purple-500">
+        {title}
+      </div>
+      <div className="flex-1 p-4 overflow-y-auto space-y-3 custom-scrollbar bg-gray-900">
+        {messages.length === 0 && (
+          <div className="text-center text-gray-400 mt-10">
+            Bienvenue sur neuraX-ultime ! Posez-moi une question complexe ou demandez une idée innovante.
+          </div>
+        )}
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[70%] p-3 rounded-xl shadow-md ${
+                msg.sender === 'user'
+                  ? 'bg-blue-600 text-white rounded-br-none'
+                  : 'bg-gray-600 text-gray-100 rounded-bl-none'
+              }`}
+            >
+              {msg.text}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="max-w-[70%] p-3 rounded-xl shadow-md bg-gray-600 text-gray-100 rounded-bl-none">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce mr-1"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150 mr-1"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      <div className="p-4 border-t border-gray-700 flex items-center bg-gray-800 rounded-b-2xl">
+        <input
+          type="text"
+          className="flex-1 p-3 border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white placeholder-gray-400"
+          placeholder="Tapez votre message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          disabled={loading}
+        />
+        <button
+          onClick={sendMessage}
+          className="ml-3 px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading}
+        >
+          Envoyer
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default App;
