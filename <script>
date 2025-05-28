@@ -1,163 +1,174 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIventures : L'Épopée Éducative de l'IA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F9FAFB;
-            color: #1F2937;
-        }
-        .section-heading {
-            color: #4338CA;
-        }
-        .highlight-text {
-            color: #4F46E5;
-        }
-        .nav-link {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #374151;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .nav-link:hover {
-            background-color: #E0E7FF;
-            color: #4338CA;
-        }
-        .nav-link.active {
-            background-color: #6366F1;
-            color: white;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    </style>
-</head>
-<body class="antialiased">
-    <div id="root"></div>
+import React, { useState, useEffect, useRef } from 'react';
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+// Main App component
+const App = () => {
+  return (
+    // Futuristic galactic background
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 p-4 font-sans text-gray-100 flex items-center justify-center">
+      <div className="container mx-auto p-6 bg-gray-800 rounded-3xl shadow-2xl shadow-purple-500/50 border border-purple-700">
+        <h1 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-12 animate-pulse">
+          Bienvenue sur neuraX-ultime
+        </h1>
+        <div className="flex justify-center">
+          {/* Only neuraX-ultime Chatbot */}
+          <Chatbot title="neuraX-ultime" modelName="gemini-neurax" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
-        function App() {
-            const [currentSection, setCurrentSection] = useState('accueil');
-            const [avatarResponse, setAvatarResponse] = useState("Bonjour! Je suis votre mentor IA. Comment puis-je vous aider aujourd'hui?");
-            const [userProgress, setUserProgress] = useState({ quizzesCompleted: 0, projectsCompleted: 0, xp: 0, badges: [] });
+// Chatbot component
+const Chatbot = ({ title, modelName }) => {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
-            useEffect(() => {
-                const storedProgress = localStorage.getItem('aiventuresProgress');
-                if (storedProgress) {
-                    setUserProgress(JSON.parse(storedProgress));
-                }
-            }, []);
+  // Scroll to the bottom of the chat messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-            const saveProgress = (newProgress) => {
-                setUserProgress(newProgress);
-                localStorage.setItem('aiventuresProgress', JSON.stringify(newProgress));
-            };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-            const interactWithAvatar = async (message) => {
-                setAvatarResponse("Réflexion en cours...");
-                setTimeout(() => {
-                    if (message.toLowerCase().includes("bonjour")) {
-                        setAvatarResponse("Salut! Ravi de vous revoir. Prêt pour une nouvelle aventure IA?");
-                    } else if (message.toLowerCase().includes("quiz")) {
-                        setAvatarResponse("Les quiz sont un excellent moyen de tester vos connaissances! Rendez-vous dans la section Quiz.");
-                    } else if (message.toLowerCase().includes("projet")) {
-                        setAvatarResponse("Les projets pratiques vous attendent! C'est le meilleur moyen d'apprendre en codant.");
-                    } else if (message.toLowerCase().includes("progression")) {
-                        setAvatarResponse(`Vous avez complété ${userProgress.quizzesCompleted} quiz et ${userProgress.projectsCompleted} projets. Vous avez ${userProgress.xp} XP.`);
-                    } else {
-                        setAvatarResponse("C'est une question intéressante! Je suis toujours en apprentissage, mais je ferai de mon mieux pour vous guider.");
-                    }
-                }, 1500);
-            };
+  // Function to send a message and get a response from the LLM
+  const sendMessage = async () => {
+    if (input.trim() === '') return;
 
-            const completeQuiz = (score) => {
-                const newProgress = {
-                    ...userProgress,
-                    quizzesCompleted: userProgress.quizzesCompleted + 1,
-                    xp: userProgress.xp + score,
-                    badges: [...userProgress.badges]
-                };
-                if (score >= 80 && !newProgress.badges.includes("Maître Quiz")) {
-                    newProgress.badges.push("Maître Quiz");
-                }
-                if (newProgress.quizzesCompleted >= 5 && !newProgress.badges.includes("Explorateur de Quiz")) {
-                    newProgress.badges.push("Explorateur de Quiz");
-                }
-                saveProgress(newProgress);
-                alert(`Quiz complété! Score: ${score}%. Vous avez gagné ${score} XP.`);
-            };
+    const userMessage = { sender: 'user', text: input };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setInput('');
+    setLoading(true);
 
-            const completeProject = () => {
-                const newProgress = {
-                    ...userProgress,
-                    projectsCompleted: userProgress.projectsCompleted + 1,
-                    xp: userProgress.xp + 100,
-                    badges: [...userProgress.badges]
-                };
-                if (newProgress.projectsCompleted >= 1 && !newProgress.badges.includes("Développeur IA")) {
-                    newProgress.badges.push("Développeur IA");
-                }
-                if (newProgress.projectsCompleted >= 3 && !newProgress.badges.includes("Architecte IA")) {
-                    newProgress.badges.push("Architecte IA");
-                }
-                saveProgress(newProgress);
-                alert("Projet complété! Vous avez gagné 100 XP.");
-            };
+    try {
+      let botResponseText = '';
 
-            const HomeSection = () => (
-                <section id="accueil" className="text-center mb-12">
-                    <h1 className="text-5xl font-extrabold section-heading mb-4">
-                        AIventures : L'Épopée Éducative de l'IA
-                    </h1>
-                    <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-8">
-                        AIventures est désormais bien en place : une architecture React claire, un design pédagogique immersif et la promesse d’une épopée éducative dans l’univers de l’IA.
-                    </p>
-                    <div className="bg-gray-100 p-6 rounded-lg shadow-inner max-w-3xl mx-auto">
-                        <h2 className="text-3xl font-bold section-heading mb-6">Ce que contient maintenant le projet :</h2>
-                        <ul className="list-disc list-inside text-gray-700 space-y-2 pl-4 text-left">
-                            <li>Accueil animé avec avatar <strong>Lottie</strong> (intégration à venir)</li>
-                            <li>Navigation fluide entre les modules éducatifs et le dashboard</li>
-                            <li>3 modules interactifs avec vidéos <strong>YouTube</strong> intégrées</li>
-                            <li>Promesse de quiz et projets pratiques à venir</li>
-                            <li>Responsive, prêt pour <strong>GitHub Pages</strong> avec <strong>Google Analytics</strong> intégré</li>
-                        </ul>
-                    </div>
-                </section>
-            );
+      // Prepare chat history for the LLM, adding a system instruction for the persona
+      let chatHistory = [];
+      let systemInstruction = "";
 
-            return (
-                <main className="p-6">
-                    <HomeSection />
-                </main>
-            );
-        }
+      // Assign persona based on modelName
+      switch (modelName) {
+        case "gemini-neurax":
+          systemInstruction = "Vous êtes neuraX-ultime, un assistant avancé spécialisé dans la résolution de problèmes complexes, la génération de solutions innovantes et la fourniture d'informations de pointe avec une touche futuriste et galactique.";
+          break;
+        default:
+          systemInstruction = "Vous êtes un assistant utile.";
+      }
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
-</body>
-</html>
+      // Add system instruction as the first message if needed, or include in user prompt
+      // For simplicity and direct API call, we'll prepend the instruction to the user's current input.
+      const fullPrompt = `${systemInstruction}\n\n${input}`;
+
+      // Build chat history for the LLM
+      chatHistory.push({ role: "user", parts: [{ text: fullPrompt }] });
+
+      const payload = { contents: chatHistory };
+      const apiKey = ""; // API key will be provided by the Canvas environment
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.candidates && result.candidates.length > 0 &&
+          result.candidates[0].content && result.candidates[0].content.parts &&
+          result.candidates[0].content.parts.length > 0) {
+        botResponseText = result.candidates[0].content.parts[0].text;
+      } else {
+        botResponseText = `Désolé, le modèle ${title} n'a pas pu générer de réponse. Veuillez réessayer.`;
+        console.error(`Erreur: Structure de réponse inattendue de l'API Gemini pour ${title}`, result);
+      }
+
+      const botMessage = { sender: 'bot', text: botResponseText };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+    } catch (error) {
+      const errorMessage = { sender: 'bot', text: `Une erreur est survenue lors de la communication avec le chatbot ${title}.` };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      console.error(`Erreur lors de l'appel de l'API pour ${title}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !loading) {
+      sendMessage();
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl shadow-xl shadow-blue-500/30 border border-blue-600 flex flex-col h-[600px] w-full max-w-2xl mx-auto">
+      <div className="p-4 bg-gradient-to-r from-indigo-700 to-purple-700 text-white rounded-t-2xl text-2xl font-bold text-center border-b border-purple-500">
+        {title}
+      </div>
+      <div className="flex-1 p-4 overflow-y-auto space-y-3 custom-scrollbar bg-gray-900">
+        {messages.length === 0 && (
+          <div className="text-center text-gray-400 mt-10">
+            Bienvenue sur neuraX-ultime ! Posez-moi une question complexe ou demandez une idée innovante.
+          </div>
+        )}
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[70%] p-3 rounded-xl shadow-md ${
+                msg.sender === 'user'
+                  ? 'bg-blue-600 text-white rounded-br-none'
+                  : 'bg-gray-600 text-gray-100 rounded-bl-none'
+              }`}
+            >
+              {msg.text}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="max-w-[70%] p-3 rounded-xl shadow-md bg-gray-600 text-gray-100 rounded-bl-none">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce mr-1"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150 mr-1"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      <div className="p-4 border-t border-gray-700 flex items-center bg-gray-800 rounded-b-2xl">
+        <input
+          type="text"
+          className="flex-1 p-3 border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white placeholder-gray-400"
+          placeholder="Tapez votre message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          disabled={loading}
+        />
+        <button
+          onClick={sendMessage}
+          className="ml-3 px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading}
+        >
+          Envoyer
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+
 
 
