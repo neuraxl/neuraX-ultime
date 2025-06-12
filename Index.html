@@ -1,4 +1,119 @@
 <!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>NeuraX‑Starfield + WebSocket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body { margin: 0; background: #000; overflow: hidden; font-family: sans-serif; color: #fff; }
+    canvas { display: block; }
+    #console {
+      position: absolute; top: 10px; left: 10px;
+      width: calc(100% - 20px); max-height: 30vh;
+      overflow-y: auto; background: rgba(0,0,0,0.5);
+      padding: 8px; font-size: 0.85rem;
+      border-radius: 8px;
+    }
+    #inputBox {
+      position: absolute; bottom: 10px; left: 10px;
+      width: calc(100% - 20px);
+      padding: 8px; border: none; border-radius: 8px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="star"></canvas>
+  <div id="console"></div>
+  <input type="text" id="inputBox" placeholder='Commande: "speed:2" ou "count:200"' />
+
+  <script>
+    const canvas = document.getElementById('star'), ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      initStars();
+    });
+
+    // Paramètres dynamiques
+    let params = { speed: 1, count: 150 };
+
+    // Générer les étoiles
+    let stars = [];
+    function initStars() {
+      stars = Array.from({ length: params.count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.5 + 0.5,
+        dx: (Math.random() * 0.5 + 0.1) * params.speed
+      }));
+    }
+    initStars();
+
+    function anim() {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, w, h);
+      for (let s of stars) {
+        s.x -= s.dx;
+        if (s.x < 0) s.x = w;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, 2 * Math.PI);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+      }
+      requestAnimationFrame(anim);
+    }
+    anim();
+
+    // Console d'affichage
+    const consoleEl = document.getElementById('console');
+    function log(msg) {
+      const d = document.createElement('div');
+      d.textContent = msg;
+      consoleEl.appendChild(d);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    // WebSocket client
+    const ws = new WebSocket('ws://localhost:4000');
+    ws.onopen = () => log('🔗 Connecté au serveur WebSocket');
+    ws.onmessage = (ev) => {
+      log('Serveur : ' + ev.data);
+      interpret(ev.data);
+    };
+    ws.onclose = () => log('❌ Déconnecté du serveur');
+
+    // Entrée utilisateur
+    document.getElementById('inputBox').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const txt = e.target.value.trim();
+        if (!txt) return;
+        log('👤 Vous : ' + txt);
+        ws.send(txt);
+        e.target.value = '';
+      }
+    });
+
+    // Interprétation des commandes du serveur
+    function interpret(cmd) {
+      const [key, val] = cmd.split(':');
+      if (key === 'speed') {
+        params.speed = parseFloat(val) || 1;
+        stars.forEach(s => s.dx = (Math.random() * 0.5 + 0.1) * params.speed);
+        log(`→ vitesse ajustée : ${params.speed}`);
+      }
+      if (key === 'count') {
+        params.count = parseInt(val) || 150;
+        initStars();
+        log(`→ nombre d’étoiles ajusté : ${params.count}`);
+      }
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
