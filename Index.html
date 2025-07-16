@@ -1,4 +1,320 @@
-<!DOCTYPE html>
+import React, { useState, useEffect } from 'react';
+
+// Main App component
+function App() {
+  // State variables for the application flow
+  const [currentStep, setCurrentStep] = useState(0); // 0: Intro, 1: Define Need, 2: Choose Type, 3: Generate, 4: Display Code
+  const [problem, setProblem] = useState('');
+  const [events, setEvents] = useState('');
+  const [actions, setActions] = useState('');
+  const [users, setUsers] = useState('');
+  const [integrationType, setIntegrationType] = useState(''); // 'GitHub App', 'GitHub Actions Workflow', 'Custom Action'
+  const [generatedCode, setGeneratedCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Function to navigate to the next step
+  const nextStep = () => {
+    setCurrentStep(currentStep + 1);
+    setError(''); // Clear any previous errors
+  };
+
+  // Function to navigate to the previous step
+  const prevStep = () => {
+    setCurrentStep(currentStep - 1);
+    setError(''); // Clear any previous errors
+  };
+
+  // Function to handle code generation using the LLM
+  const generateCode = async () => {
+    setIsLoading(true);
+    setError('');
+    setGeneratedCode('');
+
+    let prompt = `Génère un exemple de code pour une intégration GitHub basée sur les spécifications suivantes:\n\n`;
+    prompt += `Type d'intégration: ${integrationType}\n`;
+    prompt += `Problème à résoudre: ${problem}\n`;
+    prompt += `Événements déclencheurs: ${events}\n`;
+    prompt += `Actions à effectuer: ${actions}\n`;
+    prompt += `Utilisateurs cibles: ${users}\n\n`;
+
+    // Add specific instructions based on integration type for better generation
+    if (integrationType === 'GitHub App') {
+      prompt += `Le code doit être une structure de base pour une GitHub App en Node.js (Probot ou Octokit.js) qui écoute les webhooks spécifiés et effectue les actions. Inclure des commentaires pour expliquer chaque partie.\n`;
+    } else if (integrationType === 'GitHub Actions Workflow') {
+      prompt += `Le code doit être un fichier YAML pour un workflow GitHub Actions (.github/workflows/main.yml) qui se déclenche sur les événements spécifiés et exécute les actions. Inclure des commentaires pour expliquer chaque étape.\n`;
+    } else if (integrationType === 'Action personnalisée') {
+      prompt += `Le code doit être une action personnalisée pour GitHub Actions. Fournir le fichier action.yml et un script JavaScript (index.js) ou un Dockerfile simple qui effectue les actions. Inclure des commentaires pour expliquer le code.\n`;
+    }
+
+    prompt += `Le code doit être complet et prêt à être utilisé comme point de départ.`;
+
+    try {
+      // LLM API call
+      let chatHistory = [];
+      chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+      const payload = { contents: chatHistory };
+      const apiKey = ""; // API key will be provided by the environment
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.candidates && result.candidates.length > 0 &&
+          result.candidates[0].content && result.candidates[0].content.parts &&
+          result.candidates[0].content.parts.length > 0) {
+        const text = result.candidates[0].content.parts[0].text;
+        setGeneratedCode(text);
+        setCurrentStep(4); // Move to display code step
+      } else {
+        setError("Impossible de générer le code. Veuillez réessayer.");
+        console.error("Unexpected API response structure:", result);
+      }
+    } catch (err) {
+      setError(`Erreur lors de la génération du code: ${err.message}. Veuillez vérifier votre connexion ou réessayer.`);
+      console.error("Error during code generation:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Render different steps based on currentStep state
+  const renderStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Bienvenue au Générateur de Code pour Intégrations GitHub !</h2>
+            <p className="mb-6 text-lg">
+              Cet outil vous aidera à concevoir et à générer le code de base pour vos intégrations GitHub, en suivant le plan que nous avons établi.
+            </p>
+            <button
+              onClick={nextStep}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              Commencer
+            </button>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-6 text-center">Étape 1: Définir le besoin et le cas d'utilisation</h2>
+            <div className="mb-4">
+              <label htmlFor="problem" className="block text-gray-700 text-sm font-bold mb-2">
+                Quel problème l'intégration va-t-elle résoudre ?
+              </label>
+              <textarea
+                id="problem"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24 resize-y"
+                value={problem}
+                onChange={(e) => setProblem(e.target.value)}
+                placeholder="Ex: Automatiser la labellisation des issues, synchroniser des projets avec un outil externe..."
+              ></textarea>
+            </div>
+            <div className="mb-4">
+              <label htmlFor="events" className="block text-gray-700 text-sm font-bold mb-2">
+                Quels événements GitHub déclencheront l'intégration ?
+              </label>
+              <input
+                type="text"
+                id="events"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={events}
+                onChange={(e) => setEvents(e.target.value)}
+                placeholder="Ex: issues.opened, pull_request.closed, push"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="actions" className="block text-gray-700 text-sm font-bold mb-2">
+                Quelles actions l'intégration doit-elle effectuer sur GitHub ou en dehors ?
+              </label>
+              <textarea
+                id="actions"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24 resize-y"
+                value={actions}
+                onChange={(e) => setActions(e.target.value)}
+                placeholder="Ex: Créer un commentaire, fermer une pull request, appeler une API externe..."
+              ></textarea>
+            </div>
+            <div className="mb-6">
+              <label htmlFor="users" className="block text-gray-700 text-sm font-bold mb-2">
+                Qui utilisera cette intégration ?
+              </label>
+              <input
+                type="text"
+                id="users"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={users}
+                onChange={(e) => setUsers(e.target.value)}
+                placeholder="Ex: Utilisateurs individuels, équipes, organisations entières"
+              />
+            </div>
+            <div className="flex justify-between">
+              <button
+                onClick={prevStep}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out"
+              >
+                Précédent
+              </button>
+              <button
+                onClick={nextStep}
+                disabled={!problem || !events || !actions || !users}
+                className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out ${
+                  (!problem || !events || !actions || !users) ? 'opacity-50 cursor-not-allowed' : 'transform hover:scale-105'
+                }`}
+              >
+                Suivant
+              </button>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-6 text-center">Étape 2: Choisir le bon type d'intégration</h2>
+            <p className="mb-4 text-gray-700">Sélectionnez le type d'intégration qui convient le mieux à votre besoin :</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <button
+                onClick={() => setIntegrationType('GitHub App')}
+                className={`p-4 rounded-lg border-2 ${
+                  integrationType === 'GitHub App' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'
+                } transition duration-300 ease-in-out text-left`}
+              >
+                <h3 className="font-bold text-lg mb-2">GitHub App</h3>
+                <p className="text-sm text-gray-600">Pour des applications durables, authentification fine, interaction complexe avec l'API, ou fonctionnement sur plusieurs dépôts/organisations.</p>
+              </button>
+              <button
+                onClick={() => setIntegrationType('GitHub Actions Workflow')}
+                className={`p-4 rounded-lg border-2 ${
+                  integrationType === 'GitHub Actions Workflow' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'
+                } transition duration-300 ease-in-out text-left`}
+              >
+                <h3 className="font-bold text-lg mb-2">GitHub Actions Workflow</h3>
+                <p className="text-sm text-gray-600">Pour l'automatisation spécifique à un dépôt, déclenchée par des événements standard de GitHub.</p>
+              </button>
+              <button
+                onClick={() => setIntegrationType('Action personnalisée')}
+                className={`p-4 rounded-lg border-2 ${
+                  integrationType === 'Action personnalisée' ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'
+                } transition duration-300 ease-in-out text-left`}
+              >
+                <h3 className="font-bold text-lg mb-2">Action personnalisée</h3>
+                <p className="text-sm text-gray-600">Pour une logique réutilisable à partager avec d'autres workflows ou utilisateurs.</p>
+              </button>
+            </div>
+            <div className="flex justify-between">
+              <button
+                onClick={prevStep}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out"
+              >
+                Précédent
+              </button>
+              <button
+                onClick={nextStep}
+                disabled={!integrationType}
+                className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out ${
+                  !integrationType ? 'opacity-50 cursor-not-allowed' : 'transform hover:scale-105'
+                }`}
+              >
+                Suivant
+              </button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md text-center">
+            <h2 className="text-2xl font-bold mb-6">Prêt à générer le code ?</h2>
+            <p className="mb-4 text-gray-700">
+              Basé sur vos sélections, je vais maintenant générer le code de base pour votre intégration GitHub.
+            </p>
+            <p className="mb-6 text-gray-700 font-semibold">
+              Type sélectionné: <span className="text-blue-600">{integrationType}</span>
+            </p>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            <div className="flex justify-between">
+              <button
+                onClick={prevStep}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out"
+              >
+                Précédent
+              </button>
+              <button
+                onClick={generateCode}
+                disabled={isLoading}
+                className={`bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out ${
+                  isLoading ? 'opacity-50 cursor-not-allowed' : 'transform hover:scale-105'
+                }`}
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Génération...
+                  </div>
+                ) : (
+                  'Générer le code'
+                )}
+              </button>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-6 text-center">Code généré pour votre intégration GitHub</h2>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            <div className="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto mb-6">
+              <pre><code>{generatedCode || 'Aucun code généré.'}</code></pre>
+            </div>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(0)} // Restart from the beginning
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out"
+              >
+                Recommencer
+              </button>
+              <button
+                onClick={() => {
+                  // Copy to clipboard functionality
+                  const el = document.createElement('textarea');
+                  el.value = generatedCode;
+                  document.body.appendChild(el);
+                  el.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(el);
+                  alert('Code copié dans le presse-papiers !'); // Using alert for simplicity, could be a custom modal
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105"
+              >
+                Copier le code
+              </button>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 font-sans">
+      <div className="w-full">
+        {renderStep()}
+      </div>
+    </div>
+  );
+}
+
+export default App;<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
