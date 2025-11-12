@@ -1,3 +1,227 @@
+#!/usr/bin/env bash
+# all_in_one.sh — tout-en-un pour NeuralX PoC
+# Usage: ./all_in_one.sh
+# Auteur: assistant — prêt à servir l'architecte
+# NOTE DE SÉCURITÉ: NE COMMITEZ JAMAIS les clés privées (ca.key, server.key, client.key).
+set -euo pipefail
+IFS=$'\n\t'
+
+# --------- CONFIG ----------
+PYTHON=${PYTHON:-python3}
+VENV_DIR=${VENV_DIR:-venv}
+PROJECT_DIR=${PROJECT_DIR:-$(pwd)}
+CERTS_DIR="${PROJECT_DIR}/certs"
+DOCKER_COMPOSE_FILE=${DOCKER_COMPOSE_FILE:-docker-compose.mtls.yml}
+MKDOCS_BUILD_DIR=${MKDOCS_BUILD_DIR:-site}
+PROCEED_CONFIRM=${PROCEED_CONFIRM:-1}   # 1 pour avancer sans prompt, 0 pour demander confirmation
+
+# Tools expected: git, docker, docker-compose (or docker compose), openssl, mkdocs (installed in venv)
+echo "NeuralX — script tout-en-un"
+echo "Project : ${PROJECT_DIR}"
+
+if [ "$PROCEED_CONFIRM" -eq 0 ]; then
+  read -p "Ce script va modifier ton système (venv, docker). Continuer ? [y/N] " -r
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Abandon."
+    exit 1
+  fi
+fi
+
+# --------- Helpers ----------
+log() { echo -e "\n==> $*"; }
+err() { echo "ERROR: $*" >&2; exit 1; }
+
+# Ensure we're in project dir
+cd "$PROJECT_DIR"
+
+# 1) Create Python virtualenv
+log "1) Création / activation du virtualenv (${VENV_DIR}) et installation des paquets"
+if [ ! -d "${VENV_DIR}" ]; then
+  ${PYTHON} -m venv "${VENV_DIR}"
+fi
+
+# Activate venv for this script
+# shellcheck disable=SC1091
+source "${VENV_DIR}/bin/activate"
+
+pip install --upgrade pip
+
+# Install common deps (in requirements.txt if present)
+if [ -f requirements.txt ]; then
+  log "Installation depuis requirements.txt"
+  pip install -r requirements.txt
+else
+  log "requirements.txt introuvable — installation minimale"
+  pip install flask pytest pyjwt pyyaml locust mkdocs mkdocs-material cryptography
+fi
+
+# Also install grpc libs (may require a build environment)
+log "Installation optionnelle gRPC (peut échouer si environnement sans accès Internet)"
+set +e
+pip install grpcio grpcio-tools protobuf
+GRPC_INSTALL_RC=$?
+set -e
+if [ $GRPC_INSTALL_RC -ne 0 ]; then
+  echo "⚠️  Installation grpcio échouée (code ${GRPC_INSTALL_RC}). Si tu as l'accès Internet, relance manuellement : pip install grpcio grpcio-tools"
+else
+  echo "gRPC installé."
+fi
+
+# 2) Generate Python gRPC bindings if grpc_tools available
+if python - <<'PY' >/dev/null 2>&1
+import importlib, sys
+try:
+    import grpc_tools
+    sys.exit(0)
+except Exception:
+    sys.exit(1)
+PY
+then
+  if [ -f neuralx.proto ]; then
+    log "Génération des bindings gRPC depuis neuralx.proto"
+    python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. neuralx.proto
+    echo "Bindings générés : neuralx_pb2.py, neuralx_pb2_grpc.py"
+  else
+    echo "Pas de neuralx.proto trouvé — skipping gRPC binding generation."
+  fi
+else
+  echo "grpc_tools non disponible, ignorer génération des bindings."
+fi
+
+# 3) Run pytest (unit tests)
+log "3) Exécution des tests unitaires (pytest)"
+pytest -q || {
+  echo "⚠️  Tests unitaires ont échoué. Voir la sortie ci-dessus."
+  # Do not exit immediately so user can inspect; but fail the script.
+  exit 2
+}
+
+# 4) Build docs with MkDocs
+if command -v mkdocs >/dev/null 2>&1; then
+  log "4) Construction des docs MkDocs (site/)"
+  mkdocs build --clean
+  log "Docs générées dans ./site (ou ${MKDOCS_BUILD_DIR})"
+else
+  echo "mkdocs non installé dans l'environnement. Installation recommandée : pip install mkdocs mkdocs-material"
+fi
+
+# 5) Generate test certs for mTLS (if not present)
+log "5) Génération des certificats de test mTLS (dans ${CERTS_DIR})"
+mkdir -p "${CERTS_DIR}"
+if [ ! -f "${CERTS_DIR}/ca.crt" ] || [ ! -f "${CERTS_DIR}/server.crt" ]; then
+  if [ -x "${CERTS_DIR}/generate_certs.sh" ]; then
+    (cd "${CERTS_DIR}" && ./generate_certs.sh)
+  else
+    # fallback to openssl inline generation
+    log "Script generate_certs.sh manquant ou non exécutable — tentative de génération via openssl"
+    (
+      cd "${CERTS_DIR}"
+      # CA
+      openssl genrsa -out ca.key 2048
+      openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 -subj "/CN=NeuralX Test CA" -out ca.crt
+      # Server
+      openssl genrsa -out server.key 2048
+      openssl req -new -key server.key -subj "/CN=neuralx.local" -out server.csr
+      openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 365 -sha256
+      # Client
+      openssl genrsa -out client.key 2048
+      openssl req -new -key client.key -subj "/CN=neuralx-client" -out client.csr
+      openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 365 -sha256
+    )
+  fi
+  log "Certificats générés dans ${CERTS_DIR}"
+else
+  log "Certificats déjà présents — saut de la génération"
+fi
+
+# 6) Prepare /etc/hosts mapping (optional)
+echo
+log "6) Ajout de l'entrée /etc/hosts pour 'neuralx.local' (nécessite sudo)"
+if ! grep -q "neuralx.local" /etc/hosts 2>/dev/null; then
+  if [ "$(id -u)" -ne 0 ]; then
+    echo "Ajout nécessitera sudo. Demande de sudo..."
+    sudo sh -c "echo '127.0.0.1 neuralx.local' >> /etc/hosts"
+  else
+    echo "127.0.0.1 neuralx.local" >> /etc/hosts
+  fi
+  echo "Entrée ajoutée."
+else
+  echo "Entrée déjà présente."
+fi
+
+# 7) Start Docker Compose (mTLS) if docker available
+log "7) Démarrage de la stack Docker (mTLS) via ${DOCKER_COMPOSE_FILE}"
+if command -v docker >/dev/null 2>&1; then
+  # Choose compose command variant
+  if docker compose version >/dev/null 2>&1; then
+    COMPOSE_CMD="docker compose -f ${DOCKER_COMPOSE_FILE}"
+  elif command -v docker-compose >/dev/null 2>&1; then
+    COMPOSE_CMD="docker-compose -f ${DOCKER_COMPOSE_FILE}"
+  else
+    err "Docker Compose non trouvé (ni docker compose ni docker-compose). Installe Docker + Docker Compose."
+  fi
+
+  # Check file exists
+  if [ ! -f "${DOCKER_COMPOSE_FILE}" ]; then
+    echo "Le fichier ${DOCKER_COMPOSE_FILE} est introuvable. Saute l'étape Docker."
+  else
+    # Start in detached mode
+    ${COMPOSE_CMD} up --build -d
+    echo "Containers démarrés :"
+    ${COMPOSE_CMD} ps
+    echo
+    echo "Tester l'endpoint via curl mutual TLS (exemple) :"
+    echo "curl --cert ${CERTS_DIR}/client.crt --key ${CERTS_DIR}/client.key --cacert ${CERTS_DIR}/ca.crt -H \"Authorization: Bearer <TOKEN>\" -H \"Content-Type: application/ld+json\" --data @examples/inference_request.json https://neuralx.local/infer -k"
+  fi
+else
+  echo "Docker non installé — saute l'étape de déploiement."
+fi
+
+# 8) Optional: run gRPC server & client test (if installed)
+if python - <<'PY' >/dev/null 2>&1
+import importlib, sys
+try:
+    import grpc
+    import grpc_tools
+    sys.exit(0)
+except Exception:
+    sys.exit(1)
+PY
+then
+  if [ -f "grpc_server.py" ] && [ -f "grpc_client_test.py" ]; then
+    log "8) Lancement du serveur gRPC en arrière-plan et exécution du client test"
+    # start server
+    python grpc_server.py &
+    GRPC_PID=$!
+    sleep 1
+    # run client
+    python grpc_client_test.py || {
+      echo "⚠️  Test gRPC client a échoué"
+      kill ${GRPC_PID} || true
+      exit 3
+    }
+    echo "gRPC client OK, arrêt du serveur (PID ${GRPC_PID})"
+    kill ${GRPC_PID} || true
+  else
+    echo "Fichiers gRPC manquants (grpc_server.py|grpc_client_test.py) — saute test gRPC"
+  fi
+else
+  echo "gRPC non disponible dans ce venv ou grpc_tools manquant — saute tests gRPC"
+fi
+
+# 9) Final summary
+log "Terminé — résumé rapide"
+echo "- Virtualenv: ${VENV_DIR}"
+echo "- Tests unitaires: OK si script n'a pas quitté précédemment"
+echo "- Docs: ./site (si mkdocs installé)"
+echo "- Certs: ${CERTS_DIR}"
+echo "- Docker compose file utilisé: ${DOCKER_COMPOSE_FILE} (si présent)"
+echo
+echo "Prochaine étape recommandée :"
+echo " - Générer un token de test (HS256): python -c \"from auth import create_test_token; print(create_test_token())\""
+echo " - Tester l'API mTLS : voir la commande curl affichée ci-dessus"
+echo
+echo "⚠️  Rappel sécurité : NE COMMITE PAS les fichiers privés sous ${CERTS_DIR} (ca.key, server.key, client.key). Ajoute-les à .gitignore."
 import React, { useState, useEffect } from 'react';
 
 // Main App component
