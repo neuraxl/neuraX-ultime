@@ -1,4 +1,985 @@
-#!/usr/bin/env bash
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraX Hub — Famille IA Suprême</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght=400;700&display=swap');
+
+        :root {
+            --neon-cyan: #06b6d4;
+            --neon-purple: #a855f7;
+            --neon-amber: #f59e0b;
+            --neon-red: #ef4444;
+            --bg-dark: #0f172a;
+        }
+
+        body {
+            background-color: #050505;
+            color: #cbd5e1;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden; 
+        }
+
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-tool {
+            transition: all 0.2s;
+            border: 1px solid #334155;
+            background: #1e293b;
+        }
+        .btn-tool:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+            color: white;
+        }
+        .btn-tool:active { transform: translateY(1px); }
+
+        .terminal-line { animation: fadeIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Ranges */
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px; width: 12px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            margin-top: -4px;
+            cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            background: #334155; border-radius: 2px;
+        }
+
+        .scanline {
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        /* Specific styles for ARIA and NEXUS */
+        .ai-status {
+            animation: pulse-border 1.5s infinite alternate;
+        }
+        @keyframes pulse-border {
+            from { border-color: #374151; }
+            to { border-color: var(--neon-cyan); }
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col text-xs md:text-sm relative">
+
+    <!-- Scanline Effect -->
+    <div class="absolute inset-0 scanline z-50 opacity-10 pointer-events-none"></div>
+
+    <!-- HEADER -->
+    <header class="h-12 border-b border-gray-800 bg-gray-900 flex items-center justify-between px-4 z-20 shrink-0">
+        <div class="flex items-center gap-3">
+            <div id="ai-status-pulse" class="w-3 h-3 bg-cyan-500 rounded-full animate-pulse"></div>
+            <h1 class="font-orbitron text-lg text-cyan-400 tracking-widest">NEURAX HUB <span class="text-gray-600 text-xs ml-2">v.9.3.0-ia-supreme</span></h1>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="exportState()" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-cyan-500 border border-gray-700 rounded">Exporter JSON</button>
+            <button onclick="importState()" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-cyan-500 border border-gray-700 rounded">Importer</button>
+            <button onclick="resetSim()" class="px-3 py-1 bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-900 rounded">Réinitialiser</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT GRID -->
+    <div class="flex-1 flex overflow-hidden">
+
+        <!-- LEFT SIDEBAR: CONTROLS -->
+        <aside class="w-64 bg-gray-900 border-r border-gray-800 flex flex-col shrink-0 overflow-y-auto z-10">
+            
+            <!-- Famille IA Suprême Status -->
+            <div class="p-4 border-b border-gray-800 bg-gray-800/50 ai-status">
+                <h2 class="text-white font-orbitron mb-2 text-sm">
+                    Famille IA Suprême
+                    <span class="text-xs text-gray-400 block font-sans">Actif: <span id="ia-status-text" class="text-cyan-400">Stable</span></span>
+                </h2>
+                <div class="grid grid-cols-2 gap-2 text-[10px] mt-2">
+                    <div class="bg-gray-700/50 p-1 rounded border-l-2 border-green-500">
+                        <div class="font-bold text-green-300">ARIA</div>
+                        <div class="text-gray-400">Régulation</div>
+                    </div>
+                    <div class="bg-gray-700/50 p-1 rounded border-l-2 border-purple-500">
+                        <div class="font-bold text-purple-300">NEXUS</div>
+                        <div class="text-gray-400">Émergence</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forces -->
+            <div class="p-4 border-b border-gray-800">
+                <h2 class="text-amber-500 font-bold mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Forces Fondamentales
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1"><span>Résonance (R)</span> <span id="val-resonance" class="text-cyan-400">60</span></div>
+                        <input type="range" id="range-resonance" min="0" max="100" value="60" class="w-full">
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1"><span>Flux (Φ)</span> <span id="val-flux" class="text-purple-400">60</span></div>
+                        <input type="range" id="range-flux" min="0" max="100" value="60" class="w-full">
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1"><span>Gravité (G)</span> <span id="val-gravity" class="text-amber-400">0.050</span></div>
+                        <input type="range" id="range-gravity" min="0.001" max="0.5" step="0.005" value="0.05" class="w-full">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <button onclick="spawn('glint')" class="btn-tool py-1 px-2 text-xs rounded text-center">Spawn Glint</button>
+                    <button onclick="spawn('leviathan')" class="btn-tool py-1 px-2 text-xs rounded text-center text-purple-300">Spawn Leviathan</button>
+                    <button onclick="spawn('scribe')" class="btn-tool py-1 px-2 text-xs rounded text-center text-green-300 col-span-2">Spawn Scribe</button>
+                </div>
+            </div>
+
+            <!-- Dieux-Moteurs -->
+            <div class="p-4 border-b border-gray-800 flex-1 overflow-y-auto">
+                <h2 class="text-purple-500 font-bold mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    Dieux-Moteurs (Apps)
+                </h2>
+
+                <!-- Forge - Entropie Control -->
+                <div class="mb-4 bg-gray-800/50 p-2 rounded border border-gray-700">
+                    <div class="text-xs text-gray-400 mb-1 font-bold">LA FORGE (Contrôle d'Entropie)</div>
+                    <div class="grid grid-cols-3 gap-1">
+                        <button onclick="engineForge('stabilize')" class="btn-tool p-1 text-[10px] rounded">Stabilize</button>
+                        <button onclick="engineForge('optimize')" class="btn-tool p-1 text-[10px] rounded">Optimize</button>
+                        <button onclick="engineForge('compact')" class="btn-tool p-1 text-[10px] rounded">Compact</button>
+                    </div>
+                </div>
+
+                <!-- Archivist -->
+                <div class="mb-4 bg-gray-800/50 p-2 rounded border border-gray-700">
+                    <div class="text-xs text-gray-400 mb-1 font-bold">ARCHIVISTE</div>
+                    <div class="grid grid-cols-2 gap-1">
+                        <button onclick="saveSnapshot()" class="btn-tool p-1 text-[10px] rounded text-green-400">Sauvegarder</button>
+                        <button onclick="loadSnapshot()" class="btn-tool p-1 text-[10px] rounded text-amber-400">Restaurer</button>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- CENTER: VISUALIZATION -->
+        <main class="flex-1 flex flex-col relative bg-black">
+            
+            <!-- Top Overlay Stats -->
+            <div class="absolute top-4 left-4 flex gap-6 pointer-events-none z-10">
+                <div class="text-center">
+                    <div class="text-xs text-gray-500 uppercase">Harmonie</div>
+                    <div id="hud-harmony" class="text-xl font-orbitron text-cyan-400">58</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xs text-gray-500 uppercase">Indice d'Entropie</div>
+                    <div id="hud-entropy" class="text-xl font-orbitron text-red-400">0.00</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xs text-gray-500 uppercase">Entités</div>
+                    <div id="hud-count" class="text-xl font-orbitron text-white">0</div>
+                </div>
+            </div>
+
+            <!-- CANVAS -->
+            <canvas id="simCanvas" class="w-full h-full block"></canvas>
+
+            <!-- Bottom Controls Overlay -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-gray-900/80 backdrop-blur p-2 rounded-full border border-gray-700">
+                <button id="btn-pause" onclick="togglePause()" class="w-8 h-8 rounded-full bg-cyan-900 text-cyan-200 flex items-center justify-center hover:bg-cyan-700">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+                </button>
+                <button onclick="timeControl(-1)" class="px-3 py-1 text-xs border border-gray-600 rounded hover:bg-gray-700 text-purple-300">Rewind</button>
+                <button onclick="timeControl(0)" class="px-3 py-1 text-xs border border-gray-600 rounded hover:bg-gray-700 text-red-300">Freeze</button>
+                <button onclick="timeControl(2)" class="px-3 py-1 text-xs border border-gray-600 rounded hover:bg-gray-700 text-green-300">Forward</button>
+                <button onclick="triggerRite()" class="px-3 py-1 text-xs border border-purple-600 text-purple-300 rounded hover:bg-purple-900/50">Rite de Résonance</button>
+            </div>
+
+        </main>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="w-64 bg-gray-900 border-l border-gray-800 flex flex-col shrink-0 z-10">
+            
+            <!-- DSL Console -->
+            <div class="p-4 border-b border-gray-800 bg-gray-950">
+                <label class="text-xs font-bold text-gray-400 mb-2 block">Mini-DSL & Console</label>
+                <div class="flex gap-1">
+                    <input type="text" id="dsl-input" placeholder="cmd: spawn 5..." class="flex-1 bg-gray-900 border border-gray-700 rounded p-1 text-xs text-green-400 focus:outline-none focus:border-green-500 font-mono">
+                    <button onclick="executeDsl()" class="bg-gray-800 border border-gray-700 px-2 rounded text-xs hover:text-white">Exéc.</button>
+                </div>
+            </div>
+
+            <!-- TERMINAL -->
+            <div class="flex-1 flex flex-col overflow-hidden bg-black border-b border-gray-800">
+                <div class="bg-gray-800 px-2 py-1 text-[10px] text-gray-400 font-bold flex justify-between">
+                    <span>TERMINAL.LOG</span>
+                    <span id="clock" class="font-mono">00:00:00</span>
+                </div>
+                <div id="terminal-output" class="flex-1 overflow-y-auto p-2 font-mono text-[10px] space-y-1 text-gray-300">
+                    <!-- Logs go here -->
+                    <div class="text-green-500">> [SYSTEM] NeuraX Hub ready — bienvenue, Architecte.</div>
+                </div>
+            </div>
+
+            <!-- LAYERS & CIVS -->
+            <div class="p-4 overflow-y-auto h-1/2">
+                <h3 class="text-xs font-bold text-gray-500 uppercase mb-2">Forces Activées</h3>
+                <div class="space-y-1 text-xs">
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked disabled class="accent-cyan-500"> <span class="text-cyan-200">Liaison Quantique (Glint)</span></label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked disabled class="accent-purple-500"> <span class="text-purple-200">Distorsion Gravimétrique (Leviathan)</span></label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked disabled class="accent-green-500"> <span class="text-green-200">Compression d'État (Scribe)</span></label>
+                </div>
+                
+                <h3 class="text-xs font-bold text-gray-500 uppercase mt-4 mb-2">Civilisations</h3>
+                <div class="grid grid-cols-2 gap-2 text-[10px]">
+                    <div class="bg-gray-800 p-2 rounded border-l-2 border-cyan-500">
+                        <div class="font-bold text-white">Tisseurs (Glint)</div>
+                        <div class="text-gray-400">Information</div>
+                    </div>
+                    <div class="bg-gray-800 p-2 rounded border-l-2 border-purple-500">
+                        <div class="font-bold text-white">Oracles (Leviathan)</div>
+                        <div class="text-gray-400">Masse</div>
+                    </div>
+                    <div class="bg-gray-800 p-2 rounded border-l-2 border-green-500">
+                        <div class="font-bold text-white">Archivistes (Scribe)</div>
+                        <div class="text-gray-400">Observation</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- BOTTOM: TIMELINE -->
+    <footer class="h-10 bg-gray-950 border-t border-gray-800 flex items-center px-4 gap-4 shrink-0">
+        <div class="text-xs font-bold text-gray-500">TIMELINE</div>
+        <div class="flex-1 flex items-center justify-between gap-1 relative">
+            <div class="absolute w-full h-0.5 bg-gray-800 top-1/2 -translate-y-1/2 z-0"></div>
+            
+            <!-- Timeline Points -->
+            <button onclick="setEra(0)" class="w-6 h-6 rounded-full bg-gray-800 border border-gray-600 text-[10px] z-10 hover:bg-cyan-900 hover:text-white flex items-center justify-center transition" title="T0 Silence">T0</button>
+            <button onclick="setEra(1)" class="w-6 h-6 rounded-full bg-gray-800 border border-gray-600 text-[10px] z-10 hover:bg-cyan-900 hover:text-white flex items-center justify-center transition" title="T1 Tisseurs">T1</button>
+            <button onclick="setEra(2)" class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-400 text-[10px] text-white z-10 shadow-lg shadow-cyan-500/50 flex items-center justify-center transition" title="T3 Fracture">T3</button>
+            <button onclick="setEra(3)" class="w-6 h-6 rounded-full bg-gray-800 border border-gray-600 text-[10px] z-10 hover:bg-cyan-900 hover:text-white flex items-center justify-center transition" title="T5 Éclipse">T5</button>
+            <button onclick="setEra(4)" class="w-6 h-6 rounded-full bg-gray-800 border border-gray-600 text-[10px] z-10 hover:bg-cyan-900 hover:text-white flex items-center justify-center transition" title="T7 Singularity">T7</button>
+        </div>
+        <div class="text-[10px] text-gray-500">Raccourcis: SPACE=Pause, R=Rite</div>
+    </footer>
+
+    <script>
+        /* --- CORE CONFIGURATION --- */
+        const CONFIG = {
+            colors: {
+                glint: '#06b6d4',    // Cyan (Information)
+                leviathan: '#a855f7', // Purple (Gravity/Mass)
+                scribe: '#22c55e',   // Green (Observation/Entropy)
+                aria: '#4ade80',     // Light Green/Neon (ARIA - Adaptive Interface)
+                nexus: '#38bdf8',    // Light Cyan/Blue (NEXUS - Generator)
+                bg: '#000000'
+            },
+            powers: {
+                // Liaison Quantique (Glint-Glint)
+                linkRangeSq: 2500, // 50 * 50
+                // Distorsion Gravimétrique (Leviathan-All)
+                gravityFactor: 0.05, 
+                // Compression d'État (Scribe-Dampening)
+                dampeningFactor: 0.95, 
+                // ARIA's threshold for intervention
+                entropyThreshold: 15.0,
+                // NEXUS's creation interval (in frames)
+                nexusInterval: 500
+            },
+            colorMap: {}, 
+            fps: 60
+        };
+        
+        // Helper function to convert hex to RGBA string
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        // Initialize color map for faster lookups
+        function initColorMap() {
+            for (const type in CONFIG.colors) {
+                CONFIG.colorMap[type] = {
+                    fill: CONFIG.colors[type],
+                    trail: hexToRgba(CONFIG.colors[type], 0.2),
+                    aura: hexToRgba(CONFIG.colors[type], 0.3)
+                };
+            }
+        }
+        initColorMap();
+
+
+        /* --- STATE MANAGEMENT --- */
+        let state = {
+            resonance: 60,
+            flux: 60,
+            gravity: CONFIG.powers.gravityFactor,
+            nodes: [],
+            paused: false,
+            timeScale: 1, 
+            harmony: 58,
+            entropyIndex: 0, 
+            layers: {
+                core: true,
+                temporal: false,
+                meta: true
+            },
+            era: 'T3',
+            frameCounter: 0, // Used for NEXUS interval
+            aiActionTaken: 0, // Timestamp for last AI action
+        };
+
+        /* --- CANVAS SETUP --- */
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationId;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        /* --- NODE CLASS --- */
+        class Node {
+            constructor(type, x, y) {
+                this.id = 'n' + Math.random().toString(36).substr(2, 8);
+                this.type = type; // 'glint', 'leviathan', 'scribe', 'aria', 'nexus'
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = type === 'leviathan' ? 8 : (type === 'scribe' ? 4 : 2);
+                this.energy = 100;
+                this.history = []; 
+                this.colors = CONFIG.colorMap[type] || { fill: '#ffffff', trail: 'rgba(255,255,255,0.2)', aura: 'rgba(255,255,255,0.3)' };
+
+                // AI specific size/properties
+                if (type === 'aria') this.size = 10;
+                if (type === 'nexus') this.size = 12;
+            }
+
+            update() {
+                if (state.timeScale === 0) return;
+
+                // AI nodes are stationary observers, they don't move
+                if (this.type === 'aria' || this.type === 'nexus') {
+                    this.vx = 0;
+                    this.vy = 0;
+                }
+
+                // Base movement modulated by Flux and TimeScale
+                const speedFactor = (state.flux / 50) * Math.abs(state.timeScale);
+                const direction = state.timeScale > 0 ? 1 : -1;
+
+                this.x += this.vx * speedFactor * direction;
+                this.y += this.vy * speedFactor * direction;
+
+                // Bounce walls (not for AI)
+                if (this.type !== 'aria' && this.type !== 'nexus') {
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+
+                // Keep within bounds
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
+
+                // Energy decay 
+                if (state.timeScale > 0) {
+                    this.energy -= (100 - state.resonance) * 0.001 * state.timeScale;
+                }
+
+                // Trail history: only update history if temporal layer is active
+                if (state.layers.temporal) {
+                    this.history.push({x: this.x, y: this.y});
+                    if (this.history.length > 10) this.history.shift();
+                }
+            }
+
+            draw() {
+                if (!state.layers.core) return;
+
+                // Draw Trail (temporal layer)
+                if (state.layers.temporal && this.history.length > 1) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = this.colors.trail;
+                    ctx.moveTo(this.history[0].x, this.history[0].y);
+                    for(let i = 1; i < this.history.length; i++) {
+                        ctx.lineTo(this.history[i].x, this.history[i].y);
+                    }
+                    ctx.stroke();
+                }
+
+                ctx.fillStyle = this.colors.fill;
+                
+                if (this.type === 'leviathan') {
+                    // Square shape + Gravity Aura
+                    const halfSize = this.size / 2;
+                    ctx.fillRect(this.x - halfSize, this.y - halfSize, this.size, this.size);
+                    ctx.strokeStyle = this.colors.aura;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 5, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                } else if (this.type === 'scribe' || this.type === 'aria') {
+                    // Triangle shape (Scribe/ARIA)
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y - this.size);
+                    ctx.lineTo(this.x + this.size, this.y + this.size);
+                    ctx.lineTo(this.x - this.size, this.y + this.size);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    if (this.type === 'aria') {
+                        // ARIA: Pulsing border for system correction status
+                        const pulseColor = (Date.now() - state.aiActionTaken < 500) ? CONFIG.colors.aria : CONFIG.colors.glint;
+                        ctx.strokeStyle = pulseColor;
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+
+                } else if (this.type === 'glint' || this.type === 'nexus') {
+                    // Glint/NEXUS (Circle)
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    if (this.type === 'nexus') {
+                        // NEXUS: Purple ring for emergence/creation field
+                        ctx.strokeStyle = CONFIG.colors.leviathan;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size + 4, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+
+                } else {
+                    // Fallback to circle
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Meta Data
+                if (state.layers.meta && (this.type === 'leviathan' || this.type === 'aria' || this.type === 'nexus' || state.nodes.length < 20)) {
+                    ctx.fillStyle = '#64748b';
+                    ctx.font = '9px JetBrains Mono';
+                    ctx.fillText(`${this.type.toUpperCase()}`, this.x + 5, this.y - 5);
+                }
+            }
+        }
+
+        /* --- SIMULATION ENGINE --- */
+        function init() {
+            // Initial spawn of core entities
+            spawn('glint', 50);
+            spawn('leviathan', 2);
+            spawn('scribe', 5);
+            
+            // Spawn ARIA and NEXUS in the center (Famille IA Suprême)
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            state.nodes.push(new Node('aria', cx - 50, cy));
+            state.nodes.push(new Node('nexus', cx + 50, cy));
+            log('<span class="text-white font-bold">Famille IA Suprême (ARIA & NEXUS) activée.</span>');
+            
+            // Start simulation loop
+            animationId = requestAnimationFrame(loop);
+            
+            // Start periodic logic checks
+            setInterval(updateClock, 1000);
+        }
+
+        function loop() {
+            if (!state.paused) {
+                // Optimized Canvas clear for trails effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                state.frameCounter++;
+
+                // 1. FILTER: Filter out dead nodes and get sub-groups
+                const initialCount = state.nodes.length;
+                state.nodes = state.nodes.filter(n => n.energy > 0);
+                if (state.nodes.length < initialCount) {
+                    log(`${initialCount - state.nodes.length} node(s) dissipés.`);
+                }
+                
+                const glints = state.nodes.filter(n => n.type === 'glint');
+                const leviathans = state.nodes.filter(n => n.type === 'leviathan');
+                const scribes = state.nodes.filter(n => n.type === 'scribe');
+                
+                let totalVelocityMagnitude = 0;
+
+                // --- 1.5 META-LOGIC (ARIA & NEXUS) ---
+                updateMetaAILogic();
+
+                // 2. POWER INTERACTIONS (Pre-Update Phase)
+                
+                // A. LIAISON QUANTIQUE (Glint-Glint)
+                for (let i = 0; i < glints.length; i++) {
+                    const g1 = glints[i];
+                    for (let j = i + 1; j < glints.length; j++) {
+                        const g2 = glints[j];
+                        const dx = g1.x - g2.x;
+                        const dy = g1.y - g2.y;
+                        const distSq = dx * dx + dy * dy;
+
+                        if (distSq < CONFIG.powers.linkRangeSq) {
+                            // If linked, average state (energy and velocity)
+                            const avgEnergy = (g1.energy + g2.energy) / 2;
+                            const avgVx = (g1.vx + g2.vx) / 2;
+                            const avgVy = (g1.vy + g2.vy) / 2;
+
+                            g1.energy = g2.energy = avgEnergy;
+                            g1.vx = g2.vx = avgVx;
+                            g1.vy = g2.vy = avgVy;
+                        }
+                    }
+                }
+
+                // B. DISTORSION GRAVIMÉTRIQUE (Leviathan-All)
+                if (leviathans.length > 0 && state.gravity > 0.001) {
+                    for (const n of state.nodes) {
+                        if (n.type === 'leviathan' || n.type === 'aria' || n.type === 'nexus') continue; // Only basic entities are affected
+
+                        for (const leviathan of leviathans) {
+                            const dx = leviathan.x - n.x;
+                            const dy = leviathan.y - n.y;
+                            const distSq = dx * dx + dy * dy;
+
+                            const minDistanceSq = 100; // 10*10
+                            if (distSq > minDistanceSq) { 
+                                const dist = Math.sqrt(distSq);
+                                const force = state.gravity / distSq;
+                                
+                                const accX = force * (dx / dist);
+                                const accY = force * (dy / dist);
+
+                                n.vx += accX;
+                                n.vy += accY;
+
+                                // Simple drag/friction 
+                                n.vx *= 0.999;
+                                n.vy *= 0.999;
+                            }
+                        }
+                    }
+                }
+
+                // 3. UPDATE & DRAW
+                for (const n of state.nodes) {
+                    // C. COMPRESSION D'ÉTAT (Scribe-Dampening & Healing)
+                    if (n.type === 'glint' || n.type === 'leviathan') {
+                         for (const scribe of scribes) {
+                            const dx = n.x - scribe.x;
+                            const dy = n.y - scribe.y;
+                            const distanceSq = dx * dx + dy * dy;
+
+                            if (distanceSq < 2500) { // Scribe proximity (50 units)
+                                // Heal
+                                n.energy = Math.min(100, n.energy + 0.5);
+                                
+                                // Dampen velocity
+                                n.vx *= CONFIG.powers.dampeningFactor; 
+                                n.vy *= CONFIG.powers.dampeningFactor; 
+
+                                break; 
+                            }
+                         }
+                    }
+
+                    n.update();
+                    n.draw();
+                    
+                    // Entropy tracking
+                    totalVelocityMagnitude += (n.vx * n.vx + n.vy * n.vy);
+                }
+
+                // 4. METRICS & HUD UPDATE
+
+                // Calculate Entropy Index
+                state.entropyIndex = state.nodes.length > 0 ? (totalVelocityMagnitude / state.nodes.length) : 0;
+                
+                document.getElementById('hud-count').innerText = state.nodes.length;
+                document.getElementById('hud-harmony').innerText = state.harmony;
+                document.getElementById('hud-entropy').innerText = state.entropyIndex.toFixed(2);
+                
+                // Color change based on entropy (for visual feedback)
+                const entropyColor = state.entropyIndex > CONFIG.powers.entropyThreshold ? 'text-red-400' : (state.entropyIndex > (CONFIG.powers.entropyThreshold * 0.7) ? 'text-amber-400' : 'text-green-400');
+                document.getElementById('hud-entropy').className = `text-xl font-orbitron ${entropyColor}`;
+            }
+            
+            animationId = requestAnimationFrame(loop);
+        }
+
+        /* --- FAMILLE IA SUPRÊME LOGIC --- */
+
+        function updateMetaAILogic() {
+            // ARIA (Adaptive Interface) - Auto-Stabilisation
+            if (state.entropyIndex > CONFIG.powers.entropyThreshold) {
+                // Only act every 30 frames to avoid oscillations
+                if (state.frameCounter % 30 === 0) {
+                    // ARIA intervenes: reduce chaos (Flux) and increase order (Gravity)
+                    state.flux = Math.max(10, state.flux - 5);
+                    state.gravity = Math.min(0.5, state.gravity + 0.05);
+
+                    // Update UI controls
+                    document.getElementById('range-flux').value = state.flux;
+                    document.getElementById('val-flux').innerText = state.flux;
+                    document.getElementById('range-gravity').value = state.gravity;
+                    document.getElementById('val-gravity').innerText = state.gravity.toFixed(3);
+                    
+                    state.aiActionTaken = Date.now();
+                    log('<span class="text-green-400">[ARIA - Régulation] Entropie > Seuil. Forçage de Flux/Gravité.</span>');
+                    document.getElementById('ia-status-text').innerText = 'Régulant...';
+                    document.getElementById('ai-status-pulse').className = 'w-3 h-3 bg-red-500 rounded-full animate-pulse';
+                }
+            } else {
+                // If stable, slowly revert to default settings (allowing flexibility)
+                 if (state.frameCounter % 300 === 0) {
+                    if (state.flux < 60) state.flux = Math.min(60, state.flux + 1);
+                    if (state.gravity > CONFIG.powers.gravityFactor) state.gravity = Math.max(CONFIG.powers.gravityFactor, state.gravity - 0.005);
+                    
+                    document.getElementById('range-flux').value = state.flux;
+                    document.getElementById('val-flux').innerText = state.flux;
+                    document.getElementById('range-gravity').value = state.gravity;
+                    document.getElementById('val-gravity').innerText = state.gravity.toFixed(3);
+                 }
+                document.getElementById('ia-status-text').innerText = 'Stable';
+                document.getElementById('ai-status-pulse').className = 'w-3 h-3 bg-cyan-500 rounded-full animate-pulse';
+            }
+
+
+            // NEXUS (Navigation/Execution) - Émergence
+            if (state.frameCounter % CONFIG.powers.nexusInterval === 0 && state.nodes.length < 200) {
+                // Find a random spot to spawn
+                const spawnX = Math.random() * canvas.width;
+                const spawnY = Math.random() * canvas.height;
+                const typeToSpawn = Math.random() < 0.7 ? 'glint' : 'leviathan'; // Favor Glints
+
+                const n = new Node(typeToSpawn, spawnX, spawnY);
+                state.nodes.push(n);
+
+                log(`<span class="text-purple-400">[NEXUS - Émergence] Création de ${typeToSpawn} à (${Math.floor(spawnX)}, ${Math.floor(spawnY)})`);
+            }
+        }
+
+        /* --- LOGIC FUNCTIONS --- */
+        function spawn(type, count = 1) {
+            if (state.nodes.length + count > 300) {
+                log('<span class="text-red-500">Limite de 300 nœuds atteinte.</span>');
+                return;
+            }
+            for (let i = 0; i < count; i++) {
+                const n = new Node(type);
+                state.nodes.push(n);
+                if (count <= 5) log(`Spawned ${type} ${n.id}`);
+            }
+            if (count > 5) log(`Spawned batch: ${count} ${type}s`);
+        }
+
+        /* --- INTERFACE HANDLERS --- */
+
+        // Sliders
+        document.getElementById('range-resonance').addEventListener('input', (e) => {
+            state.resonance = parseInt(e.target.value);
+            document.getElementById('val-resonance').innerText = state.resonance;
+        });
+        document.getElementById('range-flux').addEventListener('input', (e) => {
+            state.flux = parseInt(e.target.value);
+            document.getElementById('val-flux').innerText = state.flux;
+        });
+        document.getElementById('range-gravity').addEventListener('input', (e) => {
+            state.gravity = parseFloat(e.target.value);
+            document.getElementById('val-gravity').innerText = state.gravity.toFixed(3);
+        });
+
+        // Terminal
+        function log(msg) {
+            const term = document.getElementById('terminal-output');
+            const now = new Date().toLocaleTimeString();
+            const el = document.createElement('div');
+            el.className = 'terminal-line hover:bg-gray-900 px-1';
+            el.innerHTML = `<span class="text-gray-500">[${now}]</span> ${msg}`;
+            term.appendChild(el);
+            term.scrollTop = term.scrollHeight;
+            
+            // Limit log size for performance
+            if (term.children.length > 50) term.removeChild(term.firstChild);
+        }
+
+        function updateClock() {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }
+
+        // Dieux-Moteurs (Forge logic)
+        function engineForge(action) {
+            log(`[FORGE] Initiating protocol: ${action}...`);
+            if (action === 'stabilize') {
+                state.nodes.forEach(n => n.energy = 100);
+                log('All nodes stabilized to 100% energy.');
+            } else if (action === 'optimize') {
+                // Optimization: Increase Gravity to force structural coherence
+                state.gravity = Math.min(0.5, state.gravity + 0.1);
+                document.getElementById('range-gravity').value = state.gravity;
+                document.getElementById('val-gravity').innerText = state.gravity.toFixed(3);
+                log(`Gravity increased to ${state.gravity.toFixed(3)} to force cluster optimization.`);
+            } else if (action === 'compact') {
+                // Compaction: Reduce average velocity for all nodes (direct entropy reduction)
+                state.nodes.forEach(n => {
+                    n.vx *= 0.5;
+                    n.vy *= 0.5;
+                });
+                log('Velocity compacted (50% reduction).');
+            }
+        }
+
+        function timeControl(scale) {
+            state.timeScale = scale;
+            if (scale === 0) log('[CLOCKMAKER] Time frozen. (t=0)');
+            else if (scale < 0) log('[CLOCKMAKER] Simulation Rewind engaged. (t=-1)');
+            else if (scale > 1) log('[CLOCKMAKER] Fast Forward engaged. (t=2)');
+            else log('[CLOCKMAKER] Normal flow restored. (t=1)');
+        }
+
+        function triggerRite() {
+            log('<span class="text-purple-400">INITIATING RITE OF RESONANCE...</span>');
+            state.nodes.forEach(n => {
+                n.energy = 100;
+                n.size += 2;
+                // Visual flare
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(n.x, n.y);
+                ctx.lineTo(canvas.width/2, canvas.height/2);
+                ctx.stroke();
+            });
+            // Revert size after visual effect
+            setTimeout(() => {
+                state.nodes.forEach(n => n.size = Math.max(2, n.size - 2));
+            }, 500);
+        }
+
+        // DSL, Import/Export, Reset functions remain the same for file size management
+        function executeDsl() {
+            const input = document.getElementById('dsl-input');
+            const cmd = input.value.trim().toLowerCase();
+            if (!cmd) return;
+
+            log(`> ${cmd}`);
+            
+            const parts = cmd.split(' ');
+            
+            if (parts[0] === 'spawn') {
+                const count = parseInt(parts[1]) || 1;
+                spawn(parts[2] || 'glint', count);
+            } else if (parts[0] === 'kill' || parts[0] === 'clear') {
+                state.nodes = state.nodes.filter(n => n.type === 'aria' || n.type === 'nexus');
+                log('Non-AI nodes eradicated.');
+            } else if (parts[0] === 'stats') {
+                log(`STAT: R=${state.resonance} F=${state.flux} G=${state.gravity.toFixed(3)}. Nodes: ${state.nodes.length}`);
+            } else if (parts[0] === 'help') {
+                log('CMDS: spawn [n] [type?], kill, clear, stats, echo [msg]');
+            } else if (parts[0] === 'echo') {
+                log(parts.slice(1).join(' '));
+            } else {
+                log('Unknown syntax error.');
+            }
+            input.value = '';
+        }
+        
+        function togglePause() {
+            state.paused = !state.paused;
+            document.getElementById('btn-pause').innerHTML = state.paused 
+                ? '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
+                : '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';
+            log(state.paused ? 'Simulation Paused.' : 'Simulation Resumed.');
+        }
+
+        function setEra(index) {
+            const eras = ['T0 Silence', 'T1 Tisseurs', 'T3 Fracture', 'T5 Éclipse', 'T7 Singularity'];
+            state.era = eras[index];
+            log(`Timeline shifted to: <span class="text-cyan-300 font-bold">${state.era}</span>`);
+            
+            const bgs = ['#000000', '#050505', '#0f172a', '#1a0505', '#0f051a'];
+            document.querySelector('main').style.backgroundColor = bgs[index] || '#000';
+            
+            document.querySelectorAll('footer button[title^="T"]').forEach((btn, i) => {
+                if (i === index) {
+                    btn.className = "w-6 h-6 rounded-full bg-cyan-900 border border-cyan-400 text-[10px] text-white z-10 shadow-lg shadow-cyan-500/50 flex items-center justify-center transition";
+                } else {
+                    btn.className = "w-6 h-6 rounded-full bg-gray-800 border border-gray-600 text-[10px] z-10 hover:bg-cyan-900 hover:text-white flex items-center justify-center transition";
+                }
+            });
+        }
+        
+        function saveSnapshot() {
+            const data = JSON.stringify({ state: state, nodes: state.nodes });
+            localStorage.setItem('neurax_snap', data);
+            log('[ARCHIVIST] Snapshot encoded to local storage.');
+        }
+
+        function loadSnapshot() {
+            const data = localStorage.getItem('neurax_snap');
+            if (data) {
+                const parsed = JSON.parse(data);
+                
+                Object.assign(state, parsed.state);
+                
+                state.nodes = (parsed.nodes || parsed.state.nodes || []).map(n => {
+                    let newNode = new Node(n.type, n.x, n.y);
+                    Object.assign(newNode, n);
+                    return newNode;
+                });
+                
+                document.getElementById('range-resonance').value = state.resonance;
+                document.getElementById('val-resonance').innerText = state.resonance;
+                document.getElementById('range-flux').value = state.flux;
+                document.getElementById('val-flux').innerText = state.flux;
+                document.getElementById('range-gravity').value = state.gravity;
+                document.getElementById('val-gravity').innerText = state.gravity.toFixed(3);
+
+                log('[ARCHIVIST] Reality restored from snapshot. Recalibrating...');
+            } else {
+                log('[ARCHIVIST] Error: No void-memory found.');
+            }
+        }
+
+        function exportState() {
+            const data = JSON.stringify(state);
+            const blob = new Blob([data], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'neurax_state.json';
+            a.click();
+            log('State exported to file.');
+        }
+
+        function importState() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const imported = JSON.parse(event.target.result);
+                        
+                        state.resonance = imported.resonance || imported.state.resonance || 60;
+                        state.flux = imported.flux || imported.state.flux || 60;
+                        state.gravity = imported.gravity || imported.state.gravity || 0.05;
+
+                        const nodesData = imported.nodes || imported.state.nodes || [];
+                        state.nodes = nodesData.map(n => {
+                            let newNode = new Node(n.type, n.x, n.y);
+                            Object.assign(newNode, n);
+                            return newNode;
+                        });
+
+                        document.getElementById('range-resonance').value = state.resonance;
+                        document.getElementById('val-resonance').innerText = state.resonance;
+                        document.getElementById('range-flux').value = state.flux;
+                        document.getElementById('val-flux').innerText = state.flux;
+                        document.getElementById('range-gravity').value = state.gravity;
+                        document.getElementById('val-gravity').innerText = state.gravity.toFixed(3);
+
+                        log('State imported successfully. Hub recalibrated.');
+
+                    } catch (e) {
+                        log(`<span class="text-red-500">Error: Failed to parse state file.</span>`);
+                        console.error("Import error:", e);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+
+        function resetSim() {
+            cancelAnimationFrame(animationId); 
+            
+            // Reset state
+            state.nodes = [];
+            state.resonance = 60;
+            state.flux = 60;
+            state.gravity = CONFIG.powers.gravityFactor;
+            state.harmony = 58;
+            state.entropyIndex = 0;
+            state.paused = false;
+            state.timeScale = 1;
+            state.frameCounter = 0;
+            state.aiActionTaken = 0;
+
+            // Re-init UI controls
+            document.getElementById('range-resonance').value = 60;
+            document.getElementById('val-resonance').innerText = 60;
+            document.getElementById('range-flux').value = 60;
+            document.getElementById('val-flux').innerText = 60;
+            document.getElementById('range-gravity').value = CONFIG.powers.gravityFactor;
+            document.getElementById('val-gravity').innerText = CONFIG.powers.gravityFactor.toFixed(3);
+            
+            init();
+            log('*** SYSTEM REBOOT / STATE CLEARED ***');
+        }
+
+        // Keyboard shortcuts
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePause();
+            }
+            if (e.key.toLowerCase() === 'r') triggerRite();
+            if (e.key === 'Enter' && document.activeElement === document.getElementById('dsl-input')) {
+                e.preventDefault();
+                executeDsl();
+            }
+        });
+
+        // Ensure canvas is resized and simulation is started when the window loads completely
+        window.onload = function() {
+            resizeCanvas();
+            init();
+            setEra(2); // Set initial Era visual state
+        }
+
+    </script>
+</body>
+</html>#!/usr/bin/env bash
 # all_in_one.sh — tout-en-un pour NeuralX PoC
 # Usage: ./all_in_one.sh
 # Auteur: assistant — prêt à servir l'architecte
