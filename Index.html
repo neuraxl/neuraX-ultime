@@ -3,6 +3,692 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraX Hub — Supervision Neuronale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            --neon-cyan: #06b6d4;
+            --neon-purple: #d946ef;
+            --neon-amber: #f59e0b;
+            --neon-green: #22c55e;
+            --bg-dark: #050505;
+            --panel-bg: rgba(10, 10, 12, 0.85);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #94a3b8;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+
+        /* Scrollbar futuriste */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
+        /* Boutons et Panneaux */
+        .panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid #1e293b;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .btn-tool {
+            transition: all 0.2s ease;
+            border: 1px solid #1e293b;
+            background: rgba(30, 41, 59, 0.5);
+            color: #94a3b8;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        .btn-tool:hover {
+            border-color: var(--neon-cyan);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+        .btn-tool:active { transform: scale(0.98); }
+
+        /* Sliders stylisés */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            height: 20px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 2px;
+            background: #334155;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 10px; width: 10px;
+            background: var(--neon-cyan);
+            margin-top: -4px;
+            transform: rotate(45deg);
+            border: 1px solid #fff;
+            box-shadow: 0 0 10px var(--neon-cyan);
+            cursor: pointer;
+        }
+
+        /* Effets CRT / Scanline */
+        .scanline {
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.3) 3px,
+                rgba(0, 0, 0, 0.3) 4px
+            );
+            pointer-events: none;
+        }
+        .vignette {
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+        }
+
+        /* Animations */
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col text-xs relative select-none">
+
+    <!-- FX Overlays -->
+    <div class="absolute inset-0 scanline z-50 opacity-20"></div>
+    <div class="absolute inset-0 vignette z-50"></div>
+
+    <!-- HEADER -->
+    <header class="h-10 border-b border-gray-800 bg-black/90 flex items-center justify-between px-4 z-20 shrink-0 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <div class="relative w-4 h-4 flex items-center justify-center">
+                <div class="absolute inset-0 bg-cyan-500 rounded-full animate-ping opacity-20"></div>
+                <div class="w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_10px_#06b6d4]"></div>
+            </div>
+            <h1 class="font-orbitron text-base text-cyan-100 tracking-[0.2em] drop-shadow-[0_0_5px_rgba(6,182,212,0.5)]">
+                NEURA<span class="text-cyan-500">X</span> HUB <span class="text-gray-600 text-[10px] ml-2 align-super">v2.1.0</span>
+            </h1>
+        </div>
+        <div class="flex gap-2 font-mono">
+            <div class="flex items-center gap-2 px-3 py-1 bg-gray-900 border border-gray-800 rounded text-xs">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="text-green-500">ONLINE</span>
+            </div>
+            <button onclick="resetSim()" class="px-3 py-1 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-900/50 rounded transition-colors">PURGE</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 flex overflow-hidden relative">
+
+        <!-- LEFT: CONTROLS -->
+        <aside class="w-72 bg-gray-900/80 border-r border-gray-800 flex flex-col shrink-0 z-10 backdrop-blur-sm">
+            
+            <!-- Metrics Graph Placeholder -->
+            <div class="h-24 border-b border-gray-800 bg-black/50 p-2 relative overflow-hidden">
+                <div class="text-[10px] font-bold text-gray-500 mb-1">CHARGE NEURONALE</div>
+                <div class="flex items-end justify-between h-full pb-4 gap-0.5" id="mini-graph">
+                    <!-- JS generates bars here -->
+                </div>
+                <div class="absolute top-0 right-0 p-1 text-[9px] text-cyan-600">MONITORING</div>
+            </div>
+
+            <div class="p-4 flex-1 overflow-y-auto space-y-6">
+                
+                <!-- Forces -->
+                <div>
+                    <h2 class="text-xs font-orbitron text-amber-500 mb-3 flex items-center gap-2 tracking-wider">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        CONSTANTES
+                    </h2>
+                    <div class="space-y-3 text-[10px]">
+                        <div class="group">
+                            <div class="flex justify-between mb-1"><span class="text-cyan-300">Résonance Synaptique</span> <span id="val-resonance" class="font-mono">60%</span></div>
+                            <input type="range" id="range-resonance" min="0" max="100" value="60">
+                        </div>
+                        <div class="group">
+                            <div class="flex justify-between mb-1"><span class="text-purple-300">Flux de Données</span> <span id="val-flux" class="font-mono">60%</span></div>
+                            <input type="range" id="range-flux" min="0" max="100" value="60">
+                        </div>
+                        <div class="group">
+                            <div class="flex justify-between mb-1"><span class="text-green-300">Auto-Genèse</span> <span id="val-autogen" class="font-mono">30%</span></div>
+                            <input type="range" id="range-autogen" min="0" max="100" value="30">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools -->
+                <div>
+                    <h2 class="text-xs font-orbitron text-purple-500 mb-3 flex items-center gap-2 tracking-wider">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        PROTOCOLES
+                    </h2>
+                    
+                    <!-- Grid of actions -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="spawn('glint')" class="btn-tool py-2 px-2 rounded flex flex-col items-center gap-1">
+                            <span class="text-[9px] uppercase tracking-wide text-cyan-400">Inject Node</span>
+                            <div class="w-full h-0.5 bg-cyan-900"><div class="h-full w-1/2 bg-cyan-400"></div></div>
+                        </button>
+                        <button onclick="spawn('leviathan')" class="btn-tool py-2 px-2 rounded flex flex-col items-center gap-1">
+                            <span class="text-[9px] uppercase tracking-wide text-purple-400">Deploy Core</span>
+                            <div class="w-full h-0.5 bg-purple-900"><div class="h-full w-1/2 bg-purple-400"></div></div>
+                        </button>
+                    </div>
+
+                    <div class="mt-2 space-y-2">
+                        <div class="flex gap-1">
+                            <button onclick="engineForge('stabilize')" class="btn-tool flex-1 py-1 text-[10px] rounded border-l-2 border-l-amber-500">Stabilize</button>
+                            <button onclick="engineForge('optimize')" class="btn-tool flex-1 py-1 text-[10px] rounded">Optimize</button>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="engineChoir('harmonize')" class="btn-tool flex-1 py-1 text-[10px] rounded border-l-2 border-l-blue-500">Harmonize</button>
+                            <button onclick="triggerRite()" class="btn-tool flex-1 py-1 text-[10px] rounded text-purple-300">Invoke Rite</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temporal -->
+                <div class="bg-black/30 p-2 rounded border border-gray-800">
+                    <label class="text-[9px] font-bold text-gray-500 mb-1 block">MANIPULATION TEMPORELLE</label>
+                    <div class="flex rounded overflow-hidden border border-gray-700">
+                        <button onclick="timeControl(-1)" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-400 py-1">◄◄</button>
+                        <button onclick="timeControl(0)" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-400 py-1 border-x border-gray-700">❚❚</button>
+                        <button onclick="timeControl(1)" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-400 py-1">►</button>
+                        <button onclick="timeControl(2)" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-400 py-1 border-l border-gray-700">►►</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER: VISUALIZATION -->
+        <main class="flex-1 flex flex-col relative bg-black cursor-crosshair">
+            
+            <!-- HUD Overlay -->
+            <div class="absolute top-4 left-4 right-4 flex justify-between pointer-events-none z-10">
+                <!-- Left Stats -->
+                <div class="flex flex-col gap-1">
+                    <div class="text-[10px] text-cyan-600 font-bold tracking-widest">TOPOLOGIE RÉSEAU</div>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-orbitron text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" id="hud-nodes">0</span>
+                        <span class="text-xs text-gray-500">ACTIFS</span>
+                    </div>
+                    <div class="text-[10px] text-purple-400 mt-1">DENSITÉ: <span id="hud-density" class="text-white font-mono">0.00</span>/cm³</div>
+                </div>
+                
+                <!-- Center Status -->
+                <div class="text-center pt-2">
+                    <div class="inline-block px-4 py-1 border border-gray-700 bg-black/60 backdrop-blur rounded-full">
+                        <span class="text-[10px] text-gray-400">ÉTAT SYSTÈME:</span>
+                        <span id="system-status" class="text-green-400 font-bold ml-1 animate-pulse-slow">NOMINAL</span>
+                    </div>
+                </div>
+
+                <!-- Right Clock -->
+                <div class="text-right">
+                     <div class="text-[10px] text-gray-600 font-bold tracking-widest">TEMPS UNIVERSEL</div>
+                     <div class="text-xl font-mono text-gray-300" id="clock">00:00:00</div>
+                     <div class="text-[10px] text-amber-600">CYCLE: <span id="hud-cycle">T3-FRACTURE</span></div>
+                </div>
+            </div>
+
+            <!-- CANVAS -->
+            <canvas id="simCanvas" class="w-full h-full block"></canvas>
+
+            <!-- Floating Terminal Input -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-96 max-w-full px-4">
+                <div class="bg-black/80 backdrop-blur border border-gray-700 rounded-lg p-1 flex items-center shadow-2xl shadow-purple-900/20">
+                    <span class="text-green-500 px-2 font-mono">></span>
+                    <input type="text" id="dsl-input" placeholder="Entrer commande (ex: spawn 10)..." class="bg-transparent border-none text-cyan-300 text-xs w-full focus:outline-none font-mono h-8">
+                </div>
+            </div>
+
+        </main>
+
+        <!-- RIGHT: LOGS & LAYERS -->
+        <aside class="w-64 bg-gray-900/90 border-l border-gray-800 flex flex-col shrink-0 z-10 backdrop-blur-sm">
+            
+            <div class="flex items-center justify-between px-3 py-2 bg-black/40 border-b border-gray-800">
+                <span class="text-[10px] font-bold text-gray-500 uppercase">Journal d'événements</span>
+                <div class="flex gap-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-gray-600"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-gray-600"></div>
+                </div>
+            </div>
+            
+            <div id="terminal-output" class="flex-1 overflow-y-auto p-3 font-mono text-[10px] space-y-1.5 text-gray-400 scroll-smooth">
+                <div class="text-green-500 border-l-2 border-green-500 pl-2 bg-green-900/10 py-1">
+                    [SYS] Initialisation du noyau...<br>
+                    [SYS] Moteur graphique: CANVAS_2D_HQ<br>
+                    [SYS] Prêt.
+                </div>
+            </div>
+
+            <!-- Layers Control -->
+            <div class="h-1/3 border-t border-gray-800 p-3 bg-black/20">
+                <h3 class="text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-wider">VUES SPECTRALES</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-cyan-200 group-hover:text-white transition-colors">Synapses</span>
+                        <input type="checkbox" checked onchange="toggleLayer('synapses')" class="accent-cyan-500"> 
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-purple-200 group-hover:text-white transition-colors">Noyaux (Nodes)</span>
+                        <input type="checkbox" checked onchange="toggleLayer('nodes')" class="accent-purple-500"> 
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="text-green-200 group-hover:text-white transition-colors">Signaux</span>
+                        <input type="checkbox" checked onchange="toggleLayer('signals')" class="accent-green-500"> 
+                    </label>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        /* --- CONFIGURATION & STATE --- */
+        const CONFIG = {
+            colors: {
+                node: '#06b6d4',
+                core: '#d946ef',
+                scribe: '#22c55e',
+                server_openai: '#10a37f', // OpenAI Green
+                server_gemini: '#4b90ff', // Gemini Blue
+                server_claude: '#da7756', // Claude Orange
+                synapse: 'rgba(6, 182, 212, 0.15)',
+                signal: '#ffffff'
+            },
+            connectionDistance: 120,
+            maxNodes: 150
+        };
+
+        let state = {
+            nodes: [],
+            signals: [], 
+            paused: false,
+            timeScale: 1,
+            resonance: 60,
+            flux: 60,
+            autogen: 30,
+            layers: { synapses: true, nodes: true, signals: true },
+            lastFrame: 0
+        };
+
+        /* --- CANVAS --- */
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        /* --- CLASSES --- */
+        class Node {
+            constructor(type, x, y, label = '') {
+                this.id = Math.random().toString(36).substr(2, 5).toUpperCase();
+                this.type = type; 
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                this.label = label;
+                
+                // Server types are heavy and slower
+                if (this.type === 'server') {
+                    this.vx = (Math.random() - 0.5) * 0.2;
+                    this.vy = (Math.random() - 0.5) * 0.2;
+                    this.size = 12; 
+                } else {
+                    this.vx = (Math.random() - 0.5) * (Math.random() * 2);
+                    this.vy = (Math.random() - 0.5) * (Math.random() * 2);
+                    this.size = type === 'leviathan' ? 6 : (type === 'scribe' ? 3 : 1.5);
+                }
+                
+                this.pulse = 0;
+            }
+
+            update(dt) {
+                // Movement logic
+                const speed = (state.flux / 50) * state.timeScale;
+                this.x += this.vx * speed;
+                this.y += this.vy * speed;
+
+                // Bounce
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Bounds clamp
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
+
+                // Pulse decay
+                if (this.pulse > 0) this.pulse -= 0.05 * state.timeScale;
+            }
+        }
+
+        class Signal {
+            constructor(startNode, endNode) {
+                this.start = startNode;
+                this.end = endNode;
+                this.progress = 0;
+                this.speed = 0.02 + (Math.random() * 0.03);
+                this.dead = false;
+            }
+
+            update() {
+                this.progress += this.speed * state.timeScale * (state.flux / 40);
+                if (this.progress >= 1) {
+                    this.dead = true;
+                    this.end.pulse = 1; // Excitation
+                }
+            }
+
+            draw(ctx) {
+                if (this.dead) return;
+                const x = this.start.x + (this.end.x - this.start.x) * this.progress;
+                const y = this.start.y + (this.end.y - this.start.y) * this.progress;
+                
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Glow trail
+                ctx.shadowBlur = 4;
+                ctx.shadowColor = '#fff';
+            }
+        }
+
+        /* --- ENGINE --- */
+        function init() {
+            // Clean start
+            state.nodes = [];
+            
+            // Spawn AI SERVERS
+            // Position them in a triangle formation roughly
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            
+            // OpenAI (Green)
+            state.nodes.push(new Node('server', cx - 150, cy + 50, 'OpenAI'));
+            // Gemini (Blue)
+            state.nodes.push(new Node('server', cx, cy - 100, 'Gemini'));
+            // Claude (Orange)
+            state.nodes.push(new Node('server', cx + 150, cy + 50, 'Claude'));
+
+            spawn('glint', 30);
+            spawn('leviathan', 3);
+            
+            // Force resize to be sure
+            resize();
+            
+            loop(0);
+            setInterval(slowLogic, 500);
+            initMiniGraph();
+            
+            log("[SYS] Serveurs IA connectés: OpenAI, Gemini, Claude.");
+        }
+
+        function spawn(type, count = 1) {
+            for (let i = 0; i < count; i++) {
+                if (state.nodes.length >= CONFIG.maxNodes) break;
+                state.nodes.push(new Node(type));
+            }
+            if(type !== 'glint') log(`Injection: ${count} ${type}(s)`);
+        }
+
+        function loop(timestamp) {
+            if (!state.paused) {
+                ctx.fillStyle = '#050505';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                updateEntities();
+
+                ctx.globalCompositeOperation = 'screen'; 
+                drawSynapses();
+                if (state.layers.signals) drawSignals();
+                if (state.layers.nodes) drawNodes();
+                ctx.globalCompositeOperation = 'source-over';
+            }
+            requestAnimationFrame(loop);
+        }
+
+        function updateEntities() {
+            state.nodes.forEach(n => n.update());
+            
+            state.signals.forEach(s => s.update());
+            state.signals = state.signals.filter(s => !s.dead);
+
+            // Chance to spawn signal on connection
+            if (state.flux > 10 && Math.random() < (state.flux / 2000)) {
+                const n1 = state.nodes[Math.floor(Math.random() * state.nodes.length)];
+                // Prefer connections to servers
+                let dist = CONFIG.connectionDistance;
+                // Servers have larger gravitational pull for signals
+                if(n1.type === 'server') dist *= 2.5; 
+
+                let neighbors = state.nodes.filter(n2 => n1 !== n2 && Math.hypot(n1.x-n2.x, n1.y-n2.y) < dist);
+                if (neighbors.length > 0) {
+                    const n2 = neighbors[Math.floor(Math.random() * neighbors.length)];
+                    state.signals.push(new Signal(n1, n2));
+                }
+            }
+            
+            if (state.nodes.length < 25 && state.autogen > 0) spawn('glint');
+        }
+
+        function drawSynapses() {
+            if (!state.layers.synapses) return;
+
+            ctx.lineWidth = 1;
+            for (let i = 0; i < state.nodes.length; i++) {
+                for (let j = i + 1; j < state.nodes.length; j++) {
+                    const n1 = state.nodes[i];
+                    const n2 = state.nodes[j];
+                    const d = Math.hypot(n1.x - n2.x, n1.y - n2.y);
+                    
+                    // Servers have longer reach
+                    let maxDist = CONFIG.connectionDistance;
+                    if (n1.type === 'server' || n2.type === 'server') maxDist *= 2;
+
+                    if (d < maxDist) {
+                        const opacity = 1 - (d / maxDist);
+                        // Use server color if connected to server
+                        let color = CONFIG.colors.synapse;
+                        if (n1.type === 'server') color = hexToRgba(getColorForNode(n1), opacity * 0.5);
+                        else if (n2.type === 'server') color = hexToRgba(getColorForNode(n2), opacity * 0.5);
+                        else color = `rgba(6, 182, 212, ${opacity * 0.3})`;
+
+                        ctx.strokeStyle = color;
+                        ctx.beginPath();
+                        ctx.moveTo(n1.x, n1.y);
+                        ctx.lineTo(n2.x, n2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function drawNodes() {
+            state.nodes.forEach(n => {
+                ctx.fillStyle = getColorForNode(n);
+                
+                const glow = n.pulse * 10 + (n.type === 'server' ? 10 : 2);
+                ctx.shadowBlur = glow;
+                ctx.shadowColor = ctx.fillStyle;
+
+                ctx.beginPath();
+                
+                if (n.type === 'server') {
+                    // Draw Server as Square/Rhombus
+                    const s = n.size + n.pulse;
+                    ctx.rect(n.x - s, n.y - s, s*2, s*2);
+                } else {
+                    // Standard circle
+                    ctx.arc(n.x, n.y, n.size + n.pulse, 0, Math.PI * 2);
+                }
+                ctx.fill();
+
+                // Labels
+                if (n.type === 'server') {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 10px Orbitron';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(n.label, n.x, n.y - n.size - 8);
+                } else if (n.type === 'leviathan') {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '9px JetBrains Mono';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(n.id, n.x + 8, n.y + 3);
+                }
+            });
+            ctx.shadowBlur = 0; 
+            ctx.textAlign = 'left';
+        }
+
+        function getColorForNode(n) {
+            if (n.type === 'server') {
+                if (n.label === 'OpenAI') return CONFIG.colors.server_openai;
+                if (n.label === 'Gemini') return CONFIG.colors.server_gemini;
+                if (n.label === 'Claude') return CONFIG.colors.server_claude;
+                return '#fff';
+            }
+            return n.type === 'leviathan' ? CONFIG.colors.core : 
+                   (n.type === 'scribe' ? CONFIG.colors.scribe : CONFIG.colors.node);
+        }
+        
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function drawSignals() {
+            state.signals.forEach(s => s.draw(ctx));
+        }
+
+        /* --- TOOLS & LOGIC --- */
+        
+        function slowLogic() {
+            document.getElementById('hud-nodes').innerText = state.nodes.length;
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+            const density = (state.nodes.length * state.resonance / 10000).toFixed(2);
+            document.getElementById('hud-density').innerText = density;
+            updateMiniGraph(state.nodes.length);
+        }
+
+        function triggerRite() {
+            log("[WARN] Rite de Résonance invoqué.");
+            state.nodes.forEach(n => { n.pulse = 3; });
+        }
+
+        function engineForge(mode) {
+            log(`[FORGE] Exécution: ${mode.toUpperCase()}`);
+            if (mode === 'stabilize') {
+                state.nodes.forEach(n => { n.vx *= 0.5; n.vy *= 0.5; });
+            } else if (mode === 'optimize') {
+                state.nodes.forEach(n => {
+                    if(n.type !== 'server') {
+                        n.x += (Math.random()-0.5)*20; 
+                        n.y += (Math.random()-0.5)*20;
+                    }
+                });
+            }
+        }
+        
+        function engineChoir(mode) {
+            log(`[CHOIR] Chant: ${mode.toUpperCase()}`);
+            if(mode === 'harmonize') {
+                const cx = canvas.width/2;
+                const cy = canvas.height/2;
+                state.nodes.forEach((n, i) => {
+                    if(n.type !== 'server') {
+                        const angle = (i / state.nodes.length) * Math.PI * 2;
+                        n.vx = (Math.cos(angle) * 100 + cx - n.x) * 0.05;
+                        n.vy = (Math.sin(angle) * 100 + cy - n.y) * 0.05;
+                    }
+                });
+            }
+        }
+
+        function timeControl(val) {
+            state.timeScale = val;
+            state.paused = (val === 0);
+            log(`[CHRONO] Vitesse x${val}`);
+        }
+
+        function executeDsl() {
+            const inp = document.getElementById('dsl-input');
+            const cmd = inp.value.trim().toLowerCase();
+            if(!cmd) return;
+            log(`> USER: ${cmd}`);
+            const parts = cmd.split(' ');
+            if(parts[0] === 'spawn') spawn('glint', parseInt(parts[1]) || 1);
+            else if(parts[0] === 'reset') init();
+            else log("Erreur syntaxique.");
+            inp.value = '';
+        }
+
+        function log(msg) {
+            const term = document.getElementById('terminal-output');
+            const div = document.createElement('div');
+            div.className = "border-l-2 border-gray-700 pl-2 hover:bg-gray-800/50 transition-colors";
+            div.innerHTML = `<span class="text-gray-600">[${new Date().toLocaleTimeString().split(' ')[0]}]</span> ${msg}`;
+            term.appendChild(div);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function toggleLayer(l) { state.layers[l] = !state.layers[l]; }
+
+        /* --- MINI GRAPH --- */
+        let graphData = new Array(20).fill(0);
+        function initMiniGraph() {
+            const container = document.getElementById('mini-graph');
+            container.innerHTML = '';
+            graphData.forEach(() => {
+                const bar = document.createElement('div');
+                bar.className = 'flex-1 bg-cyan-900/50';
+                bar.style.height = '5%';
+                container.appendChild(bar);
+            });
+        }
+        function updateMiniGraph(val) {
+            graphData.shift(); graphData.push(val);
+            const bars = document.getElementById('mini-graph').children;
+            const max = Math.max(...graphData, 10);
+            for(let i=0; i<bars.length; i++) {
+                bars[i].style.height = `${Math.max(5, (graphData[i]/max)*100)}%`;
+            }
+        }
+
+        function resetSim() { init(); }
+
+        // Listeners
+        document.getElementById('range-resonance').addEventListener('input', e => { state.resonance = e.target.value; document.getElementById('val-resonance').innerText = e.target.value + '%'; });
+        document.getElementById('range-flux').addEventListener('input', e => { state.flux = e.target.value; document.getElementById('val-flux').innerText = e.target.value + '%'; });
+        document.getElementById('range-autogen').addEventListener('input', e => { state.autogen = e.target.value; document.getElementById('val-autogen').innerText = e.target.value + '%'; });
+        document.getElementById('dsl-input').addEventListener('keydown', e => { if(e.key === 'Enter') executeDsl(); });
+
+        // Start
+        init();
+
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeuraX Hub — Famille IA Suprême</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
