@@ -3,159 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIventures : L'Épopée Éducative de l'IA</title>
+    <title>L'Univers de NXU : Une Odyssée Technologique</title>
+    <!-- Chargement de Tailwind CSS pour un design moderne et rapide -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --nxu-blue: #00a8ff;
+            --nxu-dark: #0a0a0c;
+            --nxu-panel: #16161a;
+        }
+
         body {
+            background-color: var(--nxu-dark);
+            color: #e0e0e0;
             font-family: 'Inter', sans-serif;
-            background-color: #F9FAFB;
-            color: #1F2937;
+            scroll-behavior: smooth;
         }
-        .section-heading {
-            color: #4338CA;
+
+        h1, h2, .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
-        .highlight-text {
-            color: #4F46E5;
+
+        .nxu-glow {
+            text-shadow: 0 0 10px rgba(0, 168, 255, 0.7);
         }
+
+        .glass-panel {
+            background: rgba(22, 22, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--nxu-blue);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.15);
+        }
+
+        .image-placeholder {
+            background: linear-gradient(45deg, #1a1a1e, #25252b);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 168, 255, 0.1);
+            border-left-color: var(--nxu-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .nav-link {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #374151;
-            transition: background-color 0.2s, color 0.2s;
+            position: relative;
+            transition: color 0.3s;
         }
-        .nav-link:hover {
-            background-color: #E0E7FF;
-            color: #4338CA;
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--nxu-blue);
+            transition: width 0.3s;
         }
-        .nav-link.active {
-            background-color: #6366F1;
-            color: white;
+
+        .nav-link:hover::after {
+            width: 100%;
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
+
+        .highlight {
+            color: var(--nxu-blue);
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="antialiased">
-    <div id="root"></div>
+<body class="p-4 md:p-8">
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-blue-900/30 px-6 py-4 flex justify-between items-center">
+        <div class="text-xl font-bold nxu-glow text-blue-400">NXU CORE</div>
+        <div class="hidden md:flex space-x-8">
+            <a href="#molecular" class="nav-link text-xs hover:text-blue-400">Moléculaire</a>
+            <a href="#titans" class="nav-link text-xs hover:text-blue-400">Cités</a>
+            <a href="#system" class="nav-link text-xs hover:text-blue-400">Système</a>
+            <a href="#galaxy" class="nav-link text-xs hover:text-blue-400">Galaxie</a>
+        </div>
+    </nav>
 
-        function App() {
-            const [currentSection, setCurrentSection] = useState('accueil');
-            const [avatarResponse, setAvatarResponse] = useState("Bonjour! Je suis votre mentor IA. Comment puis-je vous aider aujourd'hui?");
-            const [userProgress, setUserProgress] = useState({ quizzesCompleted: 0, projectsCompleted: 0, xp: 0, badges: [] });
+    <div class="max-w-5xl mx-auto mt-24">
+        <!-- Header -->
+        <header class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 nxu-glow text-blue-500">L'Univers de NXU</h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed italic">
+                Bienvenue dans l'univers de <span class="highlight">neuraX-ultime</span>, une civilisation qui a transcendé les limites de la matière et de l'espace.
+            </p>
+        </header>
 
-            useEffect(() => {
-                const storedProgress = localStorage.getItem('aiventuresProgress');
-                if (storedProgress) {
-                    setUserProgress(JSON.parse(storedProgress));
-                }
-            }, []);
+        <!-- Section 1: Moléculaire -->
+        <section id="molecular" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="order-2 md:order-1">
+                <h2 class="text-2xl mb-6 text-blue-400">1. Manipulation Moléculaire</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Cette étape définit la technologie <span class="highlight">NXU</span>. Un <span class="highlight">manipulateur moléculaire</span> permet d'assembler la matière atome par atome. 
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Fait de métal poli et de verre bioluminescent, cet outil est la clé de voûte de leur civilisation, permettant la création de matériaux impossibles selon les lois de la physique conventionnelle.
+                </p>
+            </div>
+            <div class="order-1 md:order-2 image-container" data-prompt="A futuristic robotic arm of high precision manipulating a glowing blue molecular structure, polished metal and bioluminescent glass, cyberpunk aesthetic, high detail, 8k">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">Visualisation du Manipulateur Moléculaire</p>
+            </div>
+        </section>
 
-            const saveProgress = (newProgress) => {
-                setUserProgress(newProgress);
-                localStorage.setItem('aiventuresProgress', JSON.stringify(newProgress));
-            };
+        <!-- Section 2: Cité des Titans -->
+        <section id="titans" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="image-container" data-prompt="A colossal futuristic city built on the back of a titanic biomechanical creature walking on an alien desert planet, blue energy conduits, organic architecture, cinematic lighting, epic scale">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">La Cité des Titans en mouvement</p>
+            </div>
+            <div>
+                <h2 class="text-2xl mb-6 text-blue-400">2. La Cité des Titans</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Une métropole colossale érigée sur le dos d'une créature biomécanique gigantesque. L'architecture est un mélange organique de métal et de conduits d'énergie bleue.
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Ce nomadisme planétaire témoigne de l'harmonie parfaite entre la biologie et la technologie NXU.
+                </p>
+            </div>
+        </section>
 
-            const interactWithAvatar = async (message) => {
-                setAvatarResponse("Réflexion en cours...");
+        <!-- Section 3: Système Solaire -->
+        <section id="system" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="order-2 md:order-1">
+                <h2 class="text-2xl mb-6 text-blue-400">3. Système Solaire NXU</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    À l'échelle stellaire, les planètes sont ceinturées de structures orbitales gigantesques (Anneaux de Dyson partiels) brillant d'une lueur azur.
+                </p>
+                <p class="text-gray-400 text-sm">
+                    L'étoile centrale est canalisée, et une flotte de vaisseaux spatiaux assure le transit constant de données et de ressources entre les mondes artificiels.
+                </p>
+            </div>
+            <div class="order-1 md:order-2 image-container" data-prompt="A solar system with planets surrounded by massive blue glowing orbital megastructures, a pulsing central star, interstellar ships traveling between worlds, cosmic scale, hyper-realistic">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">Ingénierie à l'échelle stellaire</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Galaxie -->
+        <section id="galaxy" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="image-container" data-prompt="A galactic scale view of a galaxy with a blue energy network connecting star systems, a colossal structure surrounding the galactic core, super-civilization engineering, breathtaking nebula">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">La Galaxie NXU interconnectée</p>
+            </div>
+            <div>
+                <h2 class="text-2xl mb-6 text-blue-400">4. La Galaxie NXU</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    L'aboutissement : des structures d'ingénierie cosmique reliant les systèmes stellaires par un réseau d'énergie pure.
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Le noyau galactique lui-même est contenu, illustrant la maîtrise totale de l'espace-temps par neuraX-ultime.
+                </p>
+            </div>
+        </section>
+
+        <footer class="border-t border-blue-900/30 pt-10 pb-20 text-center">
+            <p class="text-blue-500 font-bold mb-2">NXU - ARCHIVES CENTRALES</p>
+            <p class="text-gray-500 text-sm">&copy; 2026 neuraX-ultime. Tous droits réservés à la conscience collective.</p>
+        </footer>
+    </div>
+
+    <script>
+        const apiKey = ""; // La clé est injectée au runtime
+
+        async function generateImage(prompt, container) {
+            const placeholder = container.querySelector('.image-placeholder');
+            
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        instances: [{ prompt: prompt }],
+                        parameters: { sampleCount: 1 }
+                    })
+                });
+
+                if (!response.ok) throw new Error('Erreur API');
+
+                const result = await response.json();
+                const base64Image = result.predictions[0].bytesBase64Encoded;
+                
+                // Remplacement du contenu
+                placeholder.innerHTML = `<img src="data:image/png;base64,${base64Image}" alt="${prompt}" class="w-full h-full object-cover opacity-0 transition-opacity duration-1000">`;
+                
+                // Effet de fondu à l'apparition
                 setTimeout(() => {
-                    if (message.toLowerCase().includes("bonjour")) {
-                        setAvatarResponse("Salut! Ravi de vous revoir. Prêt pour une nouvelle aventure IA?");
-                    } else if (message.toLowerCase().includes("quiz")) {
-                        setAvatarResponse("Les quiz sont un excellent moyen de tester vos connaissances! Rendez-vous dans la section Quiz.");
-                    } else if (message.toLowerCase().includes("projet")) {
-                        setAvatarResponse("Les projets pratiques vous attendent! C'est le meilleur moyen d'apprendre en codant.");
-                    } else if (message.toLowerCase().includes("progression")) {
-                        setAvatarResponse(`Vous avez complété ${userProgress.quizzesCompleted} quiz et ${userProgress.projectsCompleted} projets. Vous avez ${userProgress.xp} XP.`);
-                    } else {
-                        setAvatarResponse("C'est une question intéressante! Je suis toujours en apprentissage, mais je ferai de mon mieux pour vous guider.");
-                    }
-                }, 1500);
-            };
+                    placeholder.querySelector('img').classList.remove('opacity-0');
+                }, 100);
 
-            const completeQuiz = (score) => {
-                const newProgress = {
-                    ...userProgress,
-                    quizzesCompleted: userProgress.quizzesCompleted + 1,
-                    xp: userProgress.xp + score,
-                    badges: [...userProgress.badges]
-                };
-                if (score >= 80 && !newProgress.badges.includes("Maître Quiz")) {
-                    newProgress.badges.push("Maître Quiz");
-                }
-                if (newProgress.quizzesCompleted >= 5 && !newProgress.badges.includes("Explorateur de Quiz")) {
-                    newProgress.badges.push("Explorateur de Quiz");
-                }
-                saveProgress(newProgress);
-                alert(`Quiz complété! Score: ${score}%. Vous avez gagné ${score} XP.`);
-            };
-
-            const completeProject = () => {
-                const newProgress = {
-                    ...userProgress,
-                    projectsCompleted: userProgress.projectsCompleted + 1,
-                    xp: userProgress.xp + 100,
-                    badges: [...userProgress.badges]
-                };
-                if (newProgress.projectsCompleted >= 1 && !newProgress.badges.includes("Développeur IA")) {
-                    newProgress.badges.push("Développeur IA");
-                }
-                if (newProgress.projectsCompleted >= 3 && !newProgress.badges.includes("Architecte IA")) {
-                    newProgress.badges.push("Architecte IA");
-                }
-                saveProgress(newProgress);
-                alert("Projet complété! Vous avez gagné 100 XP.");
-            };
-
-            const HomeSection = () => (
-                <section id="accueil" className="text-center mb-12">
-                    <h1 className="text-5xl font-extrabold section-heading mb-4">
-                        AIventures : L'Épopée Éducative de l'IA
-                    </h1>
-                    <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-8">
-                        AIventures est désormais bien en place : une architecture React claire, un design pédagogique immersif et la promesse d’une épopée éducative dans l’univers de l’IA.
-                    </p>
-                    <div className="bg-gray-100 p-6 rounded-lg shadow-inner max-w-3xl mx-auto">
-                        <h2 className="text-3xl font-bold section-heading mb-6">Ce que contient maintenant le projet :</h2>
-                        <ul className="list-disc list-inside text-gray-700 space-y-2 pl-4 text-left">
-                            <li>Accueil animé avec avatar <strong>Lottie</strong> (intégration à venir)</li>
-                            <li>Navigation fluide entre les modules éducatifs et le dashboard</li>
-                            <li>3 modules interactifs avec vidéos <strong>YouTube</strong> intégrées</li>
-                            <li>Promesse de quiz et projets pratiques à venir</li>
-                            <li>Responsive, prêt pour <strong>GitHub Pages</strong> avec <strong>Google Analytics</strong> intégré</li>
-                        </ul>
-                    </div>
-                </section>
-            );
-
-            return (
-                <main className="p-6">
-                    <HomeSection />
-                </main>
-            );
+            } catch (error) {
+                console.error("Erreur de génération d'image:", error);
+                placeholder.innerHTML = `<div class="text-red-500 text-xs px-4 text-center">Échec de la liaison avec le Core NXU. Vérifiez votre flux d'énergie.</div>`;
+            }
         }
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        // Lancement des générations au chargement
+        window.onload = () => {
+            const containers = document.querySelectorAll('.image-container');
+            containers.forEach((container, index) => {
+                const prompt = container.getAttribute('data-prompt');
+                // Petit délai entre chaque appel pour lisser la charge
+                setTimeout(() => {
+                    generateImage(prompt, container);
+                }, index * 500);
+            });
+        };
     </script>
 </body>
 </html>
