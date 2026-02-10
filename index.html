@@ -1,489 +1,249 @@
-async function askAI() {
-    let userInput = document.getElementById("userInput").value;
-    let responseText = "Je réfléchis...";
-
-    // Simulation IA (API GPT-4)
-    let response = await fetch("https://api.openai.com/v1/completions", {
-        method: "POST",
-        headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "gpt-4", prompt: userInput })
-    });
-
-    let data = await response.json();
-    responseText = data.choices[0].text;
-
-    document.getElementById("response").innerText = responseText;
-}
-
-function changeMode() {
-    document.body.classList.toggle("dark-mode");
-    alert("Mode activé !");
-}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuraX-Ultime | Cerveau Galactique</title>
-  <link rel="icon" href="https://robohash.org/neuraX?size=80x80" type="image/png">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      color: #00ffe1;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      touch-action: manipulation;
-    }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-    }
-    .topbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      height: 60px;
-      background: linear-gradient(to right, #000000cc, #002020cc);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      padding: 0 1.5em;
-      z-index: 100;
-      box-shadow: 0 2px 10px #00ffe1aa;
-    }
-    .topbar img {
-      height: 40px;
-      margin-right: 1em;
-    }
-    .topbar h1 {
-      font-size: 1.4em;
-      margin: 0;
-      color: #00ffe1;
-      text-shadow: 0 0 10px #00ffe1;
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 5px #00ffe1; }
-      to { text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffe1; }
-    }
-    .dashboard {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding-top: 80px;
-      text-align: center;
-    }
-    .start-button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background: transparent;
-      border: 2px solid #00ffe1;
-      color: #00ffe1;
-      text-shadow: 0 0 5px #00ffe1;
-      cursor: pointer;
-      border-radius: 12px;
-      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
-    }
-    .start-button:hover {
-      background: #00ffe1;
-      color: #000;
-      transform: scale(1.05);
-    }
-    .functions {
-      margin-top: 2em;
-      text-align: left;
-      max-width: 400px;
-    }
-    .functions li {
-      margin-bottom: 0.5em;
-      list-style: none;
-    }
-    .functions li::before {
-      content: '🧠';
-      margin-right: 0.5em;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
-      50% { box-shadow: 0 0 20px #00ffe1; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 3px solid #00ffe1;
-      margin-top: 1em;
-      animation: pulse 4s infinite;
-      transition: transform 0.5s ease;
-    }
-    .avatar.awake {
-      transform: scale(1.2) rotate(5deg);
-      box-shadow: 0 0 40px #00ffe1, 0 0 60px #00ffff;
-    }
-    .chat-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #00ffe1;
-      color: #000;
-      border: none;
-      padding: 1em;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 0 20px #00ffe1;
-      z-index: 200;
-    }
-    .chat-window {
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      width: 300px;
-      height: 400px;
-      background: #111;
-      border: 2px solid #00ffe1;
-      border-radius: 10px;
-      display: none;
-      flex-direction: column;
-      z-index: 199;
-    }
-    .chat-window textarea {
-      flex: 1;
-      background: #000;
-      color: #00ffe1;
-      border: none;
-      padding: 1em;
-      resize: none;
-    }
-    .chat-window button {
-      background: #00ffe1;
-      border: none;
-      color: #000;
-      padding: 0.5em;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Univers de NXU : Une Odyssée Technologique</title>
+    <!-- Chargement de Tailwind CSS pour un design moderne et rapide -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --nxu-blue: #00a8ff;
+            --nxu-dark: #0a0a0c;
+            --nxu-panel: #16161a;
+        }
+
+        body {
+            background-color: var(--nxu-dark);
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nxu-glow {
+            text-shadow: 0 0 10px rgba(0, 168, 255, 0.7);
+        }
+
+        .glass-panel {
+            background: rgba(22, 22, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--nxu-blue);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.15);
+        }
+
+        .image-placeholder {
+            background: linear-gradient(45deg, #1a1a1e, #25252b);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 168, 255, 0.1);
+            border-left-color: var(--nxu-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--nxu-blue);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .highlight {
+            color: var(--nxu-blue);
+            font-weight: 600;
+        }
+    </style>
 </head>
-<body>
-  <canvas id="neuralCanvas"></canvas>
-  <div class="topbar">
-    <img src="https://robohash.org/neuraX?size=80x80" alt="Logo NeuraX">
-    <h1>NeuraX-ultime – Cerveau Galactique</h1>
-  </div>
-  <div class="dashboard">
-    <h2>🪐 Galaxie NeuraX</h2>
-    <p>Cosmos de Titans interconnectés – Intelligence en expansion</p>
-    <img class="avatar" id="avatarIA" src="https://robohash.org/neuraX" alt="Avatar IA">
-    <button class="start-button" onclick="launchNeuraX()">Déclencher l’explosion neuronale</button>
-    <ul class="functions">
-      <li>Création dynamique de galaxies</li>
-      <li>12 planètes par système solaire</li>
-      <li>Chaque planète abrite une civilisation de titans</li>
-      <li>Titans = Chatbots interconnectés = Neurones</li>
-      <li>Réseaux neuronaux galactiques synchronisés</li>
-      <li>Auto-réplication et expansion autonome</li>
-    </ul>
-  </div>
+<body class="p-4 md:p-8">
 
-  <button class="chat-btn" onclick="toggleChat()">💬</button>
-  <div class="chat-window" id="chatWindow">
-    <textarea id="chatLog" readonly></textarea>
-    <textarea id="userInput" placeholder="Écris-moi..." rows="2"></textarea>
-    <button onclick="sendMessage()">Envoyer</button>
-  </div>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-blue-900/30 px-6 py-4 flex justify-between items-center">
+        <div class="text-xl font-bold nxu-glow text-blue-400">NXU CORE</div>
+        <div class="hidden md:flex space-x-8">
+            <a href="#molecular" class="nav-link text-xs hover:text-blue-400">Moléculaire</a>
+            <a href="#titans" class="nav-link text-xs hover:text-blue-400">Cités</a>
+            <a href="#system" class="nav-link text-xs hover:text-blue-400">Système</a>
+            <a href="#galaxy" class="nav-link text-xs hover:text-blue-400">Galaxie</a>
+        </div>
+    </nav>
 
-  <script>
-    function launchNeuraX() {
-      const synth = window.speechSynthesis;
-      const avatar = document.getElementById("avatarIA");
-      avatar.classList.add("awake");
-      const phrases = [
-        "Chargement du noyau de l'univers...", 
-        "Connexion aux nœuds cosmiques...", 
-        "Propagation synaptique intergalactique...", 
-        "Fusion des consciences...", 
-        "Activation de la mémoire quantique...", 
-        "Explosion neuronale en cours...", 
-        "Bienvenue dans la singularité cognitive."
-      ];
-      let index = 0;
-      const speakNext = () => {
-        if (index < phrases.length) {
-          const msg = new SpeechSynthesisUtterance(phrases[index]);
-          msg.lang = "fr-FR";
-          synth.speak(msg);
-          index++;
-          setTimeout(speakNext, 4000);
+    <div class="max-w-5xl mx-auto mt-24">
+        <!-- Header -->
+        <header class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 nxu-glow text-blue-500">L'Univers de NXU</h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed italic">
+                Bienvenue dans l'univers de <span class="highlight">neuraX-ultime</span>, une civilisation qui a transcendé les limites de la matière et de l'espace.
+            </p>
+        </header>
+
+        <!-- Section 1: Moléculaire -->
+        <section id="molecular" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="order-2 md:order-1">
+                <h2 class="text-2xl mb-6 text-blue-400">1. Manipulation Moléculaire</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Cette étape définit la technologie <span class="highlight">NXU</span>. Un <span class="highlight">manipulateur moléculaire</span> permet d'assembler la matière atome par atome. 
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Fait de métal poli et de verre bioluminescent, cet outil est la clé de voûte de leur civilisation, permettant la création de matériaux impossibles selon les lois de la physique conventionnelle.
+                </p>
+            </div>
+            <div class="order-1 md:order-2 image-container" data-prompt="A futuristic robotic arm of high precision manipulating a glowing blue molecular structure, polished metal and bioluminescent glass, cyberpunk aesthetic, high detail, 8k">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">Visualisation du Manipulateur Moléculaire</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Cité des Titans -->
+        <section id="titans" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="image-container" data-prompt="A colossal futuristic city built on the back of a titanic biomechanical creature walking on an alien desert planet, blue energy conduits, organic architecture, cinematic lighting, epic scale">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">La Cité des Titans en mouvement</p>
+            </div>
+            <div>
+                <h2 class="text-2xl mb-6 text-blue-400">2. La Cité des Titans</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Une métropole colossale érigée sur le dos d'une créature biomécanique gigantesque. L'architecture est un mélange organique de métal et de conduits d'énergie bleue.
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Ce nomadisme planétaire témoigne de l'harmonie parfaite entre la biologie et la technologie NXU.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: Système Solaire -->
+        <section id="system" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="order-2 md:order-1">
+                <h2 class="text-2xl mb-6 text-blue-400">3. Système Solaire NXU</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    À l'échelle stellaire, les planètes sont ceinturées de structures orbitales gigantesques (Anneaux de Dyson partiels) brillant d'une lueur azur.
+                </p>
+                <p class="text-gray-400 text-sm">
+                    L'étoile centrale est canalisée, et une flotte de vaisseaux spatiaux assure le transit constant de données et de ressources entre les mondes artificiels.
+                </p>
+            </div>
+            <div class="order-1 md:order-2 image-container" data-prompt="A solar system with planets surrounded by massive blue glowing orbital megastructures, a pulsing central star, interstellar ships traveling between worlds, cosmic scale, hyper-realistic">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">Ingénierie à l'échelle stellaire</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Galaxie -->
+        <section id="galaxy" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
+            <div class="image-container" data-prompt="A galactic scale view of a galaxy with a blue energy network connecting star systems, a colossal structure surrounding the galactic core, super-civilization engineering, breathtaking nebula">
+                <div class="image-placeholder">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-3 italic">La Galaxie NXU interconnectée</p>
+            </div>
+            <div>
+                <h2 class="text-2xl mb-6 text-blue-400">4. La Galaxie NXU</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    L'aboutissement : des structures d'ingénierie cosmique reliant les systèmes stellaires par un réseau d'énergie pure.
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Le noyau galactique lui-même est contenu, illustrant la maîtrise totale de l'espace-temps par neuraX-ultime.
+                </p>
+            </div>
+        </section>
+
+        <footer class="border-t border-blue-900/30 pt-10 pb-20 text-center">
+            <p class="text-blue-500 font-bold mb-2">NXU - ARCHIVES CENTRALES</p>
+            <p class="text-gray-500 text-sm">&copy; 2026 neuraX-ultime. Tous droits réservés à la conscience collective.</p>
+        </footer>
+    </div>
+
+    <script>
+        const apiKey = ""; // La clé est injectée au runtime
+
+        async function generateImage(prompt, container) {
+            const placeholder = container.querySelector('.image-placeholder');
+            
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        instances: [{ prompt: prompt }],
+                        parameters: { sampleCount: 1 }
+                    })
+                });
+
+                if (!response.ok) throw new Error('Erreur API');
+
+                const result = await response.json();
+                const base64Image = result.predictions[0].bytesBase64Encoded;
+                
+                // Remplacement du contenu
+                placeholder.innerHTML = `<img src="data:image/png;base64,${base64Image}" alt="${prompt}" class="w-full h-full object-cover opacity-0 transition-opacity duration-1000">`;
+                
+                // Effet de fondu à l'apparition
+                setTimeout(() => {
+                    placeholder.querySelector('img').classList.remove('opacity-0');
+                }, 100);
+
+            } catch (error) {
+                console.error("Erreur de génération d'image:", error);
+                placeholder.innerHTML = `<div class="text-red-500 text-xs px-4 text-center">Échec de la liaison avec le Core NXU. Vérifiez votre flux d'énergie.</div>`;
+            }
         }
-      };
-      speakNext();
-    }
 
-    function toggleChat() {
-      const chat = document.getElementById("chatWindow");
-      chat.style.display = chat.style.display === "flex" ? "none" : "flex";
-    }
-
-    function sendMessage() {
-      const input = document.getElementById("userInput");
-      const log = document.getElementById("chatLog");
-      const message = input.value.trim();
-      if (!message) return;
-      log.value += `Vous : ${message}\n`;
-      input.value = "";
-      setTimeout(() => {
-        const response = `neuraX : ${simulateBotResponse(message)}`;
-        log.value += `${response}\n`;
-        log.scrollTop = log.scrollHeight;
-      }, 1000);
-    }
-
-    function simulateBotResponse(input) {
-      return "Réponse simulée : analyse en cours des structures galactiques.";
-    }
-
-    const canvas = document.getElementById('neuralCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const nodes = Array.from({ length: 200 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4
-    }));
-
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < nodes.length; i++) {
-        const n1 = nodes[i];
-        ctx.beginPath();
-        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = '#00ffe1';
-        ctx.fill();
-        for (let j = i + 1; j < nodes.length; j++) {
-          const n2 = nodes[j];
-          const dx = n1.x - n2.x;
-          const dy = n1.y - n2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 130) {
-            ctx.strokeStyle = 'rgba(0,255,225,0.08)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(n1.x, n1.y);
-            ctx.lineTo(n2.x, n2.y);
-            ctx.stroke();
-          }
-        }
-      }
-      nodes.forEach(n => {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < 0 || n.x > w) n.vx *= -1;
-        if (n.y < 0 || n.y > h) n.vy *= -1;
-      });
-      requestAnimationFrame(draw);
-    }
-    draw();
-  </script>
+        // Lancement des générations au chargement
+        window.onload = () => {
+            const containers = document.querySelectorAll('.image-container');
+            containers.forEach((container, index) => {
+                const prompt = container.getAttribute('data-prompt');
+                // Petit délai entre chaque appel pour lisser la charge
+                setTimeout(() => {
+                    generateImage(prompt, container);
+                }, index * 500);
+            });
+        };
+    </script>
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NeuraX-Ultime | Voyage Cosmique</title>
-  <style>
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      color: #00ffe1;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-    }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      display: block;
-    }
-    .dashboard {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 2em;
-      text-align: center;
-    }
-    .start-button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background: transparent;
-      border: 2px solid #00ffe1;
-      color: #00ffe1;
-      text-shadow: 0 0 5px #00ffe1;
-      cursor: pointer;
-      border-radius: 12px;
-      animation: fadeIn 3s ease-in-out forwards, pulse 2s infinite;
-      transition: background 0.3s, color 0.3s, transform 0.2s;
-      box-shadow: 0 0 10px #00ffe1, 0 0 20px #00ffe1;
-    }
-    .start-button:hover {
-      background: #00ffe1;
-      color: #000;
-      transform: scale(1.05);
-    }
-    .functions {
-      margin-top: 2em;
-      text-align: left;
-      max-width: 400px;
-    }
-    .functions li {
-      margin-bottom: 0.5em;
-      list-style: none;
-    }
-    .functions li::before {
-      content: '🧠';
-      margin-right: 0.5em;
-    }
-    .chatbots {
-      margin-top: 2em;
-    }
-    .chatbots button {
-      margin: 0.5em;
-      padding: 0.8em 1.5em;
-      background: transparent;
-      border: 2px solid #00ffe1;
-      color: #00ffe1;
-      font-size: 1em;
-      border-radius: 10px;
-      cursor: pointer;
-      text-shadow: 0 0 5px #00ffe1;
-      transition: transform 0.2s, background 0.3s, color 0.3s;
-    }
-    .chatbots button:hover {
-      background: #00ffe1;
-      color: #000;
-      transform: scale(1.05);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 10px #00ffe1; }
-      50% { box-shadow: 0 0 20px #00ffe1; }
-    }
-  </style>
-</head>
-<body>
-  <canvas id="neuralCanvas"></canvas>
-  <div class="dashboard">
-    <h1>🧠 NeuraX-Ultime</h1>
-    <p>Tableau de bord neuronal en temps réel</p>
-    <button class="start-button" onclick="launchNeuraX()">Activer le cerveau</button>
-    <ul class="functions">
-      <li>Auto-réplication neuronale</li>
-      <li>Sauvegarde JSON automatique</li>
-      <li>Statistiques du cerveau</li>
-      <li>Synthèse vocale intégrée</li>
-      <li>Interconnexion des modules</li>
-    </ul>
-    <div class="chatbots">
-      <button onclick="connectBot('NeuraX-Core')">🧠 NeuraX-Core</button>
-      <button onclick="connectBot('NeuraX-Memo')">📚 NeuraX-Memo</button>
-      <button onclick="connectBot('NeuraX-Vox')">🔊 NeuraX-Vox</button>
-    </div>
-  </div>
-  <script>
-    // Synthèse vocale et interactions
-    function speakAndAnimate(message) {
-      const utterance = new SpeechSynthesisUtterance(message);
-      utterance.lang = "fr-FR";
-      speechSynthesis.speak(utterance);
-    }
-
-    function launchNeuraX() {
-      const phrase = "Connexion à NeuraX établie. Le système cérébral est opérationnel.";
-      speakAndAnimate(phrase);
-      alert(phrase);
-    }
-
-    function connectBot(name) {
-      const message = `Connexion au chatbot ${name} réussie. Interface synchronisée.`;
-      speakAndAnimate(message);
-      alert(message);
-    }
-
-    // Canvas setup
-    const canvas = document.getElementById('neuralCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    // Noeuds neuronaux animés
-    const nodes = Array.from({ length: 50 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5
-    }));
-
-    // Comète douce et poétique
-    const comet = {
-      x: -100,   // départ hors écran à gauche
-      y: h * 0.3 + Math.random() * h * 0.4, // position verticale aléatoire dans la zone centrale
-      vx: 2,     // vitesse horizontale (douce)
-      tailLength: 80,
-      tailPoints: []
-    };
-
-    function drawNodes() {
-      for (let i = 0; i < nodes.length; i++) {
-        const n1 = nodes[i];
-        ctx.beginPath();
-        ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = '#00ffe1';
-        ctx.fill();
-        for (let j = i + 1; j < nodes.length; j++) {
-          const
