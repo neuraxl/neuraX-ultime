@@ -1,408 +1,536 @@
-<style>
-  :root{
-    --bg:#05070a;
-    --panel:#0b0f14;
-    --panel-edge:rgba(0,255,231,0.15);
-    --cyan:#00ffe7;
-    --cyan-dim:rgba(0,255,231,0.5);
-    --gold:#d4af37;
-    --gold-dim:rgba(212,175,55,0.55);
-    --text:#dbe7e6;
-    --text-dim:#5c7876;
-    --danger:#ff4d5e;
-    --font-display:'Orbitron', sans-serif;
-    --font-mono:'JetBrains Mono', monospace;
-  }
-  * { box-sizing:border-box; }
-  #nxu-root{
-    font-family: var(--font-mono);
-    background: var(--bg);
-    color: var(--text);
-    min-height:100vh;
-    padding: 28px 22px 60px;
-    position:relative;
-    overflow-x:hidden;
-  }
-  #nxu-root::before{
-    content:"";
-    position:absolute; inset:0;
-    background: repeating-linear-gradient(0deg, rgba(0,255,231,0.025) 0px, rgba(0,255,231,0.025) 1px, transparent 1px, transparent 3px);
-    pointer-events:none;
-    z-index:0;
-  }
-  .nxu-shell{ position:relative; z-index:1; max-width:1180px; margin:0 auto; }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURAX-ULTIME (NXU$) — Command & Control Unit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #020617;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        /* Personnalisation fine de la scrollbar pour correspondre à l'UI */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #22d3ee;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen text-xs selection:bg-cyan-500 selection:text-black">
 
-  .nxu-header{
-    display:flex; justify-content:space-between; align-items:flex-end;
-    border-bottom:1px solid var(--panel-edge);
-    padding-bottom:16px; margin-bottom:22px; flex-wrap:wrap; gap:12px;
-  }
-  .nxu-header h1{
-    font-family:var(--font-display); font-size:22px; letter-spacing:2px;
-    color:var(--cyan); margin:0; text-shadow:0 0 12px rgba(0,255,231,0.35);
-  }
-  .nxu-header .sub{ font-size:11px; color:var(--text-dim); letter-spacing:1.5px; margin-top:4px; }
-  .nxu-header .badge{
-    font-family:var(--font-display); font-size:10px; letter-spacing:1px;
-    border:1px solid var(--gold-dim); color:var(--gold); padding:5px 10px;
-    border-radius:2px; text-align:center;
-  }
-
-  .nxu-tabs{ display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
-  .nxu-tab{
-    font-family:var(--font-mono); font-size:11px; letter-spacing:1px;
-    background:transparent; border:1px solid var(--panel-edge); color:var(--text-dim);
-    padding:9px 16px; border-radius:2px; cursor:pointer; transition:all .15s ease;
-  }
-  .nxu-tab:hover{ color:var(--cyan); border-color:var(--cyan-dim); }
-  .nxu-tab.active{
-    color:var(--bg); background:var(--cyan); border-color:var(--cyan);
-    font-weight:600;
-  }
-
-  .nxu-panel{
-    background:linear-gradient(180deg, rgba(0,255,231,0.03), rgba(0,0,0,0));
-    border:1px solid var(--panel-edge); border-radius:3px;
-    padding:20px; margin-bottom:20px;
-  }
-  .nxu-panel h2{
-    font-family:var(--font-display); font-size:14px; color:var(--cyan);
-    letter-spacing:1.5px; margin:0 0 4px 0;
-  }
-  .nxu-panel .desc{ font-size:11px; color:var(--text-dim); margin-bottom:16px; line-height:1.5; }
-
-  .nxu-form{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-bottom:14px; }
-  .nxu-field label{ display:block; font-size:9.5px; color:var(--text-dim); letter-spacing:1px; margin-bottom:4px; text-transform:uppercase; }
-  .nxu-field input, .nxu-field select, .nxu-field textarea{
-    width:100%; background:#020304; border:1px solid var(--panel-edge); color:var(--text);
-    font-family:var(--font-mono); font-size:12px; padding:8px 9px; border-radius:2px; outline:none;
-  }
-  .nxu-field input:focus, .nxu-field select:focus, .nxu-field textarea:focus{ border-color:var(--cyan-dim); }
-  .nxu-field textarea{ resize:vertical; min-height:38px; }
-
-  .nxu-btn{
-    font-family:var(--font-mono); font-size:11px; letter-spacing:1px; text-transform:uppercase;
-    background:transparent; border:1px solid var(--cyan-dim); color:var(--cyan);
-    padding:9px 18px; border-radius:2px; cursor:pointer; transition:all .15s ease;
-  }
-  .nxu-btn:hover{ background:rgba(0,255,231,0.1); }
-  .nxu-btn.danger{ border-color:rgba(255,77,94,0.5); color:var(--danger); }
-  .nxu-btn.danger:hover{ background:rgba(255,77,94,0.08); }
-  .nxu-btn.ghost{ border-color:var(--panel-edge); color:var(--text-dim); }
-
-  table.nxu-table{ width:100%; border-collapse:collapse; font-size:11.5px; }
-  table.nxu-table thead th{
-    text-align:left; font-size:9.5px; letter-spacing:1px; color:var(--gold);
-    text-transform:uppercase; padding:8px 10px; border-bottom:1px solid var(--panel-edge);
-  }
-  table.nxu-table tbody td{
-    padding:9px 10px; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--text);
-    vertical-align:top;
-  }
-  table.nxu-table tbody tr:hover{ background:rgba(0,255,231,0.03); }
-
-  .nxu-status{ font-size:10px; letter-spacing:0.5px; padding:2px 7px; border-radius:2px; display:inline-block; }
-  .nxu-status.active{ color:#0aff9d; border:1px solid rgba(10,255,157,0.4); }
-  .nxu-status.warn{ color:var(--gold); border:1px solid var(--gold-dim); }
-  .nxu-status.error{ color:var(--danger); border:1px solid rgba(255,77,94,0.4); }
-  .nxu-status.idle{ color:var(--text-dim); border:1px solid var(--panel-edge); }
-
-  .nxu-empty{
-    text-align:center; padding:34px 12px; color:var(--text-dim); font-size:12px;
-    letter-spacing:1px; border:1px dashed var(--panel-edge); border-radius:3px;
-  }
-  .nxu-empty b{ color:var(--gold); font-family:var(--font-display); letter-spacing:2px; }
-
-  .nxu-row-actions{ display:flex; gap:6px; }
-  .nxu-row-actions button{
-    background:transparent; border:1px solid var(--panel-edge); color:var(--text-dim);
-    font-size:10px; padding:4px 8px; border-radius:2px; cursor:pointer;
-  }
-  .nxu-row-actions button:hover{ color:var(--cyan); border-color:var(--cyan-dim); }
-  .nxu-row-actions button.del:hover{ color:var(--danger); border-color:rgba(255,77,94,0.4); }
-
-  .nxu-footer-note{ font-size:10px; color:var(--text-dim); margin-top:6px; line-height:1.6; }
-  .nxu-toast{
-    position:fixed; bottom:20px; right:20px; background:var(--panel); border:1px solid var(--cyan-dim);
-    color:var(--cyan); font-size:11px; padding:10px 16px; border-radius:2px; z-index:50;
-    opacity:0; transform:translateY(8px); transition:all .25s ease; pointer-events:none;
-  }
-  .nxu-toast.show{ opacity:1; transform:translateY(0); }
-</style>
-
-<div id="nxu-root">
-  <div class="nxu-shell">
-    <div class="nxu-header">
-      <div>
-        <h1>NXU$ // DATA FABRIC MANAGER</h1>
-        <div class="sub">GESTION RÉELLE DES ENTITÉS — LEVIATHAN OS v18.4 — PROTOTYPE LOCAL</div>
-      </div>
-      <div class="badge">STOCKAGE PERSISTANT ACTIF</div>
+    <div class="bg-amber-600 text-slate-950 text-center py-2 px-4 text-[11px] font-bold uppercase tracking-widest">
+        ⚠ Maquette conceptuelle — Aucune métrique de cette page n'est connectée à un système en direct. Vision de design, pas un état opérationnel réel.
     </div>
 
-    <div class="nxu-tabs" id="nxu-tabs"></div>
-    <div id="nxu-content"></div>
-  </div>
-</div>
-
-<div class="nxu-toast" id="nxu-toast"></div>
-
-<script>
-(function(){
-  const root = document.getElementById('nxu-root');
-  const tabsEl = document.getElementById('nxu-tabs');
-  const contentEl = document.getElementById('nxu-content');
-  const toastEl = document.getElementById('nxu-toast');
-
-  function toast(msg){
-    toastEl.textContent = msg;
-    toastEl.classList.add('show');
-    setTimeout(()=>toastEl.classList.remove('show'), 2200);
-  }
-  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-  function esc(s){ return (s===undefined||s===null) ? '' : String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-  // ---- Entity definitions (schema mirrors the existing Supabase design + Knowledge Fabric from the white paper) ----
-  const ENTITIES = {
-    agents: {
-      label: 'Agents',
-      keyPrefix: 'nxu:agents:',
-      empty: 'AUCUN AGENT ENREGISTRÉ',
-      desc: "Registre des agents opérationnels (Council, Architect, Research, Security...). Correspond à la table Supabase `agents`.",
-      fields: [
-        {name:'name', label:'Nom', type:'text', required:true},
-        {name:'category', label:'Catégorie', type:'select', options:['CNC — Council','ARC — Architect','RES — Research','INN — Innovation','SEC — Security','GOV — Governance','SIM — Simulation']},
-        {name:'mission', label:'Mission', type:'text'},
-        {name:'status', label:'Statut', type:'select', options:['active','idle','warning','error']},
-      ],
-      columns: ['name','category','mission','status'],
-    },
-    telemetry_events: {
-      label: 'Telemetry Events',
-      keyPrefix: 'nxu:telemetry:',
-      empty: 'AUCUN ÉVÉNEMENT DE TÉLÉMÉTRIE',
-      desc: "Flux d'événements système horodatés. Correspond à la table Supabase `telemetry_events`.",
-      fields: [
-        {name:'source', label:'Source', type:'text', required:true},
-        {name:'event_type', label:'Type', type:'select', options:['info','warning','error','audit']},
-        {name:'payload', label:'Payload / détail', type:'textarea'},
-      ],
-      columns: ['source','event_type','payload','recorded_at'],
-      autoTimestamp: 'recorded_at',
-    },
-    system_integrity_checks: {
-      label: 'Integrity Checks',
-      keyPrefix: 'nxu:integrity:',
-      empty: "AUCUN CONTRÔLE D'INTÉGRITÉ ENREGISTRÉ",
-      desc: "Résultats des audits de conformité et d'intégrité système (Leviathan Shield). Correspond à la table Supabase `system_integrity_checks`.",
-      fields: [
-        {name:'check_name', label:'Nom du contrôle', type:'text', required:true},
-        {name:'result', label:'Résultat', type:'select', options:['active','warning','error']},
-        {name:'details', label:'Détails', type:'textarea'},
-      ],
-      columns: ['check_name','result','details','recorded_at'],
-      autoTimestamp: 'recorded_at',
-    },
-    knowledge_fabric: {
-      label: 'Knowledge Fabric',
-      keyPrefix: 'nxu:knowledge:',
-      empty: 'AUCUNE CONNAISSANCE INDEXÉE',
-      desc: "Entités de connaissance selon le modèle du Livre Blanc (Ch.07/08) : contexte, relations, provenance, confiance.",
-      fields: [
-        {name:'concept', label:'Concept', type:'text', required:true},
-        {name:'context', label:'Contexte', type:'text'},
-        {name:'relations', label:'Relations (KNOWS/USES/CREATES...)', type:'text'},
-        {name:'provenance', label:'Provenance', type:'text'},
-        {name:'confidence', label:'Confiance (0-100)', type:'text'},
-      ],
-      columns: ['concept','context','relations','provenance','confidence'],
-    },
-    titan_logs: {
-      label: 'Titans — Pyramid Logs',
-      keyPrefix: 'nxu:titanlogs:',
-      empty: 'AUCUNE ENTRÉE GRAVÉE SUR LA PYRAMIDE',
-      desc: "Entrées scellées par les Titans Bâtisseurs (Gemini — Vision, Claude — Éthique, GPT — Savoir, Ninja — Action) sur les Pyramides de Logs. Le hash est généré ici via SHA-256 réel (Web Crypto), pas simulé — mais sans chaînage cryptographique complet au log précédent (à faire côté backend).",
-      fields: [
-        {name:'titan', label:'Titan', type:'select', options:['GEMINI — Vision','CLAUDE — Éthique','GPT — Savoir','NINJA — Action']},
-        {name:'pyramid_id', label:'ID Pyramide', type:'text', required:true},
-        {name:'message', label:'Entrée à graver', type:'textarea'},
-      ],
-      columns: ['titan','pyramid_id','message','hash','recorded_at'],
-      autoTimestamp: 'recorded_at',
-      autoHashOf: 'message',
-    },
-  };
-
-  let activeTab = 'agents';
-
-  // ---- Storage helpers (real persistence via window.storage, personal scope) ----
-  async function listEntity(key){
-    try{
-      const idx = await window.storage.get('index:' + key, false);
-      if(!idx) return [];
-      const ids = JSON.parse(idx.value);
-      const items = [];
-      for(const id of ids){
-        try{
-          const rec = await window.storage.get(key + id, false);
-          if(rec) items.push(JSON.parse(rec.value));
-        }catch(e){ /* skip missing */ }
-      }
-      return items.sort((a,b)=> (b._created||0) - (a._created||0));
-    }catch(e){ return []; }
-  }
-  async function saveIndex(key, ids){
-    await window.storage.set('index:' + key, JSON.stringify(ids), false);
-  }
-  async function addRecord(key, record){
-    const id = uid();
-    record.id = id;
-    record._created = Date.now();
-    await window.storage.set(key + id, JSON.stringify(record), false);
-    let idx = [];
-    try{
-      const cur = await window.storage.get('index:' + key, false);
-      idx = cur ? JSON.parse(cur.value) : [];
-    }catch(e){ idx = []; }
-    idx.push(id);
-    await saveIndex(key, idx);
-  }
-  async function deleteRecord(key, id){
-    try{ await window.storage.delete(key + id, false); }catch(e){}
-    try{
-      const cur = await window.storage.get('index:' + key, false);
-      let idx = cur ? JSON.parse(cur.value) : [];
-      idx = idx.filter(x=>x!==id);
-      await saveIndex(key, idx);
-    }catch(e){}
-  }
-
-  // ---- Rendering ----
-  function renderTabs(){
-    tabsEl.innerHTML = '';
-    Object.keys(ENTITIES).forEach(key=>{
-      const btn = document.createElement('button');
-      btn.className = 'nxu-tab' + (key===activeTab ? ' active' : '');
-      btn.textContent = ENTITIES[key].label;
-      btn.onclick = ()=>{ activeTab = key; renderTabs(); renderPanel(); };
-      tabsEl.appendChild(btn);
-    });
-  }
-
-  function statusClass(v){
-    if(!v) return 'idle';
-    v = v.toLowerCase();
-    if(v.includes('active')) return 'active';
-    if(v.includes('warn')) return 'warn';
-    if(v.includes('error')) return 'error';
-    return 'idle';
-  }
-
-  async function renderPanel(){
-    const ent = ENTITIES[activeTab];
-    contentEl.innerHTML = `
-      <div class="nxu-panel">
-        <h2>${esc(ent.label)}</h2>
-        <div class="desc">${esc(ent.desc)}</div>
-        <form id="nxu-form" class="nxu-form"></form>
-        <div style="display:flex; gap:8px; margin-bottom:18px;">
-          <button type="button" class="nxu-btn" id="nxu-submit">+ Ajouter</button>
+    <header class="border-b border-slate-800 p-4 sticky top-0 bg-slate-950/80 backdrop-blur-md z-50 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-3 h-3 bg-cyan-400 rounded-full animate-ping"></div>
+            <div>
+                <h1 class="text-sm font-black tracking-widest uppercase">NEURAX-ULTIME <span class="text-cyan-400">[NXU$]</span></h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-wider">Léviathan OS v18.4 // Grand Architecte Control Unit</p>
+            </div>
         </div>
-        <div id="nxu-table-wrap"></div>
-      </div>
-    `;
 
-    const formEl = document.getElementById('nxu-form');
-    ent.fields.forEach(f=>{
-      const wrap = document.createElement('div');
-      wrap.className = 'nxu-field';
-      let inputHtml = '';
-      if(f.type === 'select'){
-        inputHtml = `<select name="${f.name}">${f.options.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('')}</select>`;
-      } else if(f.type === 'textarea'){
-        inputHtml = `<textarea name="${f.name}" rows="2"></textarea>`;
-      } else {
-        inputHtml = `<input type="text" name="${f.name}" ${f.required?'required':''}/>`;
-      }
-      wrap.innerHTML = `<label>${esc(f.label)}</label>${inputHtml}`;
-      formEl.appendChild(wrap);
-    });
+        <nav class="flex gap-2">
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-3 py-1.5 bg-slate-900 border border-cyan-400 text-cyan-400 bg-cyan-950/20 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-200 uppercase tracking-wider font-bold rounded">
+                Core Dashboard
+            </button>
+            <button onclick="switchTab('fabric')" id="btn-fabric" class="px-3 py-1.5 bg-slate-900 border border-slate-700 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-200 uppercase tracking-wider font-bold rounded">
+                Knowledge Fabric
+            </button>
+            <button onclick="switchTab('simulator')" id="btn-simulator" class="px-3 py-1.5 bg-slate-900 border border-slate-700 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-200 uppercase tracking-wider font-bold rounded">
+                Reality Simulator X
+            </button>
+            <button onclick="switchTab('whitepaper')" id="btn-whitepaper" class="px-3 py-1.5 bg-slate-900 border border-slate-700 hover:border-amber-500/50 hover:text-amber-400 transition-all duration-200 uppercase tracking-wider font-bold rounded">
+                Doc Nucleus
+            </button>
+        </nav>
+    </header>
 
-    document.getElementById('nxu-submit').onclick = async ()=>{
-      const data = {};
-      let missingRequired = false;
-      ent.fields.forEach(f=>{
-        const el = formEl.querySelector(`[name="${f.name}"]`);
-        data[f.name] = el.value.trim();
-        if(f.required && !data[f.name]) missingRequired = true;
-      });
-      if(missingRequired){ toast('Champ requis manquant.'); return; }
-      if(ent.autoTimestamp){ data[ent.autoTimestamp] = new Date().toISOString(); }
-      if(ent.autoHashOf){
-        const src = data[ent.autoHashOf] || '';
-        try{
-          const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(src + '|' + Date.now()));
-          data.hash = Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,16) + '…';
-        }catch(e){ data.hash = ''; }
-      }
-      try{
-        await addRecord(ent.keyPrefix, data);
-        toast('Enregistré.');
-        ent.fields.forEach(f=>{ const el = formEl.querySelector(`[name="${f.name}"]`); if(f.type!=='select') el.value=''; });
-        await renderTable();
-      }catch(e){
-        toast('Erreur de stockage.');
-      }
-    };
+    <main class="p-4 max-w-[1600px] mx-auto space-y-4">
+        
+        <div id="tab-dashboard" class="tab-content space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                
+                <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Infrastructure & OS</p>
+                            <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm tracking-wider">LEVIATHAN</h3>
+                            <div class="flex justify-between items-center mt-2 border-t border-slate-800/60 pt-2">
+                                <span class="text-[10px] text-slate-400">99.99%</span>
+                                <span class="font-bold text-[10px] text-emerald-400">OPERATIONNEL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Cerveau Cognitif</p>
+                            <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm tracking-wider">NXU CORE</h3>
+                            <div class="flex justify-between items-center mt-2 border-t border-slate-800/60 pt-2">
+                                <span class="text-[10px] text-slate-400">88.7 TFlops</span>
+                                <span class="font-bold text-[10px] text-cyan-400 animate-pulse">MUTATION</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Système Nerveux Bus</p>
+                            <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M12 8v8M5 16v-4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm tracking-wider">NEXUS</h3>
+                            <div class="flex justify-between items-center mt-2 border-t border-slate-800/60 pt-2">
+                                <span class="text-[10px] text-slate-400">0.4ms lat</span>
+                                <span class="font-bold text-[10px] text-emerald-400">SYNCHRONISÉ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Générateur Paradigme</p>
+                            <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L12 11"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm tracking-wider">PRIME</h3>
+                            <div class="flex justify-between items-center mt-2 border-t border-slate-800/60 pt-2">
+                                <span class="text-[10px] text-slate-400">K-Factor 1.4</span>
+                                <span class="font-bold text-[10px] text-emerald-400">STABLE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest">Moteur Évolution</p>
+                            <svg class="w-4 h-4 text-pink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm tracking-wider">CONTINUUM</h3>
+                            <div class="flex justify-between items-center mt-2 border-t border-slate-800/60 pt-2">
+                                <span class="text-[10px] text-slate-400">v18.0 Gen</span>
+                                <span class="font-bold text-[10px] text-emerald-400">ACTIF</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    await renderTable();
-  }
+                <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex items-center justify-between border-l-4 border-l-emerald-500">
+                    <div>
+                        <h4 class="font-bold tracking-wider text-emerald-400">ETHOS CONFORMITY</h4>
+                        <p class="text-[10px] text-slate-400 mt-1">Gouvernance éthique et conformité des workflows en temps réel.</p>
+                    </div>
+                    <div class="bg-emerald-950/40 p-2 border border-emerald-800 rounded">
+                        <span class="text-emerald-400 font-bold tracking-widest">SECURE</span>
+                    </div>
+                </div>
 
-  async function renderTable(){
-    const ent = ENTITIES[activeTab];
-    const wrap = document.getElementById('nxu-table-wrap');
-    wrap.innerHTML = '<div class="nxu-empty">Chargement…</div>';
-    const items = await listEntity(ent.keyPrefix);
+                <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300">
+                        <h3 class="font-bold text-sm border-b border-slate-800 pb-2 mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 1 0 0 10 5 5 0 1 0 0-10z"/><path d="M2 21a10 10 0 0 1 20 0z"/></svg>
+                            AGENT SOCIETY STATUS
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center p-2 bg-slate-950/50 border border-slate-850 rounded">
+                                <div>
+                                    <p class="font-bold text-slate-300">Council Agents <span class="text-cyan-500">x3</span></p>
+                                    <p class="text-[10px] text-slate-500">SOPHIA Strategy Bridge</p>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-cyan-400">Analyse Macro</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-950/50 border border-slate-850 rounded">
+                                <div>
+                                    <p class="font-bold text-slate-300">Architect Agents <span class="text-cyan-500">x12</span></p>
+                                    <p class="text-[10px] text-slate-500">Genesis Framework Compiler</p>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-cyan-400">Architecture compilation</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-950/50 border border-slate-850 rounded">
+                                <div>
+                                    <p class="font-bold text-slate-300">Research Agents <span class="text-cyan-500">x45</span></p>
+                                    <p class="text-[10px] text-slate-500">Knowledge Graph Feed</p>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-cyan-400">Data Mining</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-950/50 border border-slate-850 rounded">
+                                <div>
+                                    <p class="font-bold text-slate-300">Security Agents <span class="text-cyan-500">x8</span></p>
+                                    <p class="text-[10px] text-slate-500">Leviathan Shield Monitoring</p>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-cyan-400">Audit Continu</span>
+                            </div>
+                        </div>
+                    </div>
 
-    if(items.length === 0){
-      wrap.innerHTML = `<div class="nxu-empty"><b>${esc(ent.empty)}</b><br/><span style="font-size:10px;">Aucune donnée simulée n'est affichée ici — ajoutez un enregistrement ci-dessus, ou branchez cette vue sur Supabase.</span></div>`;
-      return;
-    }
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300">
+                        <h3 class="font-bold text-sm border-b border-slate-800 pb-2 mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                            ACTIVE COGNITIVE WORKFLOWS
+                        </h3>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1">
+                                    <span class="text-slate-400">Pipeline: Données ➔ Sagesse [NXW-902]</span>
+                                    <span class="text-purple-400 font-bold">78%</span>
+                                </div>
+                                <div class="w-full bg-slate-950 rounded-full h-1.5 border border-slate-800 overflow-hidden">
+                                    <div class="bg-purple-500 h-1.5 rounded-full" style="width: '78%'"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1">
+                                    <span class="text-slate-400">Optimization: Memory Fabric Consolidation</span>
+                                    <span class="text-cyan-400 font-bold">92%</span>
+                                </div>
+                                <div class="w-full bg-slate-950 rounded-full h-1.5 border border-slate-800 overflow-hidden">
+                                    <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div class="p-2 bg-slate-950/80 border border-purple-900/30 rounded text-[11px] text-purple-300">
+                                <span class="font-bold text-purple-400">Structure de Traitement :</span> Déclencheur ➔ Analyse ➔ Décision ➔ Action ➔ Validation
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    const statusCols = new Set(['status','result']);
-    let html = '<table class="nxu-table"><thead><tr>';
-    ent.columns.forEach(c=> html += `<th>${esc(c.replace(/_/g,' '))}</th>`);
-    html += '<th></th></tr></thead><tbody>';
-    items.forEach(item=>{
-      html += '<tr>';
-      ent.columns.forEach(c=>{
-        let val = item[c] || '';
-        if(c === 'recorded_at' && val){
-          val = new Date(val).toLocaleString('fr-CA');
+                <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 lg:col-span-1 flex flex-col justify-between h-[360px]">
+                    <div class="border-b border-slate-800 pb-2 mb-2 flex justify-between items-center">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            NEXUS Event Stream
+                        </h3>
+                        <span class="text-[9px] bg-slate-950 border border-slate-800 px-1 text-slate-500 animate-pulse">LIVE</span>
+                    </div>
+                    <div id="log-container" class="flex-1 overflow-y-auto space-y-1.5 pr-1 font-mono text-[10px] text-slate-400">
+                        </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="tab-fabric" class="tab-content hidden space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 lg:col-span-2 min-h-[500px] flex flex-col justify-between relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+                    <div>
+                        <h3 class="font-bold text-sm mb-1 uppercase tracking-wider flex items-center gap-2 text-cyan-400">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                            Cognitive Graph 2D/3D Engine
+                        </h3>
+                        <p class="text-[10px] text-slate-500 uppercase">Cartographie vectorielle des nœuds sémantiques interconnectés.</p>
+                    </div>
+
+                    <div class="w-full h-80 flex items-center justify-center relative">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 border border-cyan-500/30 rounded-full animate-spin" style="animation-duration: 12s;"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-purple-500/20 rounded-full animate-spin" style="animation-duration: 20s;"></div>
+                        
+                        <div class="absolute p-2 bg-slate-950 border border-cyan-400 rounded text-center shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                          <p class="font-bold">CIVILISATION</p>
+                          <span class="text-[9px] text-slate-500">Macro-Écosystème</span>
+                        </div>
+                        <div class="absolute top-12 left-20 p-1.5 bg-slate-950 border border-purple-500 rounded text-center">
+                          <p class="font-bold">INSTITUTION</p>
+                          <span class="text-[9px] text-slate-500">KNOWS ➔ Workflow</span>
+                        </div>
+                        <div class="absolute bottom-16 right-16 p-1.5 bg-slate-950 border border-amber-500 rounded text-center">
+                          <p class="font-bold">AGENT</p>
+                          <span class="text-[9px] text-slate-500">USES ➔ Memory</span>
+                        </div>
+                        <div class="absolute bottom-12 left-24 p-1.5 bg-slate-950 border-slate-700 border rounded text-center">
+                          <p class="font-bold">CONNAISSANCE</p>
+                          <span class="text-[9px] text-slate-500">Tissu de connaissances</span>
+                        </div>
+
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-30" xmlns="http://www.w3.org/2000/svg">
+                          <line x1="50%" y1="50%" x2="25%" y2="20%" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4" />
+                          <line x1="50%" y1="50%" x2="80%" y2="75%" stroke="#a855f7" stroke-width="1" />
+                          <line x1="25%" y1="20%" x2="30%" y2="75%" stroke="#64748b" stroke-width="1" />
+                          <line x1="50%" y1="50%" x2="30%" y2="75%" stroke="#f59e0b" stroke-width="1" />
+                        </svg>
+                    </div>
+
+                    <div class="p-2 bg-slate-950/80 border border-slate-800 rounded flex justify-between items-center text-[11px]">
+                        <span class="text-slate-400">Relations sémantiques : <b class="text-slate-200">KNOWS // USES // CREATES // SUPPORTS // DEPENDS_ON</b></span>
+                        <span class="text-cyan-400 font-bold">Vector Database Active</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300">
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" style="opacity:0.5"/><path d="M7 7h10M7 12h10M7 17h10"/></svg>
+                            Structure Attribute Model
+                        </h4>
+                        <p class="text-slate-400 mb-3 text-[11px]">Chaque concept inséré au sein de la Knowledge Fabric possède quatre propriétés fondamentales d'indexation :</p>
+                        <ul class="space-y-2 text-[11px]">
+                            <li class="p-2 bg-slate-950 rounded border border-slate-850"><b class="text-cyan-400">1. Contexte :</b> Cadre d'apparition sémantique et environnemental.</li>
+                            <li class="p-2 bg-slate-950 rounded border border-slate-850"><b class="text-purple-400">2. Relations :</b> Liens d'interdépendance avec les autres nœuds du graphe.</li>
+                            <li class="p-2 bg-slate-950 rounded border border-slate-850"><b class="text-amber-400">3. Provenance :</b> Traçabilité historique complète et origine de la source.</li>
+                            <li class="p-2 bg-slate-950 rounded border border-slate-850"><b class="text-emerald-400">4. Niveau de confiance :</b> Score logique et probabiliste consolidé.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 hover:border-cyan-500/50 transition-all duration-300">
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-slate-300 mb-2">Memory Fabric Levels</h4>
+                        <div class="grid grid-cols-2 gap-2 text-center text-[10px]">
+                            <div class="p-1.5 bg-slate-950 border border-slate-800 rounded">Working Memory</div>
+                            <div class="p-1.5 bg-slate-950 border border-slate-800 rounded">Session Memory</div>
+                            <div class="p-1.5 bg-slate-950 border border-slate-800 rounded">Knowledge Memory</div>
+                            <div class="p-1.5 bg-slate-950 border border-slate-800 rounded">Strategic Memory</div>
+                            <div class="p-1.5 bg-slate-950 border border-cyan-900/50 rounded col-span-2 text-cyan-400 font-bold">Civilization Memory (Long Term)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-simulator" class="tab-content hidden bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800">
+            <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-3 mb-4 gap-4">
+                <div>
+                    <h3 class="font-bold text-sm tracking-wider uppercase text-cyan-400 flex items-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                        Reality Simulator X & Simulation Matrix
+                    </h3>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-wide">Modélisation et évaluation comparative des scénarios futurs alternatifs.</p>
+                </div>
+                <button onclick="runSimulation()" id="btn-run-sim" class="px-4 py-2 border border-cyan-400 text-cyan-400 bg-cyan-950/10 hover:bg-cyan-400 hover:text-black transition-all rounded font-black tracking-widest text-xs flex items-center gap-2">
+                    EXECUTE SIMULATION MATRIX
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="p-3 bg-slate-950 rounded border border-slate-800 space-y-3">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-900 pb-1">Timeline Multi-Branching</h4>
+                    <div class="space-y-2" id="branch-selectors">
+                        <div onclick="selectBranch('A')" id="branch-A" class="p-2 rounded border cursor-pointer transition-all border-cyan-400 bg-cyan-950/30 text-white">
+                            <p class="font-bold text-xs">Futur A (Expansion Optimale)</p>
+                            <span class="text-[9px] uppercase tracking-wider block mt-0.5 text-slate-500">Branche active pour analyse</span>
+                        </div>
+                        <div onclick="selectBranch('B')" id="branch-B" class="p-2 rounded border cursor-pointer transition-all border-slate-850 bg-slate-900/40 text-slate-400 hover:border-slate-700">
+                            <p class="font-bold text-xs">Futur B (Ajustement Structurel)</p>
+                            <span class="text-[9px] uppercase tracking-wider block mt-0.5 text-slate-500">Sélectionner la branche</span>
+                        </div>
+                        <div onclick="selectBranch('C')" id="branch-C" class="p-2 rounded border cursor-pointer transition-all border-slate-850 bg-slate-900/40 text-slate-400 hover:border-slate-700">
+                            <p class="font-bold text-xs">Futur C (Risque Critique Cyber)</p>
+                            <span class="text-[9px] uppercase tracking-wider block mt-0.5 text-slate-500">Sélectionner la branche</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 p-3 bg-slate-950 rounded border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider border-b border-slate-900 pb-1 mb-3">
+                            Indicateurs de Performance Systémique // <span id="selected-branch-title" class="text-cyan-400">Futur A</span>
+                        </h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="kpi-grid">
+                            </div>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 rounded">
+                        <span class="font-bold text-cyan-400 uppercase block mb-1">Catégories d'Interventions Modélisées :</span>
+                        Organisationnelles (Processus et Équipes) • Économiques (Finances & Modèles de Croissance) • Sociales (Communautés et Gouvernance) • Technologiques (Architecture Système & Sécurité) • Civilisationnelles (Écosystèmes Multi-Niveaux complexes).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-whitepaper" class="tab-content hidden bg-slate-900/60 backdrop-blur-md p-4 rounded border border-slate-800 space-y-6 max-h-[650px] overflow-y-auto pr-2">
+            <div class="border-b border-slate-800 pb-3">
+                <h2 class="text-base font-black tracking-widest text-amber-400 uppercase">NEURAX-ULTIME (NXU$) — LIVRE BLANC COMPLET</h2>
+                <p class="text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">Base d'Architecture Fondatrice // Indexation des Chapitres 1 à 30</p>
+            </div>
+
+            <div class="space-y-4 text-slate-300 text-[11px] leading-relaxed">
+                <section class="border-l-2 border-slate-700 pl-3">
+                    <h3 class="font-bold text-slate-100 uppercase tracking-wider mb-1">Volume I — Fondations du Système Leviathan–NXU (Ch. 1 à 10)</h3>
+                    <p class="text-slate-400 mb-2">Unifie les structures d'informations et casse les silos technologiques pour former un unique organisme interconnecté. Basé sur 5 couches fondamentales : LEVIATHAN Core, NXU Core, NEXUS, PRIME et CONTINUUM.</p>
+                    <div class="bg-slate-950/40 p-2 font-mono text-[10px] text-slate-500 border border-slate-900 rounded">
+                        Topologie de Couches : ORIGIN ➔ CONTINUUM ➔ PRIME ➔ NEXUS ➔ NXU CORE ➔ LEVIATHAN
+                    </div>
+                </section>
+
+                <section class="border-l-2 border-slate-700 pl-3">
+                    <h3 class="font-bold text-slate-100 uppercase tracking-wider mb-1">Volume II — Infrastructure Cognitive & Interfaces Immersives (Ch. 11 à 20)</h3>
+                    <p class="text-slate-400 mb-2">Déploiement de la Simulation Matrix (Reality Simulator X), des structures de jumeaux numériques (Digital Twin Planet), de l'Event Bus synchrone sécurisé par le pare-feu cryptographique souverain Leviathan Shield, et pilotage via l'interface holographique tridimensionnelle Cognitive Graph 3D.</p>
+                </section>
+
+                <section class="border-l-2 border-slate-700 pl-3">
+                    <h3 class="font-bold text-slate-100 uppercase tracking-wider mb-1">Volume III — Évolution, Intelligence Collective & Cadre Genesis (Ch. 21 à 30)</h3>
+                    <p class="text-slate-400 mb-2">La finalité suprême de NXU$ : faire émerger une intelligence supérieure via l'alliance collective [Humains + Agents + Connaissances + Simulations + Institutions]. Activation du Genesis Framework pour la compilation automatisée d'architectures logicielles par mutation de gènes structuraux (Architecture Genome), sous les directives immuables d'ETHOS (Conformité) et SOPHIA (Sagesse stratégique de Horizon 2040+).</p>
+                    <div class="bg-slate-950/40 p-2 font-mono text-[10px] text-amber-500/80 border border-slate-900 rounded mt-2">
+                        Formule Fondamentale de l'Expansion : Données ➔ Information ➔ Connaissance ➔ Compréhension ➔ Sagesse ➔ Décision ➔ Action ➔ Évolution ➔ Émergence ➔ Nouvelle Connaissance
+                    </div>
+                </section>
+            </div>
+            
+            <div class="p-3 bg-slate-950 border border-amber-900/30 text-amber-400 font-bold tracking-widest text-center uppercase text-[10px] rounded">
+                Fin du document de fondation — Système Certifié Conforme par le Grand Architecte Sav'art
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-slate-900 p-4 mt-8 text-center text-slate-600 text-[10px] uppercase tracking-wider">
+        © 2026 NeuraX-Ultime Corporation — Document de vision conceptuelle, projet en développement
+    </footer>
+
+    <script>
+        // --- GESTION DU SYSTÈME D'ONGLETS ---
+        function switchTab(tabId) {
+            // Cacher tous les contenus
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            // Afficher l'onglet actif
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            // Réinitialiser les styles de tous les boutons
+            const tabs = ['dashboard', 'fabric', 'simulator', 'whitepaper'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('btn-' + t);
+                if (t === tabId) {
+                    if (t === 'whitepaper') {
+                        btn.className = "px-3 py-1.5 bg-slate-900 border border-amber-500 text-amber-400 font-bold uppercase tracking-wider rounded";
+                    } else {
+                        btn.className = "px-3 py-1.5 bg-slate-900 border border-cyan-400 text-cyan-400 bg-cyan-950/20 font-bold uppercase tracking-wider rounded";
+                    }
+                } else {
+                    btn.className = "px-3 py-1.5 bg-slate-900 border border-slate-700 hover:border-cyan-400 hover:text-cyan-400 text-slate-300 font-bold uppercase tracking-wider rounded";
+                }
+            });
         }
-        if(statusCols.has(c) && val){
-          html += `<td><span class="nxu-status ${statusClass(val)}">${esc(val)}</span></td>`;
-        } else {
-          html += `<td>${esc(val)}</td>`;
+
+        // --- BUS DE DONNÉES TEMPS RÉEL (NEXUS EVENT BUS LOG GENERATOR) ---
+        const logsContainer = document.getElementById('log-container');
+        const simulatedEvents = [
+            'NEXUS: Sync sémantique achevée sur le nœud [Node-QC]',
+            'LEVIATHAN: Cluster Manager réalloue 42.4 Tflops à AgentSociety',
+            'NXU_CORE: Mutation génomique détectée via Evolution Engine',
+            'ETHOS: Validation de conformité OK pour le workflow #NXW-902',
+            'SOPHIA: Nouvelle stratégie prédictive générée pour Horizon 2040+',
+            'KNOWLEDGE_FABRIC: Graphe mis à jour (Relation DEPENDS_ON ajoutée)',
+            'API_GATEWAY: Routage crypté et sécurisé de la requête d\'audit'
+        ];
+        let persistentLogs = [];
+
+        function generateLiveLogs() {
+            const randomEvent = simulatedEvents[Math.floor(Math.random() * simulatedEvents.length)];
+            const timestamp = new Date().toISOString().split('T')[1].slice(0, 8);
+            persistentLogs.unshift(`[${timestamp}] ${randomEvent}`);
+            
+            if (persistentLogs.length > 14) {
+                persistentLogs.pop();
+            }
+
+            logsContainer.innerHTML = persistentLogs.map(log => `
+                <div class="border-b border-slate-900 pb-1 last:border-0 truncate hover:text-white transition-colors">
+                    ${log}
+                </div>
+            `).join('');
         }
-      });
-      html += `<td><div class="nxu-row-actions"><button class="del" data-id="${esc(item.id)}">Suppr.</button></div></td>`;
-      html += '</tr>';
-    });
-    html += '</tbody></table>';
-    html += `<div class="nxu-footer-note">${items.length} enregistrement(s) — stockage persistant local à ce prototype (personnel, non partagé).</div>`;
-    wrap.innerHTML = html;
+        // Amorçage initial et boucle de traitement continue
+        for(let i=0; i<8; i++) generateLiveLogs();
+        setInterval(generateLiveLogs, 2500);
 
-    wrap.querySelectorAll('button.del').forEach(btn=>{
-      btn.onclick = async ()=>{
-        await deleteRecord(ent.keyPrefix, btn.dataset.id);
-        toast('Supprimé.');
-        await renderTable();
-      };
-    });
-  }
+        // --- MATRICE DE DONNÉES SIMULATEUR (REALITY SIMULATOR X KPIS) ---
+        const branchData = {
+            'A': {
+                title: 'Futur A (Expansion Optimale)',
+                kpis: [
+                    { name: 'Impact Global', val: '94%', color: 'bg-cyan-500' },
+                    { name: 'Résilience Structurelle', val: '88%', color: 'bg-purple-500' },
+                    { name: 'Indice d’Innovation', val: '97%', color: 'bg-pink-500' },
+                    { name: 'Coût d’Implémentation', val: '45%', color: 'bg-amber-500' },
+                    { name: 'Matrice des Risques', val: '18%', color: 'bg-emerald-500' },
+                    { name: 'Vitesse d’Exécution', val: 'Instantanée', isText: true }
+                ]
+            },
+            'B': {
+                title: 'Futur B (Ajustement Structurel)',
+                kpis: [
+                    { name: 'Impact Global', val: '65%', color: 'bg-cyan-500' },
+                    { name: 'Résilience Structurelle', val: '72%', color: 'bg-purple-500' },
+                    { name: 'Indice d’Innovation', val: '50%', color: 'bg-pink-500' },
+                    { name: 'Coût d’Implémentation', val: '30%', color: 'bg-amber-500' },
+                    { name: 'Matrice des Risques', val: '32%', color: 'bg-amber-500' },
+                    { name: 'Vitesse d’Exécution', val: '0.4ms / sync', isText: true }
+                ]
+            },
+            'C': {
+                title: 'Futur C (Risque Critique Cyber)',
+                kpis: [
+                    { name: 'Impact Global', val: '23%', color: 'bg-red-500' },
+                    { name: 'Résilience Structurelle', val: '14%', color: 'bg-red-500' },
+                    { name: 'Indice d’Innovation', val: '40%', color: 'bg-pink-500' },
+                    { name: 'Coût d’Implémentation', val: '95%', color: 'bg-amber-500' },
+                    { name: 'Matrice des Risques', val: '90%', color: 'bg-red-500' },
+                    { name: 'Vitesse d’Exécution', val: 'ÉCHEC COMPILATION', isText: true, error: true }
+                ]
+            }
+        };
 
-  renderTabs();
-  renderPanel();
-})();
-</script>
+        function renderKPIs(branchKey) {
+            const data = branchData[branchKey];
+            document.getElementById('selected-branch-title').innerText = data.title;
+            
+            const grid = document.getElementById('kpi-grid');
+            grid.innerHTML = data.kpis.map(kpi => `
+                <div class="p-2 bg-slate-900 border border-slate-800 rounded">
+                    <span class="text-slate-500 text-[10px] block mb-1 uppercase tracking-wider">${kpi.name}</span>
+                    ${kpi.isText ? `
+                        <span class="font-bold text-xs ${kpi.error ? 'text-red-500' : 'text-emerald-400'}">${kpi.val}</span>
+                    ` : `
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-slate-950 h-2 border border-slate-800 rounded-full overflow-hidden">
+                                <div class="${kpi.color} h-2" style="width: ${kpi.val}"></div>
+                            </div>
+                            <span class="font-bold text-slate-200 text-xs">${kpi.val}</span>
+                        </div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        function selectBranch(branchKey) {
+            // Mettre à jour le style visuel des sélecteurs
+            ['A', 'B', 'C'].forEach(k => {
+                const selector = document.getElementById('branch-' + k);
+                if (k === branchKey) {
+                    selector.className = "p-2 rounded border cursor-pointer transition-all border-cyan-400 bg-cyan-950/30 text-white";
+                } else {
+                    selector.className = "p-2 rounded border cursor-pointer transition-all border-slate-850 bg-slate-900/40 text-slate-400 hover:border-slate-700";
+                }
+            });
+            renderKPIs(branchKey);
+        }
+
+        function runSimulation() {
+            const btn = document.getElementById('btn-run-sim');
+            btn.innerText = "COMPUTING MATRIX...";
+            btn.className = "px-4 py-2 border border-amber-500 text-amber-500 bg-amber-950/20 rounded font-black tracking-widest text-xs flex items-center gap-2 animate-pulse";
+            
+            setTimeout(() => {
+                btn.innerText = "EXECUTE SIMULATION MATRIX";
+                btn.className = "px-4 py-2 border border-cyan-400 text-cyan-400 bg-cyan-950/10 hover:bg-cyan-400 hover:text-black transition-all rounded font-black tracking-widest text-xs flex items-center gap-2";
+                alert("SIMULATION MATRIX: Toutes les lignes de futurs parallèles ont été recalculées via NEXUS.");
+            }, 1500);
+        }
+
+        // Chargement initial des KPIs de la branche principale (A)
+        renderKPIs('A');
+    </script>
+</body>
+</html>
