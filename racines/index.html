@@ -1,63 +1,404 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#064e3b">
-  <meta name="description" content="RACINES — plateforme interactive de coéducation au Québec.">
-  <title>RACINES — Grandir ensemble</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#7aa57a" />
+  <meta name="description" content="RACINES — plateforme douce et bienveillante pour la coéducation au Québec." />
+  <title>RACINES — Grandir avec douceur</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{forest:'#064e3b',mint:'#d1fae5'}}}}</script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Georgia', 'serif']
+          },
+          colors: {
+            sage: '#7aa57a',
+            moss: '#3d6b4d',
+            cream: '#fffaf3',
+            sand: '#f5ead7',
+            peach: '#f7d7c9',
+            lilac: '#efe5ff'
+          }
+        }
+      }
+    };
+  </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    :root{--forest:#064e3b;--leaf:#10b981;--cream:#fffdf7}
-    *{scroll-behavior:smooth} body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream)}
-    .serif{font-family:'DM Serif Display',serif}.hero-grid{background-image:linear-gradient(rgba(16,185,129,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.08) 1px,transparent 1px);background-size:32px 32px}
-    .blob{animation:float 8s ease-in-out infinite}.blob.delay{animation-delay:-3s}@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
-    .reveal{animation:rise .65s both}@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-    .tab-content{animation:fade .35s ease}@keyframes fade{from{opacity:0}to{opacity:1}}
-    :focus-visible{outline:3px solid #5eead4;outline-offset:3px}.safe-bottom{padding-bottom:env(safe-area-inset-bottom)}
-    @media(max-width:640px){.desktop-nav{display:none}.mobile-nav{display:flex}.hero-title{font-size:3.25rem;line-height:.98}.card-pad{padding:1.25rem}}
-    @media(min-width:641px){.mobile-nav{display:none}}
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    :root {
+      --sage: #7aa57a;
+      --moss: #3d6b4d;
+      --cream: #fffaf3;
+      --sand: #f5ead7;
+      --peach: #f7d7c9;
+      --lilac: #efe5ff;
+      --rose: #fff0ef;
+      --ink: #2b2d2a;
+    }
+
+    * { box-sizing: border-box; scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #fffaf3 0%, #fff5e9 42%, #f7f9f2 100%);
+      color: var(--ink);
+    }
+
+    .soft-display {
+      font-family: Georgia, 'Times New Roman', serif;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-pattern {
+      background-image:
+        linear-gradient(rgba(122,165,122,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(122,165,122,0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .floaty {
+      animation: float 7s ease-in-out infinite;
+    }
+    .floaty-delay { animation-delay: -2s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    .tab-content { animation: fade 0.35s ease; }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .soft-card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px);
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(122,165,122,0.9);
+      outline-offset: 3px;
+    }
+
+    .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+    @media (max-width: 640px) {
+      .desktop-nav { display: none; }
+      .mobile-nav { display: flex; }
+      .hero-title { font-size: 3.2rem; line-height: 0.96; }
+    }
+    @media (min-width: 641px) {
+      .mobile-nav { display: none; }
+    }
   </style>
 </head>
-<body class="text-slate-800 antialiased">
-  <header class="sticky top-0 z-50 border-b border-emerald-800/30 bg-forest/95 text-white backdrop-blur-md">
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
-      <button class="flex items-center gap-3 text-left" data-tab="accueil" aria-label="Accueil RACINES"><span class="grid h-11 w-11 place-items-center rounded-2xl bg-emerald-400 text-2xl shadow-lg shadow-emerald-950/20">🌱</span><span><span class="block text-xs font-bold uppercase tracking-[.25em] text-emerald-200">Plateforme nationale</span><span class="block text-xl font-extrabold tracking-tight">RACINES</span></span></button>
-      <nav class="desktop-nav flex flex-wrap justify-end gap-1" aria-label="Navigation principale">
-        <button class="tab-btn rounded-xl px-3 py-2 text-sm font-semibold transition hover:bg-emerald-700" data-tab="accueil">Accueil</button><button class="tab-btn rounded-xl px-3 py-2 text-sm font-semibold transition hover:bg-emerald-700" data-tab="regions">Régions</button><button class="tab-btn rounded-xl px-3 py-2 text-sm font-semibold transition hover:bg-emerald-700" data-tab="outils">Outils</button><button class="tab-btn rounded-xl px-3 py-2 text-sm font-semibold transition hover:bg-emerald-700" data-tab="carnet">📖 Carnet</button><button class="tab-btn rounded-xl px-3 py-2 text-sm font-semibold transition hover:bg-emerald-700" data-tab="apps">Applications</button>
+<body>
+  <header class="sticky top-0 z-50 border-b border-emerald-800/10 bg-[#f9f5ee]/90 backdrop-blur-md">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <button class="flex items-center gap-3 text-left" data-tab="accueil" aria-label="Accueil RACINES">
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[#dfeecf] text-2xl shadow-sm">🌿</span>
+        <span>
+          <span class="block text-[10px] font-bold uppercase tracking-[0.25em] text-[#5d7f5f]">Plateforme bienveillante</span>
+          <span class="block text-xl font-extrabold text-[#2d4a36]">RACINES</span>
+        </span>
+      </button>
+
+      <nav class="desktop-nav flex flex-wrap justify-end gap-2" aria-label="Navigation principale">
+        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="accueil">Accueil</button>
+        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="regions">Régions</button>
+        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="outils">Outils</button>
+        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="carnet">📖 Carnet</button>
+        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="apps">Question du jour</button>
       </nav>
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-4 pb-24 pt-5 sm:px-6 sm:pb-12 sm:pt-10">
+  <main class="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 sm:pb-12 sm:pt-10">
     <section id="tab-accueil" class="tab-content">
-      <div class="hero-grid relative overflow-hidden rounded-[2rem] bg-forest px-6 py-12 text-white shadow-2xl shadow-emerald-950/20 sm:px-12 sm:py-20">
-        <div class="relative z-10 max-w-2xl"><span class="reveal inline-flex rounded-full border border-emerald-300/30 bg-emerald-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[.2em] text-emerald-100">Grandir avec respect</span><h1 class="hero-title serif reveal mt-6 text-6xl leading-none sm:text-8xl">Nos racines.<br><em class="font-normal text-emerald-300">Notre avenir.</em></h1><p class="reveal mt-6 max-w-xl text-base leading-8 text-emerald-50/80 sm:text-lg">Une plateforme pour relier les enfants, les familles, les éducateurs et les communautés autour de ce qui nous fait grandir.</p><button class="mt-8 rounded-2xl bg-emerald-300 px-5 py-3 font-bold text-forest shadow-lg transition hover:-translate-y-1 hover:bg-emerald-200" data-tab="carnet">Ouvrir mon carnet <span aria-hidden="true">→</span></button></div>
-        <div class="pointer-events-none absolute -right-10 top-8 hidden opacity-90 sm:block"><svg class="blob" width="310" height="310" viewBox="0 0 310 310" fill="none" aria-hidden="true"><circle cx="155" cy="155" r="118" fill="#34D399" fill-opacity=".18"/><path d="M155 50c-35 36-50 67-50 104 0 58 23 85 50 106 27-21 50-48 50-106 0-37-15-68-50-104Z" fill="#A7F3D0" fill-opacity=".75"/><path d="M155 144c-42 5-75 23-103 56M155 171c38 3 69 17 98 43M155 120V266" stroke="#064E3B" stroke-width="7" stroke-linecap="round"/></svg></div>
+      <div class="hero-pattern relative overflow-hidden rounded-[2rem] bg-[#f4f0e8] px-5 py-8 shadow-[0_20px_60px_rgba(93,127,95,0.10)] sm:px-12 sm:py-14">
+        <div class="absolute right-0 top-0 hidden h-64 w-64 translate-x-12 -translate-y-8 rounded-full bg-[#e9f3d6] blur-3xl sm:block"></div>
+        <div class="absolute bottom-0 left-0 h-52 w-52 -translate-x-8 translate-y-8 rounded-full bg-[#f9dccc] blur-3xl"></div>
+
+        <div class="relative z-10 grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div>
+            <span class="inline-flex rounded-full border border-[#9ac29b] bg-[#edf6ea] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#3d6b4d]">Éducation bienveillante</span>
+            <h1 class="hero-title soft-display mt-6 text-5xl leading-[0.9] text-[#2b3d2f] sm:text-7xl">Grandir avec douceur,<br><span class="text-[#6f9a73]">en confiance.</span></h1>
+            <p class="mt-6 max-w-xl text-base leading-8 text-[#4c5a4f] sm:text-lg">RACINES relie les enfants, les familles, les éducateurs et la communauté pour cultiver un environnement où chacun peut s’épanouir, s’écouter et avancer avec respect.</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <button class="rounded-full bg-[#7aa57a] px-5 py-3 font-bold text-white shadow-lg shadow-[#7aa57a]/20 transition hover:-translate-y-1 hover:bg-[#6d986f]" data-tab="carnet">Ouvrir le carnet</button>
+              <button class="rounded-full border border-[#aac5a7] bg-white/60 px-5 py-3 font-bold text-[#2d4a36] transition hover:bg-white" data-tab="outils">Découvrir les outils</button>
+            </div>
+          </div>
+
+          <div class="relative flex items-center justify-center">
+            <div class="floaty relative flex h-[290px] w-[290px] items-center justify-center rounded-[2rem] bg-gradient-to-br from-[#edf6ea] via-[#fff0ef] to-[#fbead4] shadow-[0_20px_40px_rgba(93,127,95,0.12)] sm:h-[340px] sm:w-[340px]">
+              <svg class="h-[220px] w-[220px] sm:h-[260px] sm:w-[260px]" viewBox="0 0 260 260" aria-hidden="true">
+                <circle cx="130" cy="130" r="98" fill="#dfeecf"/>
+                <circle cx="130" cy="130" r="76" fill="#fffaf3"/>
+                <path d="M130 52C94 71 79 105 79 132c0 38 20 58 51 76 31-18 51-38 51-76 0-27-15-61-51-80Z" fill="#8bb18b" opacity="0.9"/>
+                <path d="M123 99c0-14 8-24 23-24 28 0 34 18 34 34 0 18-12 32-27 32s-30-16-30-42Zm-14 56c12-13 24-19 38-19s25 7 37 20" fill="none" stroke="#2d4a36" stroke-width="7" stroke-linecap="round"/>
+                <path d="M90 200c14-20 35-31 72-31s58 11 72 31" fill="none" stroke="#2d4a36" stroke-width="7" stroke-linecap="round"/>
+                <path d="M102 92l-18 21M170 92l18 21" stroke="#2d4a36" stroke-width="7" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mt-8 grid gap-4 sm:grid-cols-3"><article class="reveal rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"><span class="text-3xl">👧</span><h2 class="mt-4 text-lg font-bold text-forest">L’enfant</h2><p class="mt-2 text-sm leading-6 text-slate-600">Je découvre, j’expérimente et j’apprends à mon rythme.</p></article><article class="reveal rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"><span class="text-3xl">🧭</span><h2 class="mt-4 text-lg font-bold text-forest">L’éducateur</h2><p class="mt-2 text-sm leading-6 text-slate-600">J’accompagne, j’écoute et je crée des passerelles.</p></article><article class="reveal rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"><span class="text-3xl">🏡</span><h2 class="mt-4 text-lg font-bold text-forest">La famille</h2><p class="mt-2 text-sm leading-6 text-slate-600">Je soutiens, je transmets et je grandis avec l’enfant.</p></article></div>
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <article class="soft-card rounded-3xl border border-[#ebf1e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+          <span class="text-3xl">👧</span>
+          <h2 class="mt-4 text-xl font-bold text-[#2d4a36]">L’enfant</h2>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Je découvre, j’expérimente et j’apprends à mon rythme, sans peur ni pression.</p>
+        </article>
+        <article class="soft-card rounded-3xl border border-[#ebf1e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+          <span class="text-3xl">🧭</span>
+          <h2 class="mt-4 text-xl font-bold text-[#2d4a36]">L’éducateur</h2>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">J’accompagne avec écoute, observation et confiance pour soutenir chaque pas.</p>
+        </article>
+        <article class="soft-card rounded-3xl border border-[#ebf1e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+          <span class="text-3xl">🏡</span>
+          <h2 class="mt-4 text-xl font-bold text-[#2d4a36]">La famille</h2>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Je soutiens, j’écoute et je transmets des repères qui grandissent avec le temps.</p>
+        </article>
+      </div>
     </section>
 
-    <section id="tab-regions" class="tab-content hidden space-y-5"><div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-8"><span class="text-xs font-bold uppercase tracking-[.2em] text-emerald-600">Ancrage territorial</span><h2 class="serif mt-2 text-4xl text-forest">Explorer le Québec</h2><p class="mt-2 text-sm text-slate-500">Chaque région porte une histoire, des savoirs et des idées à transmettre.</p><label for="regionSelect" class="sr-only">Choisir une région</label><select id="regionSelect" class="mt-6 w-full rounded-2xl border-2 border-slate-100 bg-slate-50 p-4 font-semibold text-slate-700"></select></div><div id="regionCard" class="rounded-3xl bg-forest p-6 text-white shadow-xl sm:p-8"></div></section>
+    <section id="tab-regions" class="tab-content hidden space-y-5">
+      <div class="rounded-[2rem] border border-[#ebf1e7] bg-white/80 p-5 shadow-sm sm:p-8">
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6f9a73]">Ancrage territorial</span>
+        <h2 class="soft-display mt-3 text-4xl text-[#2d4a36]">Explorer le Québec</h2>
+        <p class="mt-2 text-sm text-[#4c5a4f]">Chaque région porte une histoire, des savoirs et des liens à transmettre.</p>
+        <label for="regionSelect" class="sr-only">Choisir une région</label>
+        <select id="regionSelect" class="mt-6 w-full rounded-2xl border-2 border-[#ebf1e7] bg-[#f8faf2] p-4 text-base font-semibold text-[#2d4a36]"></select>
+      </div>
 
-    <section id="tab-outils" class="tab-content hidden"><div class="mb-6"><span class="text-xs font-bold uppercase tracking-[.2em] text-emerald-600">Pour avancer ensemble</span><h2 class="serif mt-2 text-4xl text-forest">Boîte à outils</h2></div><div class="grid gap-4 sm:grid-cols-2"><article class="rounded-3xl bg-emerald-100 p-6"><span class="text-3xl">📖</span><h3 class="mt-5 text-xl font-bold text-forest">Le Carnet RACINES</h3><p class="mt-2 text-sm leading-6 text-emerald-950/70">Un espace intime et non noté pour déposer découvertes, réussites et souvenirs.</p></article><article class="rounded-3xl bg-amber-100 p-6"><span class="text-3xl">⏱️</span><h3 class="mt-5 text-xl font-bold text-amber-950">La rencontre mensuelle</h3><p class="mt-2 text-sm leading-6 text-amber-950/70">4 × 5 minutes : réussites, défis, stratégie commune et objectifs partagés.</p></article><article class="rounded-3xl bg-rose-100 p-6"><span class="text-3xl">🛑</span><h3 class="mt-5 text-xl font-bold text-rose-950">La méthode STOP</h3><p class="mt-2 text-sm leading-6 text-rose-950/70">Stop → Écouter → Comprendre → Réparer → Apprendre.</p></article><article class="rounded-3xl bg-sky-100 p-6"><span class="text-3xl">📋</span><h3 class="mt-5 text-xl font-bold text-sky-950">Le Plan RACINES</h3><p class="mt-2 text-sm leading-6 text-sky-950/70">Forces, besoins, stratégies et ressources pour un accompagnement sur mesure.</p></article></div></section>
+      <div id="regionCard" class="rounded-[2rem] bg-[#2d4a36] p-6 text-white shadow-[0_20px_50px_rgba(45,74,54,0.18)] sm:p-8"></div>
+    </section>
 
-    <section id="tab-carnet" class="tab-content hidden"><div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-8"><div class="flex flex-col justify-between gap-5 border-b pb-6 sm:flex-row sm:items-end"><div><span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-800">Espace personnel</span><h2 class="serif mt-3 text-4xl text-forest">Mon carnet</h2><p class="mt-2 max-w-xl text-sm text-slate-500">Un lieu à toi. Il n’est ni noté, ni utilisé pour punir ou surveiller.</p></div><label class="text-sm font-semibold text-slate-600">Mon prénom<input id="enfantNom" maxlength="60" class="mt-2 block w-full rounded-xl border p-3 sm:w-48" placeholder="Prénom"></label></div><form id="carnetForm" class="my-7 space-y-4 rounded-3xl bg-slate-50 p-5 sm:p-6"><h3 class="font-bold text-forest">✍️ Ajouter une page</h3><div class="grid gap-4 sm:grid-cols-2"><label class="text-xs font-bold uppercase text-slate-500">Rubrique<select id="carnetRubrique" class="mt-2 w-full rounded-xl border bg-white p-3 text-sm"><option>🌟 Découvertes & réussites</option><option>🌱 Défis & apprentissages</option><option>❤️ Famille & souvenirs</option><option>🌍 Environnement naturel</option></select></label><label class="text-xs font-bold uppercase text-slate-500">Titre<input id="carnetTitre" required maxlength="120" class="mt-2 w-full rounded-xl border bg-white p-3 text-sm" placeholder="Ce que je veux retenir"></label></div><label class="block text-xs font-bold uppercase text-slate-500">Mon expression<textarea id="carnetTexte" maxlength="1000" rows="4" class="mt-2 w-full rounded-xl border bg-white p-3 text-sm" placeholder="Ce que j’ai ressenti, appris ou découvert…"></textarea></label><button class="rounded-xl bg-forest px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-700">Ajouter à mon carnet</button></form><h3 class="mb-4 text-xl font-bold text-forest">📚 Mes pages</h3><div id="listeCarnet" class="grid gap-4 sm:grid-cols-2"></div></div></section>
+    <section id="tab-outils" class="tab-content hidden">
+      <div class="mb-6">
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6f9a73]">Pour avancer ensemble</span>
+        <h2 class="soft-display mt-2 text-4xl text-[#2d4a36]">Boîte à outils</h2>
+      </div>
 
-    <section id="tab-apps" class="tab-content hidden"><div class="rounded-3xl bg-forest p-6 text-white shadow-xl sm:p-10"><span class="text-xs font-bold uppercase tracking-[.2em] text-emerald-300">Petite pause réflexive</span><h2 class="serif mt-3 text-4xl">La question du jour</h2><div id="phraseBox" class="my-8 rounded-2xl bg-white/10 p-6 text-center text-lg font-semibold leading-8 text-emerald-50"></div><button id="phraseBtn" class="rounded-xl bg-emerald-300 px-5 py-3 font-bold text-forest hover:bg-emerald-200">Une autre question ↗</button></div></section>
+      <div class="grid gap-5 sm:grid-cols-2">
+        <article class="rounded-[2rem] bg-[#edf6ea] p-6">
+          <span class="text-3xl">📖</span>
+          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">Le carnet RACINES</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Un espace intime pour déposer des découvertes, des réussites et des souvenirs.</p>
+        </article>
+        <article class="rounded-[2rem] bg-[#fcefe8] p-6">
+          <span class="text-3xl">⏱️</span>
+          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">La rencontre mensuelle</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">4 × 5 minutes : réussites, défis, stratégie commune et objectifs partagés.</p>
+        </article>
+        <article class="rounded-[2rem] bg-[#f5ecff] p-6">
+          <span class="text-3xl">🛑</span>
+          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">La méthode STOP</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Stop → Écouter → Comprendre → Réparer → Apprendre.</p>
+        </article>
+        <article class="rounded-[2rem] bg-[#eef6ff] p-6">
+          <span class="text-3xl">📋</span>
+          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">Le plan RACINES</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Forces, besoins, stratégies et ressources pour un accompagnement sur mesure.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="tab-carnet" class="tab-content hidden">
+      <div class="rounded-[2rem] border border-[#ebf1e7] bg-white/80 p-5 shadow-sm sm:p-8">
+        <div class="flex flex-col justify-between gap-5 border-b border-[#edf2ea] pb-6 sm:flex-row sm:items-end">
+          <div>
+            <span class="rounded-full bg-[#edf6ea] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-[#3d6b4d]">Espace personnel</span>
+            <h2 class="soft-display mt-3 text-4xl text-[#2d4a36]">Mon carnet</h2>
+            <p class="mt-2 max-w-xl text-sm text-[#4c5a4f]">Un lieu à soi. Il n’est ni noté ni utilisé pour punir ou surveiller.</p>
+          </div>
+          <label class="text-sm font-semibold text-[#2d4a36]">Mon prénom
+            <input id="enfantNom" maxlength="60" class="mt-2 block w-full rounded-2xl border border-[#dfe8da] bg-[#f8faf6] p-3 sm:w-48" placeholder="Prénom" />
+          </label>
+        </div>
+
+        <form id="carnetForm" class="my-7 space-y-4 rounded-[2rem] bg-[#faf7f0] p-5 sm:p-6">
+          <h3 class="font-bold text-[#2d4a36]">✍️ Ajouter une page</h3>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5d7f5f]">Rubrique
+              <select id="carnetRubrique" class="mt-2 w-full rounded-2xl border border-[#dfe8da] bg-white p-3 text-sm text-[#2d4a36]">
+                <option>🌟 Découvertes & réussites</option>
+                <option>🌱 Défis & apprentissages</option>
+                <option>❤️ Famille & souvenirs</option>
+                <option>🌍 Environnement naturel</option>
+              </select>
+            </label>
+
+            <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5d7f5f]">Titre
+              <input id="carnetTitre" required maxlength="120" class="mt-2 w-full rounded-2xl border border-[#dfe8da] bg-white p-3 text-sm text-[#2d4a36]" placeholder="Ce que je veux retenir" />
+            </label>
+          </div>
+
+          <label class="block text-[11px] font-bold uppercase tracking-[0.2em] text-[#5d7f5f]">Mon expression
+            <textarea id="carnetTexte" maxlength="1000" rows="4" class="mt-2 w-full rounded-2xl border border-[#dfe8da] bg-white p-3 text-sm text-[#2d4a36]" placeholder="Ce que j’ai ressenti, appris ou découvert…"></textarea>
+          </label>
+
+          <button class="rounded-full bg-[#7aa57a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#6d986f]">Ajouter à mon carnet</button>
+        </form>
+
+        <h3 class="mb-4 text-xl font-bold text-[#2d4a36]">📚 Mes pages</h3>
+        <div id="listeCarnet" class="grid gap-4 sm:grid-cols-2"></div>
+      </div>
+    </section>
+
+    <section id="tab-apps" class="tab-content hidden">
+      <div class="rounded-[2rem] bg-gradient-to-br from-[#2d4a36] to-[#4e7b5d] p-6 text-white shadow-[0_20px_50px_rgba(45,74,54,0.2)] sm:p-10">
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#dfeecf]">Petite pause réflexive</span>
+        <h2 class="soft-display mt-3 text-4xl">La question du jour</h2>
+        <div id="phraseBox" class="my-8 rounded-[1.5rem] bg-white/10 p-6 text-center text-lg font-semibold leading-8 text-[#edf6ea]"></div>
+        <button id="phraseBtn" class="rounded-full bg-[#f8e9d8] px-5 py-3 font-bold text-[#2d4a36] transition hover:bg-white">Une autre question</button>
+      </div>
+    </section>
   </main>
 
-  <nav class="mobile-nav safe-bottom fixed inset-x-0 bottom-0 z-50 justify-around border-t border-slate-200 bg-white/95 px-1 pt-2 shadow-2xl backdrop-blur-md" aria-label="Navigation mobile"><button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold text-forest" data-tab="accueil"><span class="text-lg">⌂</span>Accueil</button><button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold text-slate-500" data-tab="regions"><span class="text-lg">⌖</span>Régions</button><button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold text-slate-500" data-tab="outils"><span class="text-lg">✦</span>Outils</button><button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold text-slate-500" data-tab="carnet"><span class="text-lg">📖</span>Carnet</button><button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-bold text-slate-500" data-tab="apps"><span class="text-lg">☼</span>Jour</button></nav>
-  <footer class="hidden bg-slate-950 py-10 text-center text-sm text-slate-400 sm:block">RACINES · Grandir avec respect. Vivre avec conscience. Agir avec cœur.</footer>
-<script>
-const regions=[['01','Bas-Saint-Laurent','Territoire maritime et rural, proximité du fleuve Saint-Laurent.','Protection des berges et écosystèmes fluviaux.','Témoignages de gardiens de phares et pêcheurs.'],['02','Saguenay–Lac-Saint-Jean','Immensité forestière et hydrographie majeure.','Traditions forestières et savoirs de Mashteuiatsh.','Cartographie des bassins versants.'],['03','Capitale-Nationale (Québec)','Berceau historique de l’Amérique française.','Vieux-Québec et parcs de la Jacques-Cartier.','Mémoire institutionnelle et artistique.'],['04','Mauricie','Transition entre Basses-Landes et Bouclier canadien.','Histoire de la drave et culture Atikamekw.','Cycles de la faune boréale.'],['05','Estrie (Cantons-de-l’Est)','Relief vallonné et proximité des Appalaches.','Protection des lacs et écosystèmes montagnards.','Développement durable.'],['06','Montréal','Métropole cosmopolite, multiculturelle et dense.','Mosaïque interculturelle et autochtone.','Musées et bibliothèques de quartier.'],['07','Outaouais','Région frontalière et bilingue.','Traditions algonquines de Kitigan Zibi.','Dialogue interculturel.'],['08','Abitibi-Témiscamingue','Territoire minier et forestier.','Collaboration Anishinabeg et crie.','Biodiversité boréale.'],['09','Côte-Nord','Territoire côtier, fjordien et nitassinan.','Biorégionalisme marin et boréal.','Récits innus.'],['10','Nord-du-Québec','Territoire arctique et subarctique.','Banquise et migrations fauniques.','Valeurs cries et inuites.'],['11','Gaspésie–Îles-de-la-Madeleine','Péninsule maritime et archipel.','Patrimoine acadien et littoraux.','Contes et traditions maritimes.'],['12','Chaudière-Appalaches','Région agro-forestière.','Traditions acéricoles et agro-pastorales.','Fermières et aînés.'],['13','Laval','Île urbaine et suburbaine.','Parcs urbains et rivière des Mille Îles.','Engagement civique multiculturel.'],['14','Lanaudière','Basses-terres agricoles et forêts du nord.','Folklore et danse traditionnelle.','Contes et légendes.'],['15','Laurentides','Villégiature et montagnes.','Grande faune et protection des lacs.','Environnement et plein air.'],['16','Montérégie','Plaine agricole et collines.','Biodiversité des monts.','Partenariats agroalimentaires.'],['17','Centre-du-Québec','Cœur nourricier du Québec.','Alimentation saine et locale.','Innovation rurale et artisanat.']];
-const phrases=["Qu’est-ce qui t’a fait sourire ou t’a rendu fier aujourd’hui ?","As-tu aidé quelqu’un aujourd’hui, ou quelqu’un t’a-t-il aidé ?","Quel défi as-tu relevé aujourd’hui ?","De quoi as-tu envie de discuter demain ?"];const $=id=>document.getElementById(id);const escapeText=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-function activate(name,source){document.querySelectorAll('.tab-content').forEach(x=>x.classList.add('hidden'));$('tab-'+name).classList.remove('hidden');document.querySelectorAll('.tab-btn').forEach(x=>{x.classList.remove('bg-emerald-700','text-forest');x.classList.add('text-slate-500');});document.querySelectorAll(`[data-tab="${name}"]`).forEach(x=>{x.classList.add('bg-emerald-700','text-white');x.classList.remove('text-slate-500');});window.scrollTo({top:0,behavior:'smooth'});}
-document.querySelectorAll('[data-tab]').forEach(x=>x.addEventListener('click',()=>activate(x.dataset.tab,x)));activate('accueil');
-regions.forEach(([code,name])=>{const o=document.createElement('option');o.value=code;o.textContent=`Région ${code} — ${name}`;$('regionSelect').append(o)});$('regionSelect').value='03';function renderRegion(){const r=regions.find(x=>x[0]==$('regionSelect').value);$('regionCard').innerHTML=`<span class="text-sm font-bold text-emerald-300">RÉGION ${r[0]}</span><h3 class="serif mt-2 text-4xl">${escapeText(r[1])}</h3><div class="mt-7 grid gap-5 text-sm sm:grid-cols-3"><p><strong class="block text-emerald-300">Contexte</strong><span class="mt-2 block text-emerald-50/80">${escapeText(r[2])}</span></p><p><strong class="block text-emerald-300">Focus éco</strong><span class="mt-2 block text-emerald-50/80">${escapeText(r[3])}</span></p><p><strong class="block text-emerald-300">Passeur</strong><span class="mt-2 block text-emerald-50/80">${escapeText(r[4])}</span></p></div>`} $('regionSelect').addEventListener('change',renderRegion);renderRegion();
-function getEntries(){try{return JSON.parse(localStorage.getItem('racines-entries')||'[]')}catch{return[]}}function renderEntries(){const list=$('listeCarnet'),all=getEntries();list.innerHTML=all.length?'':'<p class="text-sm text-slate-500">Aucune page pour le moment. La première peut commencer ici.</p>';all.forEach(e=>{const card=document.createElement('article');card.className='rounded-2xl border border-emerald-100 bg-emerald-50/50 p-5';card.innerHTML=`<div class="flex justify-between gap-2"><span class="rounded-full bg-emerald-200 px-2 py-1 text-[11px] font-bold text-emerald-900">${escapeText(e.rubrique)}</span><time class="text-xs text-slate-400">${escapeText(e.date)}</time></div><h4 class="mt-4 font-bold text-forest">${escapeText(e.titre)}</h4><p class="mt-2 text-sm leading-6 text-slate-600">${escapeText(e.texte)}</p>`;list.append(card)})} $('carnetForm').addEventListener('submit',e=>{e.preventDefault();const all=getEntries();all.unshift({rubrique:$('carnetRubrique').value,titre:$('carnetTitre').value.trim(),texte:$('carnetTexte').value.trim()||'Aucune description.',date:'À l’instant'});localStorage.setItem('racines-entries',JSON.stringify(all.slice(0,50)));e.target.reset();renderEntries()});$('enfantNom').value=localStorage.getItem('racines-name')||'';$('enfantNom').addEventListener('input',e=>localStorage.setItem('racines-name',e.target.value));renderEntries();function newPhrase(){$('phraseBox').textContent=phrases[Math.floor(Math.random()*phrases.length)]} $('phraseBtn').addEventListener('click',newPhrase);newPhrase();
-</script>
+  <nav class="mobile-nav safe-bottom fixed inset-x-0 bottom-0 z-50 justify-around border-t border-[#edf1e7] bg-white/95 px-1 pt-2 shadow-[0_-10px_24px_rgba(0,0,0,0.06)] backdrop-blur-md" aria-label="Navigation mobile">
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#2d4a36]" data-tab="accueil"><span class="text-lg">⌂</span>Accueil</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="regions"><span class="text-lg">⌖</span>Régions</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="outils"><span class="text-lg">✦</span>Outils</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="carnet"><span class="text-lg">📖</span>Carnet</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="apps"><span class="text-lg">☼</span>Jour</button>
+  </nav>
+
+  <footer class="hidden bg-[#2d4a36] py-10 text-center text-sm text-[#edf6ea] sm:block">RACINES · Grandir avec respect. Vivre avec conscience. Agir avec cœur.</footer>
+
+  <script>
+    const regions = [
+      ['01','Bas-Saint-Laurent','Territoire maritime et rural, proche du fleuve Saint-Laurent.','Protection des berges et des écosystèmes fluviaux.','Témoignages de gardiens de phares et pêcheurs.'],
+      ['02','Saguenay–Lac-Saint-Jean','Immensité forestière et hydrographie majeure.','Traditions forestières et savoirs de Mashteuiatsh.','Cartographie des bassins versants.'],
+      ['03','Capitale-Nationale (Québec)','Berceau historique de l’Amérique française.','Vieux-Québec et parcs de la Jacques-Cartier.','Mémoire institutionnelle et artistique.'],
+      ['04','Mauricie','Transition entre Basses-Landes et Bouclier canadien.','Histoire de la drave et culture Atikamekw.','Observation des cycles de la faune boréale.'],
+      ['05','Estrie (Cantons-de-l’Est)','Relief vallonné et proximité des Appalaches.','Protection des lacs et écosystèmes montagnards.','Conseils des enfants sur le développement durable.'],
+      ['06','Montréal','Métropole cosmopolite et multiculturelle.','Mosaïque interculturelle et autochtone.','Partenariats avec musées et bibliothèques.'],
+      ['07','Outaouais','Région frontalière et bilingue.','Traditions algonquines de Kitigan Zibi.','Dialogue interculturel et interlinguistique.'],
+      ['08','Abitibi-Témiscamingue','Territoire minier et forestier.','Collaboration avec les communautés Anishinabeg et crie.','Respect de la biodiversité boréale.'],
+      ['09','Côte-Nord','Immersion côtière, fjordienne et nitassinan.','Biorégionalisme marin et boréal.','Récits traditionnels innus.'],
+      ['10','Nord-du-Québec','Territoire arctique et subarctique.','Préservation de la banquise et des migrations.','Valeurs communautaires cries et inuites.'],
+      ['11','Gaspésie–Îles-de-la-Madeleine','Péninsule maritime et archipel insulaire.','Patrimoine acadien et protection des littoraux.','Contes acadiens et traditions maritimes.'],
+      ['12','Chaudière-Appalaches','Région agro-forestière traversée par les Appalaches.','Traditions acéricoles et agro-pastorales.','Cercles de fermières et aînés.'],
+      ['13','Laval','Île urbaine et suburbaine à forte densité.','Parcs urbains et berges de la rivière des Mille Îles.','Engagement civique scolaire multiculturel.'],
+      ['14','Lanaudière','Basses-terres agricoles et forêts du nord.','Folklore québécois et danse traditionnelle.','Veillées de contes et légendes.'],
+      ['15','Laurentides','Région de villégiature et de montagnes.','Cohabitation avec la grande faune et protection des lacs.','Éducation environnementale et plein air.'],
+      ['16','Montérégie','Plaine agricole fertile et collines.','Histoire agricole et biodiversité des monts.','Partenariats agroalimentaires locaux.'],
+      ['17','Centre-du-Québec','Cœur nourricier et logistique du Québec.','Alimentation saine et locale.','Innovation rurale et artisanat du bois.']
+    ];
+
+    const phrases = [
+      'Qu’est-ce qui t’a fait sourire ou t’a rendu fier aujourd’hui ?',
+      'As-tu aidé quelqu’un aujourd’hui, ou quelqu’un t’a-t-il aidé ?',
+      'Quel défi as-tu relevé aujourd’hui ?',
+      'De quoi as-tu envie de parler ou de découvrir demain ?'
+    ];
+
+    const $ = (id) => document.getElementById(id);
+    const escapeText = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+
+    function activateTab(name) {
+      document.querySelectorAll('.tab-content').forEach((el) => el.classList.add('hidden'));
+      $( 'tab-' + name ).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach((button) => {
+        const active = button.dataset.tab === name;
+        button.classList.toggle('bg-[#7aa57a]', active);
+        button.classList.toggle('text-white', active);
+        button.classList.toggle('text-[#2d4a36]', !active);
+        button.classList.toggle('bg-[#edf5eb]', !active);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => activateTab(button.dataset.tab));
+    });
+
+    regions.forEach(([code, name]) => {
+      const option = document.createElement('option');
+      option.value = code;
+      option.textContent = `Région ${code} — ${name}`;
+      $('regionSelect').append(option);
+    });
+
+    $('regionSelect').value = '03';
+    function renderRegion() {
+      const region = regions.find((item) => item[0] === $('regionSelect').value);
+      $('regionCard').innerHTML = `
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#dfeecf]">Région ${region[0]}</span>
+        <h3 class="soft-display mt-2 text-4xl text-white">${escapeText(region[1])}</h3>
+        <div class="mt-7 grid gap-5 text-sm sm:grid-cols-3">
+          <p><strong class="block text-[#dfeecf]">Contexte</strong><span class="mt-2 block text-[#edf6ea]/80">${escapeText(region[2])}</span></p>
+          <p><strong class="block text-[#dfeecf]">Focus éco</strong><span class="mt-2 block text-[#edf6ea]/80">${escapeText(region[3])}</span></p>
+          <p><strong class="block text-[#dfeecf]">Passeur</strong><span class="mt-2 block text-[#edf6ea]/80">${escapeText(region[4])}</span></p>
+        </div>
+      `;
+    }
+    $('regionSelect').addEventListener('change', renderRegion);
+    renderRegion();
+
+    function getEntries() {
+      try { return JSON.parse(localStorage.getItem('racines-entries') || '[]'); }
+      catch { return []; }
+    }
+
+    function renderEntries() {
+      const list = $('listeCarnet');
+      const entries = getEntries();
+      list.innerHTML = '';
+
+      if (!entries.length) {
+        list.innerHTML = '<p class="text-sm text-[#4c5a4f]">Aucune page pour le moment. La première peut commencer ici.</p>';
+        return;
+      }
+
+      entries.forEach((entry) => {
+        const card = document.createElement('article');
+        card.className = 'rounded-[1.5rem] border border-[#e7efe5] bg-[#f8fbf8] p-5';
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="rounded-full bg-[#edf6ea] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#3d6b4d]">${escapeText(entry.rubrique)}</span>
+            <time class="text-xs text-[#7a8479]">${escapeText(entry.date)}</time>
+          </div>
+          <h4 class="mt-4 text-lg font-bold text-[#2d4a36]">${escapeText(entry.titre)}</h4>
+          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">${escapeText(entry.texte)}</p>
+        `;
+        list.append(card);
+      });
+    }
+
+    $('carnetForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const entries = getEntries();
+      entries.unshift({
+        rubrique: $('carnetRubrique').value,
+        titre: $('carnetTitre').value.trim(),
+        texte: $('carnetTexte').value.trim() || 'Aucune description.',
+        date: 'À l’instant'
+      });
+      localStorage.setItem('racines-entries', JSON.stringify(entries.slice(0, 50)));
+      event.target.reset();
+      renderEntries();
+    });
+
+    $('enfantNom').value = localStorage.getItem('racines-name') || '';
+    $('enfantNom').addEventListener('input', (event) => localStorage.setItem('racines-name', event.target.value));
+
+    renderEntries();
+
+    function newPhrase() {
+      $('phraseBox').textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    }
+    $('phraseBtn').addEventListener('click', newPhrase);
+    newPhrase();
+    activateTab('accueil');
+  </script>
 </body>
 </html>
