@@ -1,820 +1,273 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NXU$ // Architecture Système — Léviathan (Real Mode)</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@100;400;800&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#020205;color:#e2e8f0;font-family:'Space Grotesk',sans-serif}
-:root{--c:#00f2ff;--p:#bc13fe;--g:#00ff88;--r:#ff003c;--o:#ff6b00;--gold:#ffd700;--ink:#020205}
-.mono{font-family:'JetBrains Mono',monospace}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;width:100%;height:64px;background:rgba(2,2,5,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:100}
-.logo{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:14px;letter-spacing:-.02em;color:#fff;cursor:pointer}
-.logo span{color:var(--c)}
-.nav-links{display:flex;gap:6px}
-.nav-btn{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;padding:6px 14px;border:1px solid transparent;cursor:pointer;transition:all .25s;background:transparent;color:rgba(255,255,255,.4)}
-.nav-btn:hover,.nav-btn.active{color:#fff;border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)}
-.nav-btn.active{color:var(--c);border-color:rgba(0,242,255,.3)}
-#sys-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);text-align:right}
-
-/* PAGES */
-.page{position:absolute;inset:64px 0 0 0;overflow-y:auto;display:none;animation:fadeUp .5s ease-out}
-.page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.page::-webkit-scrollbar{width:3px}
-.page::-webkit-scrollbar-thumb{background:rgba(0,242,255,.2)}
-
-canvas#bg{position:fixed;top:0;left:0;z-index:-1;pointer-events:none}
-
-/* GRID BG */
-.grid-bg{background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:64px 64px}
-
-/* SCANLINES */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.025) 2px,rgba(0,0,0,.025) 4px);pointer-events:none;z-index:9999}
-
-/* CORNERS */
-.box{position:relative;border:1px solid rgba(0,242,255,.12)}
-.box::before{content:'';position:absolute;top:-2px;left:-2px;width:10px;height:10px;border-top:2px solid var(--c);border-left:2px solid var(--c)}
-.box::after{content:'';position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;border-bottom:2px solid var(--c);border-right:2px solid var(--c)}
-.box-p{border-color:rgba(188,19,254,.15)}
-.box-p::before,.box-p::after{border-color:var(--p)}
-.box-g{border-color:rgba(0,255,136,.15)}
-.box-g::before,.box-g::after{border-color:var(--g)}
-
-/* TAG */
-.tag{display:inline-block;padding:2px 9px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
-
-/* PROGRESS */
-.pb{height:3px;background:rgba(255,255,255,.05);overflow:hidden}
-.pf{height:100%;animation:pfa 2.2s ease-out forwards}
-@keyframes pfa{from{width:0}}
-
-/* PULSE */
-@keyframes pulseRing{0%{transform:scale(.8);opacity:.8}100%{transform:scale(2.4);opacity:0}}
-.pulse-ring{animation:pulseRing 2.4s ease-out infinite}
-@keyframes blink{50%{opacity:0}}
-.cursor{display:inline-block;width:7px;height:12px;background:var(--g);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px}
-
-/* GLOW */
-.glow-c{text-shadow:0 0 20px var(--c),0 0 40px rgba(0,242,255,.4)}
-.glow-p{text-shadow:0 0 20px var(--p),0 0 40px rgba(188,19,254,.4)}
-.glow-g{text-shadow:0 0 20px var(--g)}
-
-/* GLITCH */
-.glitch{animation:glitch 500ms infinite}
-@keyframes glitch{
-  0%,14%{text-shadow:.05em 0 0 rgba(255,0,0,.7),-.025em -.05em 0 rgba(0,255,0,.7),.025em .05em 0 rgba(0,0,255,.7)}
-  15%,49%{text-shadow:-.05em -.025em 0 rgba(255,0,0,.7),.025em .025em 0 rgba(0,255,0,.7),-.05em -.05em 0 rgba(0,0,255,.7)}
-  50%,99%{text-shadow:.025em .05em 0 rgba(255,0,0,.7),.05em 0 0 rgba(0,255,0,.7),0 -.05em 0 rgba(0,0,255,.7)}
-  100%{text-shadow:-.025em 0 0 rgba(255,0,0,.7),-.025em -.025em 0 rgba(0,255,0,.7),-.025em -.05em 0 rgba(0,0,255,.7)}
-}
-
-/* TERMINAL */
-.term{background:rgba(0,0,0,.65);border:1px solid rgba(0,255,136,.15);font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(0,255,136,.75);padding:16px}
-
-/* STAT CARD */
-.stat{padding:16px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
-.stat-val{font-size:28px;font-weight:900;font-style:italic;line-height:1}
-.stat-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.3);margin-top:4px}
-
-/* FEEDBACK LOOP */
-.loop-step{padding:20px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);position:relative}
-
-/* SECTION HEADER */
-.sec-head{padding:48px 48px 0}
-.sec-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:800;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px}
-.sec-title{font-size:clamp(36px,5vw,64px);font-weight:900;font-style:italic;line-height:.95;margin-bottom:8px}
-.sec-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.15em;text-transform:uppercase}
-
-@media(max-width:768px){
-  .sec-head{padding:24px 20px 0}
-  .content-grid{padding:20px!important;gap:24px!important}
-  .hide-mobile{display:none!important}
-  .nav-links{gap:2px}
-  .nav-btn{padding:5px 8px;font-size:8px}
-}
-</style>
-</head>
-<body>
-
-<canvas id="bg"></canvas>
-
-<nav>
-  <div style="display:flex;align-items:center;gap:12px">
-    <div style="position:relative;width:24px;height:24px">
-      <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(0,242,255,.4)" class="pulse-ring"></div>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" fill="var(--c)"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="var(--c)" stroke-width="1.5" opacity=".4"/></svg>
-    </div>
-    <div>
-      <div class="logo">NXU<span>$</span> // LÉVIATHAN</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:rgba(255,255,255,.18);letter-spacing:.3em">INFRASTRUCTURE RÉELLE // NOMINALE</div>
-    </div>
-  </div>
-  <div class="nav-links">
-    <button class="nav-btn active" onclick="show('overview')">Vue d'ensemble</button>
-    <button class="nav-btn" onclick="show('nxu')">NXU Core</button>
-    <button class="nav-btn" onclick="show('leviathan')">Léviathan</button>
-    <button class="nav-btn" onclick="show('protocol')">NXU$ Protocol</button>
-    <button class="nav-btn" onclick="show('loop')">Convergence</button>
-  </div>
-  <div id="sys-time" class="hide-mobile"></div>
-</nav>
-
-<div id="p-overview" class="page active grid-bg">
-<div style="min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 32px 120px">
-  <div class="mono" style="font-size:9px;letter-spacing:.5em;color:rgba(255,255,255,.2);text-transform:uppercase;margin-bottom:16px">Architecture Production // NeuraX-Ultime</div>
-  <h1 class="glitch" style="font-size:clamp(48px,8vw,96px);font-weight:900;font-style:italic;line-height:.9;margin-bottom:24px">Souveraineté<br>Réelle</h1>
-  <p style="max-width:560px;color:rgba(255,255,255,.4);font-size:13px;line-height:1.8;margin-bottom:40px;letter-spacing:.03em">
-    Un écosystème cognitif ancré sur le traitement en mode réel : orchestration neuronale adaptative à chaud, grappe d'infrastructure bare-metal massivement parallèle et validation immuable des flux de données.
-  </p>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;width:100%;max-width:820px;margin-bottom:40px">
-    <div class="box" style="padding:28px;cursor:pointer;text-align:left;transition:all .3s" onclick="show('nxu')">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="6" stroke="var(--c)" stroke-width="1.5"/><path d="M14 2v4M14 22v4M2 14h4M22 14h4" stroke="var(--c)" stroke-width="1" opacity=".5"/></svg>
-        <span class="tag" style="background:rgba(0,242,255,.08);color:var(--c)">Noyau</span>
-      </div>
-      <div class="mono" style="font-size:13px;font-weight:800;margin-bottom:6px;color:#fff">NXU CORE</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.35);line-height:1.7">Moteur d'orchestration cognitive. Ajustement dynamique des poids synaptiques et exécution d'agents en production continue.</div>
-      <div class="pb" style="margin-top:14px"><div class="pf" style="background:var(--c);width:99%"></div></div>
-    </div>
-    <div class="box box-p" style="padding:28px;cursor:pointer;text-align:left;transition:all .3s" onclick="show('leviathan')">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="3" width="8" height="8" stroke="var(--p)" stroke-width="1.5"/><rect x="17" y="17" width="8" height="8" stroke="var(--p)" stroke-width="1.5"/><path d="M11 7h6M7 11v6" stroke="var(--p)" stroke-width="1" opacity=".4"/></svg>
-        <span class="tag" style="background:rgba(188,19,254,.08);color:var(--p)">Bare-Metal</span>
-      </div>
-      <div class="mono" style="font-size:13px;font-weight:800;margin-bottom:6px;color:#fff">LÉVIATHAN</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.35);line-height:1.7">Couche matérielle distribuée. Puissance brute de traitement parallèle à l'échelle exa-scalaire pour les architectures complexes.</div>
-      <div class="pb" style="margin-top:14px"><div class="pf" style="background:var(--p);width:94%"></div></div>
-    </div>
-    <div class="box box-g" style="padding:28px;cursor:pointer;text-align:left;transition:all .3s" onclick="show('protocol')">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="var(--g)" stroke-width="1.5"/><path d="M10 14l2.5 2.5L18 11" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"/></svg>
-        <span class="tag" style="background:rgba(0,255,136,.08);color:var(--g)">Registre</span>
-      </div>
-      <div class="mono" style="font-size:13px;font-weight:800;margin-bottom:6px;color:#fff">NXU$ PROTOCOL</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.35);line-height:1.7">Gouvernance transactionnelle immuable. Horodatage cryptographique et allocation prioritaire des ressources hardware.</div>
-      <div class="pb" style="margin-top:14px"><div class="pf" style="background:var(--g);width:100%"></div></div>
-    </div>
-  </div>
-
-  <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center">
-    <span class="mono" style="font-size:9px;color:var(--g);display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:blink 1s step-end infinite"></span>Rétroaction Réelle ACTIVE</span>
-    <span class="mono" style="font-size:9px;color:var(--c);display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--c);animation:blink 1.3s step-end infinite"></span>Flux de Données SYNCHRONISÉS</span>
-    <span class="mono" style="font-size:9px;color:var(--p);display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--p);animation:blink 1.6s step-end infinite"></span>Intégrité Clusters bare-metal 100%</span>
-  </div>
-</div>
-</div>
-
-<div id="p-nxu" class="page">
-<div class="sec-head">
-  <div class="sec-label">Module 01 // NXU Core</div>
-  <h2 class="sec-title glow-c" style="color:var(--c)">NeuraX-Ultime</h2>
-  <div class="sec-sub">Noyau d'exécution et de contrôle cognitif</div>
-</div>
-<div class="content-grid" style="padding:32px 48px 80px;display:grid;grid-template-columns:1fr 340px;gap:32px">
-  <div>
-    <p style="color:rgba(255,255,255,.5);font-size:13px;line-height:1.85;margin-bottom:12px">
-      NXU Core opère comme le centre névralgique du système. Ce <strong style="color:#fff;font-weight:600">framework d'orchestration synaptique</strong> supervise directement chaque cycle logique, adaptant l'utilisation des modèles IA sous-jacents sans jamais recourir à de la simulation fictive.
-    </p>
-    <p style="color:rgba(255,255,255,.35);font-size:12px;line-height:1.85;margin-bottom:28px">
-      Grâce à une capture continue des flux d'événements de production via NEXUS, il ajuste dynamiquement la répartition de la charge transactionnelle afin d'assurer la cohérence et d'empêcher toute dérive logique.
-    </p>
-
-    <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(255,255,255,.25);text-transform:uppercase;margin-bottom:12px">// Capacités de Traitement Réel</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
-      <div class="box" style="padding:20px">
-        <div class="mono" style="font-size:11px;font-weight:800;margin-bottom:6px;color:var(--c)">Auto-Adaptation Spécifique</div>
-        <p style="font-size:11px;color:rgba(255,255,255,.35);line-height:1.65">Ajustement en temps réel de l'attention des sous-systèmes selon le flux entrant.</p>
-      </div>
-      <div class="box" style="padding:20px">
-        <div class="mono" style="font-size:11px;font-weight:800;margin-bottom:6px;color:var(--c)">Contrôle de Cohérence</div>
-        <p style="font-size:11px;color:rgba(255,255,255,.35);line-height:1.65">Surveillance active des réseaux d'agents empêchant les divergences de traitement.</p>
-      </div>
-    </div>
-
-    <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(255,255,255,.25);text-transform:uppercase;margin-bottom:12px">// Flux Synaptique / Activité Télémétrique</div>
-    <div class="box" style="padding:20px">
-      <canvas id="synapse-canvas" width="600" height="130" style="width:100%;display:block"></canvas>
-    </div>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:16px">
-    <div class="box" style="padding:20px">
-      <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(0,242,255,.4);text-transform:uppercase;margin-bottom:16px">// Paramètres Physiques NXU</div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="mono" style="font-size:9px;color:rgba(255,255,255,.4)">Stabilité Logique</span><span class="mono" style="font-size:9px;color:var(--c)">99.8%</span></div>
-          <div class="pb"><div class="pf" style="background:var(--c);width:99.8%"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="mono" style="font-size:9px;color:rgba(255,255,255,.4)">Latence d'Ajustement</span><span class="mono" style="font-size:9px;color:var(--c)">0.8ms</span></div>
-          <div class="pb"><div class="pf" style="background:var(--c);width:93%"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="term">
-      <div style="color:rgba(0,255,136,.4);margin-bottom:10px;font-size:9px;letter-spacing:.3em">// PRODUCTION KERNEL LOG</div>
-      <div style="display:flex;flex-direction:column;gap:3px;font-size:9px">
-        <div>&gt; CORE-INIT :: Models bound [OK]</div>
-        <div>&gt; DATA-FABRIC :: Streaming live telemetry</div>
-        <div>&gt; HANDSHAKE :: Léviathan bare-metal secure link</div>
-        <div style="color:var(--g)">&gt; STATE :: PRODUCTION REAL MODE <span class="cursor"></span></div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div id="p-leviathan" class="page">
-<div class="sec-head">
-  <div class="sec-label">Module 02 // Clusters Hardware</div>
-  <h2 class="sec-title glow-p" style="color:var(--p)">Léviathan Core</h2>
-  <div class="sec-sub">Infrastructure distribuée haut-débit exa-scalaire</div>
-</div>
-<div class="content-grid" style="padding:32px 48px 80px;display:grid;grid-template-columns:1fr 340px;gap:32px">
-  <div>
-    <p style="color:rgba(255,255,255,.5);font-size:13px;line-height:1.85;margin-bottom:12px">
-      Léviathan est le socle matériel brut. Cette grille distribue instantanément les calculs massifs induits par la fusion des couches GPT, Claude et Gemini sur des nœuds physiques hautement redondants.
-    </p>
-
-    <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(255,255,255,.25);text-transform:uppercase;margin-bottom:12px">// Topologie Physique des Nœuds Réels</div>
-    <div class="box box-p" style="padding:20px;margin-bottom:20px">
-      <canvas id="node-map" width="600" height="180" style="width:100%;display:block"></canvas>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
-      <div class="stat box box-p">
-        <div class="stat-val" style="color:var(--p)">EXA</div>
-        <div class="stat-lbl">Seuil Opérationnel</div>
-      </div>
-      <div class="stat box box-p">
-        <div class="stat-val" style="color:var(--g)">100%</div>
-        <div class="stat-lbl">Disponibilité Hardware</div>
-      </div>
-    </div>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:16px">
-    <div class="box box-p" style="padding:20px">
-      <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(188,19,254,.4);text-transform:uppercase;margin-bottom:16px">// Distribution Thermique / Charge</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="mono" style="font-size:9px;color:rgba(255,255,255,.4)">Cluster α (Neural Computing)</span><span class="mono" style="font-size:9px;color:var(--p)">94%</span></div>
-          <div class="pb"><div class="pf" style="background:var(--p);width:94%"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="mono" style="font-size:9px;color:rgba(255,255,255,.4)">Cluster β (Real-Time I/O)</span><span class="mono" style="font-size:9px;color:var(--p)">78%</span></div>
-          <div class="pb"><div class="pf" style="background:var(--p);width:78%"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="box box-p" style="padding:20px;text-align:center">
-      <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(188,19,254,.4);text-transform:uppercase;margin-bottom:14px">// Nœuds Connectés</div>
-      <div id="node-count" style="font-size:48px;font-weight:900;font-style:italic;color:var(--p);line-height:1">0</div>
-      <div class="mono" style="font-size:8px;color:rgba(255,255,255,.25);margin-top:4px">Actifs et Audités via Bare-Metal Grid</div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div id="p-protocol" class="page">
-<div class="sec-head">
-  <div class="sec-label">Module 03 // Validation Ledger</div>
-  <h2 class="sec-title glow-g" style="color:var(--g)">NXU$ Ledger Protocol</h2>
-  <div class="sec-sub">Gouvernance d'allocation et immuabilité des registres</div>
-</div>
-<div class="content-grid" style="padding:32px 48px 80px;display:grid;grid-template-columns:1fr 340px;gap:32px">
-  <div>
-    <p style="color:rgba(255,255,255,.5);font-size:13px;line-height:1.85;margin-bottom:12px">
-      Chaque microprocessus, jeton de transaction ou allocation de calcul initié par la société d'agents est instantanément indexé, haché et signé cryptographiquement. Cela élimine radicalement tout besoin d'arbres de test virtuels : le registre est l'action elle-même.
-    </p>
-
-    <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(255,255,255,.25);text-transform:uppercase;margin-bottom:12px">// Schéma séquentiel d'enregistrement direct</div>
-    <div class="box box-g" style="padding:24px;margin-bottom:20px">
-      <div style="display:flex;gap:0;align-items:stretch;overflow-x:auto">
-        <div style="flex:1;min-width:110px;padding:14px;border:1px solid rgba(0,255,136,.12);background:rgba(0,255,136,.03);text-align:center">
-          <div class="mono" style="font-size:9px;color:var(--g);font-weight:800;margin-bottom:4px">1. REQUÊTE</div>
-          <div class="mono" style="font-size:8px;color:rgba(255,255,255,.3)">Entrée du flux</div>
-        </div>
-        <div style="display:flex;align-items:center;padding:0 6px;color:rgba(0,255,136,.3)">→</div>
-        <div style="flex:1;min-width:110px;padding:14px;border:1px solid rgba(0,255,136,.12);background:rgba(0,255,136,.03);text-align:center">
-          <div class="mono" style="font-size:9px;color:var(--g);font-weight:800;margin-bottom:4px">2. SIGNATURE</div>
-          <div class="mono" style="font-size:8px;color:rgba(255,255,255,.3)">Hash d'état</div>
-        </div>
-        <div style="display:flex;align-items:center;padding:0 6px;color:rgba(0,255,136,.3)">→</div>
-        <div style="flex:1;min-width:110px;padding:14px;border:1px solid rgba(0,255,136,.12);background:rgba(0,255,136,.03);text-align:center">
-          <div class="mono" style="font-size:9px;color:var(--g);font-weight:800;margin-bottom:4px">3. ALLOCATION</div>
-          <div class="mono" style="font-size:8px;color:rgba(255,255,255,.3)">Hardware Bare-metal</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(255,255,255,.25);text-transform:uppercase;margin-bottom:12px">// Enregistrements Journalisés (Production)</div>
-    <div id="tx-log" class="term" style="padding:14px"></div>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:16px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="stat box box-g">
-        <div class="stat-val" style="color:var(--g)" id="tx-count">0</div>
-        <div class="stat-lbl">Opérations / sec</div>
-      </div>
-      <div class="stat box box-g">
-        <div class="stat-val" style="color:var(--g)">100%</div>
-        <div class="stat-lbl">Immuabilité</div>
-      </div>
-    </div>
-
-    <div class="box box-g" style="padding:20px">
-      <div class="mono" style="font-size:9px;letter-spacing:.3em;color:rgba(0,255,136,.4);text-transform:uppercase;margin-bottom:14px">// Structure Décentralisée</div>
-      <p style="font-size:11px;color:rgba(255,255,255,.4);line-height:1.7">Le protocole structure l'accès prioritaire au matériel Léviathan selon le niveau d'urgence sémantique calculé par NXU Core. Aucun glissement de contexte ou temps mort n'est toléré par la passerelle de sécurité.</p>
-    </div>
-  </div>
-</div>
-</div>
-
-<div id="p-loop" class="page">
-<div class="sec-head">
-  <div class="sec-label">Boucle d'Exécution Fermée // Mode Réel</div>
-  <h2 class="sec-title" style="color:var(--gold)">Convergence Systémique</h2>
-  <div class="sec-sub">L'unification dynamique des trois strates applicatives</div>
-</div>
-<div style="padding:32px 48px 80px">
-  <p style="color:rgba(255,255,255,.45);font-size:13px;line-height:1.85;margin-bottom:32px;max-width:680px">
-    La puissance absolue de l'architecture réside dans l'intégration continue de ses composants. Chaque itération suit un axe de validation strict, transformant immédiatement les requêtes de haut niveau en instructions machines immuables.
-  </p>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:16px;margin-bottom:40px">
-    <div class="loop-step box">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--c);font-weight:800;margin-bottom:6px">01 // NXU CORE</div>
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:#fff">Formulation</div>
-      <p style="font-size:11px;color:rgba(255,255,255,.4)">Analyse du besoin fonctionnel et définition de l'arbre sémantique.</p>
-    </div>
-    <div class="loop-step box box-g">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--g);font-weight:800;margin-bottom:6px">02 // NXU$ PROTOCOL</div>
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:#fff">Horodatage</div>
-      <p style="font-size:11px;color:rgba(255,255,255,.4)">Calcul de priorité, signature cryptographique et réservation de puissance.</p>
-    </div>
-    <div class="loop-step box box-p">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--p);font-weight:800;margin-bottom:6px">03 // LÉVIATHAN</div>
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:#fff">Computation</div>
-      <p style="font-size:11px;color:rgba(255,255,255,.4)">Traitement parallèle massif bare-metal sur grappes GPU/TPU isolées.</p>
-    </div>
-    <div class="loop-step box">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--c);font-weight:800;margin-bottom:6px">04 // INTEGRATION</div>
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:#fff">Assimilation</div>
-      <p style="font-size:11px;color:rgba(255,255,255,.4)">Indexation immédiate des résultats dans le graphe de connaissances.</p>
-    </div>
-  </div>
-
-  <div class="box box-gold" style="padding:24px;margin-bottom:28px">
-    <div class="mono" style="font-size:9px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:14px">// Télémétrie de la boucle de rétroaction active</div>
-    <canvas id="loop-canvas" width="900" height="200" style="width:100%;display:block"></canvas>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-    <div class="box" style="padding:28px;background:rgba(0,242,255,.02)">
-      <div style="font-size:24px;font-weight:900;font-style:italic;color:var(--c);margin-bottom:8px" class="glow-c">Traitement Ultra-Bas Latence</div>
-      <p style="font-size:12px;color:rgba(255,255,255,.4);line-height:1.7">L'élimination des couches de virtualisation ou d'émulation intermédiaires permet une vitesse de transit brute, optimisant au maximum les flux de capital cognitif.</p>
-    </div>
-    <div class="box box-p" style="padding:28px;background:rgba(188,19,254,.02)">
-      <div style="font-size:24px;font-weight:900;font-style:italic;color:var(--p);margin-bottom:8px" class="glow-p">Inviolabilité des Trajectoires</div>
-      <p style="font-size:12px;color:rgba(255,255,255,.4);line-height:1.7">Grâce à l'ancrage matériel du Léviathan Shield, toute modification inattendue d'un bloc entraîne l'isolement immédiat du nœud concerné sans coupure du réseau central.</p>
-    </div>
-  </div>
-</div>
-</div>
-
-<script>
-// ─── CLOCK & DATE ───────────────────────────────────
-function updateClock(){
-  const n=new Date();
-  document.getElementById('sys-time').innerHTML=
-    `${n.toLocaleTimeString('fr-FR',{hour12:false})}<br><span style="font-size:8px">${n.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}).toUpperCase()}</span>`;
-}
-updateClock();
-setInterval(updateClock,1000);
-
-// ─── BG CANVAS ──────────────────────────────
-const bgc=document.getElementById('bg'),bx=bgc.getContext('2d');
-let bw,bh;
-function resize(){bw=bgc.width=innerWidth;bh=bgc.height=innerHeight;}
-resize();
-window.addEventListener('resize',resize);
-
-const pts=Array.from({length:60},()=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0001,vy:(Math.random()-.5)*.0001,s:Math.random()*.6+.3}));
-let bgMode='c';
-function bgAnim(){
-  bx.fillStyle='rgba(2,2,5,0.2)';bx.fillRect(0,0,bw,bh);
-  const col={'c':'rgba(0,242,255,','p':'rgba(188,19,254,','g':'rgba(0,255,136,'}[bgMode]||'rgba(0,242,255,';
-  pts.forEach(p=>{
-    p.x=(p.x+p.vx+1)%1;p.y=(p.y+p.vy+1)%1;
-    bx.beginPath();bx.arc(p.x*bw,p.y*bh,p.s,0,Math.PI*2);
-    bx.fillStyle=col+'.25)';bx.fill();
-  });
-  requestAnimationFrame(bgAnim);
-}
-bgAnim();
-
-// ─── NAV ────────────────────────────────────
-const pages={overview:'c',nxu:'c',leviathan:'p',protocol:'g',loop:'gold'};
-function show(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('p-'+id).classList.add('active');
-  
-  if(event && event.target) event.target.classList.add('active');
-  bgMode=pages[id]||'c';
-  if(id==='nxu')initSynapse();
-  if(id==='leviathan')initLeviathan();
-  if(id==='protocol')initProtocol();
-  if(id==='loop')initLoop();
-}
-
-// ─── SYNAPSE CANVAS ─────────────────────────
-let synapseLoopId=null;
-function initSynapse(){
-  const c=document.getElementById('synapse-canvas');
-  if(!c || c._init)return; c._init=true;
-  const x=c.getContext('2d'),W=c.width,H=c.height;
-  const nodes=Array.from({length:12},(_,i)=>({x:(i/11)*W*0.9+W*0.05,y:H/2+(Math.sin(i*0.8)*H*0.25),r:Math.random()*2+2,phase:Math.random()*Math.PI*2}));
-  let t=0;
-  function draw(){
-    if(!c.parentElement.parentElement.parentElement.classList.contains('active')) return;
-    x.clearRect(0,0,W,H);
-    for(let i=0;i<nodes.length-1;i++){
-      const a=nodes[i],b=nodes[i+1];
-      x.beginPath();x.moveTo(a.x,a.y+Math.sin(t+a.phase)*10);
-      x.lineTo(b.x,b.y+Math.sin(t+b.phase)*10);
-      x.strokeStyle=`rgba(0,242,255,${0.12+0.1*Math.sin(t+i)})`;x.lineWidth=1;x.stroke();
-    }
-    nodes.forEach((n,i)=>{
-      const cy=n.y+Math.sin(t+n.phase)*10;
-      x.beginPath();x.arc(n.x,cy,n.r+Math.sin(t+i)*1,0,Math.PI*2);
-      x.fillStyle=`rgba(0,242,255,${0.4+0.4*Math.sin(t+n.phase)})`;x.fill();
-    });
-    t+=0.025;requestAnimationFrame(draw);
-  }
-  draw();
-}
-
-// ─── LÉVIATHAN ──────────────────────────────
-let levInit=false;
-function initLeviathan(){
-  if(levInit)return; levInit=true;
-  const c=document.getElementById('node-map');
-  if(!c)return;
-  const x=c.getContext('2d'),W=c.width,H=c.height;
-  const nodes=Array.from({length:22},(_,i)=>({x:Math.random()*W*0.9+W*0.05, y:Math.random()*H*0.7+H*0.15, isMaster:i<3, isRedundant:i>19}));
-  
-  function drawNodes(){
-    if(!c.parentElement.parentElement.classList.contains('active')) return;
-    x.clearRect(0,0,W,H);x.fillStyle='#020205';x.fillRect(0,0,W,H);
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
-        if(d<130){
-          x.beginPath();x.moveTo(nodes[i].x,nodes[i].y);x.lineTo(nodes[j].x,nodes[j].y);
-          x.strokeStyle=`rgba(188,19,254,${0.07*(1-d/130)})`;x.lineWidth=.5;x.stroke();
-        }
-      }
-    }
-    nodes.forEach(n=>{
-      n.x+=(Math.random()-.5)*.2;n.y+=(Math.random()-.5)*.2;
-      const color=n.isMaster?'var(--g)':n.isRedundant?'rgba(255,255,255,.15)':'var(--p)';
-      x.beginPath();x.arc(n.x,n.y,n.isMaster?4:2.5,0,Math.PI*2);
-      x.fillStyle=color;x.fill();
-    });
-    requestAnimationFrame(drawNodes);
-  }
-  drawNodes();
-
-  // incremental counter
-  let n=0,target=4821;
-  const el=document.getElementById('node-count');
-  const iv=setInterval(()=>{n=Math.min(n+Math.ceil((target-n)/12),target);if(el)el.textContent=n.toLocaleString();if(n>=target)clearInterval(iv);},40);
-}
-
-// ─── PROTOCOL ───────────────────────────────
-let protInit=false;
-function initProtocol(){
-  if(protInit)return; protInit=true;
-  const txEl=document.getElementById('tx-log');
-  const cntEl=document.getElementById('tx-count');
-  let count=140;
-  setInterval(()=>{
-    if(!txEl || !txEl.parentElement.classList.contains('active'))return;
-    count=Math.floor(Math.random()*40+120);
-    if(cntEl)cntEl.textContent=count;
-    
-    const d=document.createElement('div');d.className='live-line';
-    d.style.color='rgba(0,255,136,.7)';
-    const id='REG-'+Math.random().toString(36).slice(2,8).toUpperCase();
-    const layers=['NXU Core → LEV GRID','NXU$ Token → LOCK','LEVIATHAN bare-metal'];
-    const i=Math.floor(Math.random()*3);
-    d.textContent=`> ${id} :: ${layers[i]} :: CONFIRMATION EXTRACTION :: ${(Math.random()*.3+.1).toFixed(2)}ms :: ✓ SECURE`;
-    txEl.prepend(d);
-    if(txEl.children.length>7)txEl.lastChild.remove();
-  },500);
-}
-
-// ─── LOOP CANVAS ─────────────────────────────
-let loopInit=false;
-function initLoop(){
-  if(loopInit)return; loopInit=true;
-  const c=document.getElementById('loop-canvas');
-  if(!c)return;
-  const x=c.getContext('2d'),W=c.width,H=c.height;
-  let t=0;
-  const nodes=[
-    {label:'NXU CORE',x:.1,color:'#00f2ff'},
-    {label:'NXU$ LEDGER',x:.37,color:'#00ff88'},
-    {label:'LÉVIATHAN GRILLE',x:.63,color:'#bc13fe'},
-    {label:'INTEGRATION',x:.9,color:'#ffd700'},
-  ];
-  function drawLoop(){
-    if(!c.parentElement.parentElement.classList.contains('active')) return;
-    x.clearRect(0,0,W,H);
-    x.beginPath();
-    for(let i=0;i<=W;i++){
-      const prog=i/W;
-      const yBase=H*.5;
-      const wave=Math.sin(prog*Math.PI*6-t)*10*Math.sin(prog*Math.PI);
-      if(i===0)x.moveTo(i,yBase+wave);else x.lineTo(i,yBase+wave);
-    }
-    const grad=x.createLinearGradient(0,0,W,0);
-    grad.addColorStop(0,'var(--c)');grad.addColorStop(.35,'var(--g)');
-    grad.addColorStop(.65,'var(--p)');grad.addColorStop(1,'var(--gold)');
-    x.strokeStyle=grad;x.lineWidth=1.5;x.stroke();
-
-    nodes.forEach(n=>{
-      const nx=n.x*W, ny=H*.5+Math.sin(n.x*Math.PI*6-t)*10*Math.sin(n.x*Math.PI);
-      x.beginPath();x.arc(nx,ny,6,0,Math.PI*2);x.fillStyle=n.color;x.fill();
-      x.fillStyle=n.color;x.font='800 9px JetBrains Mono';x.textAlign='center';
-      x.fillText(n.label,nx,ny-16);
-    });
-
-    t+=0.03;requestAnimationFrame(drawLoop);
-  }
-  drawLoop();
-}
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L'Univers de NXU : Une Odyssée Technologique</title>
-    <!-- Chargement de Tailwind CSS pour un design moderne et rapide -->
+    <title>Guide National RACINES — Plateforme Interactive & Carnet Numérique</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
-
-        :root {
-            --nxu-blue: #00a8ff;
-            --nxu-dark: #0a0a0c;
-            --nxu-panel: #16161a;
-        }
-
-        body {
-            background-color: var(--nxu-dark);
-            color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        h1, h2, .nav-link {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .nxu-glow {
-            text-shadow: 0 0 10px rgba(0, 168, 255, 0.7);
-        }
-
-        .glass-panel {
-            background: rgba(22, 22, 26, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 168, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .glass-panel:hover {
-            border-color: var(--nxu-blue);
-            box-shadow: 0 0 20px rgba(0, 168, 255, 0.15);
-        }
-
-        .image-placeholder {
-            background: linear-gradient(45deg, #1a1a1e, #25252b);
-            min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .loading-spinner {
-            border: 4px solid rgba(0, 168, 255, 0.1);
-            border-left-color: var(--nxu-blue);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .nav-link {
-            position: relative;
-            transition: color 0.3s;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: var(--nxu-blue);
-            transition: width 0.3s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .highlight {
-            color: var(--nxu-blue);
-            font-weight: 600;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-slate-50 text-slate-800 antialiased">
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-blue-900/30 px-6 py-4 flex justify-between items-center">
-        <div class="text-xl font-bold nxu-glow text-blue-400">NXU CORE</div>
-        <div class="hidden md:flex space-x-8">
-            <a href="#molecular" class="nav-link text-xs hover:text-blue-400">Moléculaire</a>
-            <a href="#titans" class="nav-link text-xs hover:text-blue-400">Cités</a>
-            <a href="#system" class="nav-link text-xs hover:text-blue-400">Système</a>
-            <a href="#galaxy" class="nav-link text-xs hover:text-blue-400">Galaxie</a>
+    <!-- En-tête -->
+    <header class="bg-emerald-900 text-white shadow-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <span class="text-xs uppercase tracking-widest bg-emerald-700 px-3 py-1 rounded-full font-semibold">Plateforme Nationale Officielle</span>
+                <h1 class="text-3xl font-bold mt-2 tracking-tight">RACINES</h1>
+                <p class="text-emerald-200 text-sm italic">« Grandir avec respect. Vivre avec conscience. Agir avec cœur. Construire ensemble. »</p>
+            </div>
+            <nav class="mt-4 md:mt-0 flex flex-wrap gap-2">
+                <button onclick="switchTab('accueil')" class="tab-btn bg-emerald-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-emerald-600">Accueil & Axes</button>
+                <button onclick="switchTab('regions')" class="tab-btn bg-emerald-800/80 text-white px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-emerald-600">Régions (17)</button>
+                <button onclick="switchTab('outils')" class="tab-btn bg-emerald-800/80 text-white px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-emerald-600">Boîte à Outils</button>
+                <button onclick="switchTab('carnet')" class="tab-btn bg-emerald-800/80 text-white px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-emerald-600">📖 Le Carnet RACINES</button>
+                <button onclick="switchTab('apps')" class="tab-btn bg-emerald-800/80 text-white px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-emerald-600">Applications</button>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <div class="max-w-5xl mx-auto mt-24">
-        <!-- Header -->
-        <header class="text-center mb-20">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 nxu-glow text-blue-500">L'Univers de NXU</h1>
-            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed italic">
-                Bienvenue dans l'univers de <span class="highlight">neuraX-ultime</span>, une civilisation qui a transcendé les limites de la matière et de l'espace.
-            </p>
-        </header>
+    <!-- Contenu Principal -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
 
-        <!-- Section 1: Moléculaire -->
-        <section id="molecular" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
-            <div class="order-2 md:order-1">
-                <h2 class="text-2xl mb-6 text-blue-400">1. Manipulation Moléculaire</h2>
-                <p class="text-gray-300 leading-relaxed mb-4">
-                    Cette étape définit la technologie <span class="highlight">NXU</span>. Un <span class="highlight">manipulateur moléculaire</span> permet d'assembler la matière atome par atome. 
-                </p>
-                <p class="text-gray-400 text-sm">
-                    Fait de métal poli et de verre bioluminescent, cet outil est la clé de voûte de leur civilisation, permettant la création de matériaux impossibles selon les lois de la physique conventionnelle.
+        <!-- ONGLET 1 : ACCUEIL & AXES -->
+        <section id="tab-accueil" class="space-y-8 tab-content">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-bold text-emerald-900 mb-4">Cadre de Référence pour la Coéducation au Québec</h2>
+                <p class="text-slate-600 leading-relaxed">
+                    Le programme <strong>RACINES</strong> unifie la famille, les éducateurs, les écoles et la communauté autour d'un même projet de société : offrir aux enfants les repères nécessaires pour devenir des êtres humains conscients, autonomes et ancrés dans leur milieu de vie.
                 </p>
             </div>
-            <div class="order-1 md:order-2 image-container" data-prompt="A futuristic robotic arm of high precision manipulating a glowing blue molecular structure, polished metal and bioluminescent glass, cyberpunk aesthetic, high detail, 8k">
-                <div class="image-placeholder">
-                    <div class="loading-spinner"></div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-emerald-600">
+                    <h3 class="font-bold text-lg text-slate-800 mb-1">👧 L'Enfant</h3>
+                    <p class="text-emerald-700 font-medium text-sm mb-3">« Je découvre et j'apprends. »</p>
+                    <p class="text-slate-600 text-sm">Acteur de sa démarche, guidé vers l'autonomie et le respect de ses propres rythmes d'apprentissage.</p>
                 </div>
-                <p class="text-center text-xs text-gray-500 mt-3 italic">Visualisation du Manipulateur Moléculaire</p>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-teal-600">
+                    <h3 class="font-bold text-lg text-slate-800 mb-1">👩‍🏫 L'Éducateur / Enseignant</h3>
+                    <p class="text-teal-700 font-medium text-sm mb-3">« J'accompagne et je guide. »</p>
+                    <p class="text-slate-600 text-sm">Passeur culturel, observateur attentif et médiateur bienveillant des conflits du quotidien.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-cyan-600">
+                    <h3 class="font-bold text-lg text-slate-800 mb-1">👨‍👩‍👧 La Famille</h3>
+                    <p class="text-cyan-700 font-medium text-sm mb-3">« J'écoute, je soutiens et je transmets. »</p>
+                    <p class="text-slate-600 text-sm">Premier milieu affectif et culturel, en coresponsabilité active avec le milieu éducatif.</p>
+                </div>
             </div>
         </section>
 
-        <!-- Section 2: Cité des Titans -->
-        <section id="titans" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
-            <div class="image-container" data-prompt="A colossal futuristic city built on the back of a titanic biomechanical creature walking on an alien desert planet, blue energy conduits, organic architecture, cinematic lighting, epic scale">
-                <div class="image-placeholder">
-                    <div class="loading-spinner"></div>
-                </div>
-                <p class="text-center text-xs text-gray-500 mt-3 italic">La Cité des Titans en mouvement</p>
+        <!-- ONGLET 2 : DÉCLINAISON RÉGIONALE -->
+        <section id="tab-regions" class="space-y-6 tab-content hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-bold text-emerald-900 mb-2">Exploration Régionale du Québec (17 Régions)</h2>
+                <p class="text-slate-600 text-sm mb-4">Sélectionnez votre région administrative pour découvrir son ancrage territorial spécifique :</p>
+                <select id="regionSelect" onchange="displayRegionData()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-700 focus:ring-2 focus:ring-emerald-600">
+                    <option value="01">Région 01 — Bas-Saint-Laurent</option>
+                    <option value="02">Région 02 — Saguenay–Lac-Saint-Jean</option>
+                    <option value="03" selected>Région 03 — Capitale-Nationale (Québec)</option>
+                    <option value="04">Région 04 — Mauricie</option>
+                    <option value="05">Région 05 — Estrie (Cantons-de-l'Est)</option>
+                    <option value="06">Région 06 — Montréal</option>
+                    <option value="07">Région 07 — Outaouais</option>
+                    <option value="08">Région 08 — Abitibi-Témiscamingue</option>
+                    <option value="09">Région 09 — Côte-Nord</option>
+                    <option value="10">Région 10 — Nord-du-Québec</option>
+                    <option value="11">Région 11 — Gaspésie–Îles-de-la-Madeleine</option>
+                    <option value="12">Région 12 — Chaudière-Appalaches</option>
+                    <option value="13">Région 13 — Laval</option>
+                    <option value="14">Région 14 — Lanaudière</option>
+                    <option value="15">Région 15 — Laurentides</option>
+                    <option value="16">Région 16 — Montérégie</option>
+                    <option value="17">Région 17 — Centre-du-Québec</option>
+                </select>
             </div>
-            <div>
-                <h2 class="text-2xl mb-6 text-blue-400">2. La Cité des Titans</h2>
-                <p class="text-gray-300 leading-relaxed mb-4">
-                    Une métropole colossale érigée sur le dos d'une créature biomécanique gigantesque. L'architecture est un mélange organique de métal et de conduits d'énergie bleue.
-                </p>
-                <p class="text-gray-400 text-sm">
-                    Ce nomadisme planétaire témoigne de l'harmonie parfaite entre la biologie et la technologie NXU.
-                </p>
+            <div id="regionCard" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-4"></div>
+        </section>
+
+        <!-- ONGLET 3 : BOÎTE À OUTILS -->
+        <section id="tab-outils" class="space-y-6 tab-content hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-bold text-emerald-900 mb-4">Boîte à Outils Pédagogiques</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="border border-slate-200 p-6 rounded-xl bg-slate-50/50">
+                        <h3 class="font-bold text-emerald-800 text-lg mb-2">📖 Le Carnet RACINES</h3>
+                        <p class="text-slate-600 text-sm mb-3">Espace intime non noté de l'enfant : Mes découvertes, réussites, défis, souvenirs familiaux et projets communautaires.</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-xl bg-slate-50/50">
+                        <h3 class="font-bold text-emerald-800 text-lg mb-2">⏱️ Rencontre Mensuelle (4 x 5 min)</h3>
+                        <p class="text-slate-600 text-sm mb-3">5 min de réussites + 5 min de défis + 5 min de stratégie commune + 5 min d'objectifs partagés.</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-xl bg-slate-50/50">
+                        <h3 class="font-bold text-emerald-800 text-lg mb-2">🛑 Méthode STOP (Conflits)</h3>
+                        <p class="text-slate-600 text-sm mb-3">Stop → Écouter → Comprendre → Réparer → Apprendre. Transformer les tensions en apprentissages sociaux.</p>
+                    </div>
+                    <div class="border border-slate-200 p-6 rounded-xl bg-slate-50/50">
+                        <h3 class="font-bold text-emerald-800 text-lg mb-2">📋 Plan RACINES (Personnalisé)</h3>
+                        <p class="text-slate-600 text-sm mb-3">Outil d'accompagnement sur mesure pour les jeunes présentant des besoins particuliers (Forces, Besoins, Stratégies, Ressources).</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Section 3: Système Solaire -->
-        <section id="system" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
-            <div class="order-2 md:order-1">
-                <h2 class="text-2xl mb-6 text-blue-400">3. Système Solaire NXU</h2>
-                <p class="text-gray-300 leading-relaxed mb-4">
-                    À l'échelle stellaire, les planètes sont ceinturées de structures orbitales gigantesques (Anneaux de Dyson partiels) brillant d'une lueur azur.
-                </p>
-                <p class="text-gray-400 text-sm">
-                    L'étoile centrale est canalisée, et une flotte de vaisseaux spatiaux assure le transit constant de données et de ressources entre les mondes artificiels.
-                </p>
-            </div>
-            <div class="order-1 md:order-2 image-container" data-prompt="A solar system with planets surrounded by massive blue glowing orbital megastructures, a pulsing central star, interstellar ships traveling between worlds, cosmic scale, hyper-realistic">
-                <div class="image-placeholder">
-                    <div class="loading-spinner"></div>
+        <!-- ONGLET 4 : LE CARNET RACINES (NOUVEAUTÉ INTERACTIVE) -->
+        <section id="tab-carnet" class="space-y-6 tab-content hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <div class="border-b pb-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">Espace Personnel & Intime</span>
+                        <h2 class="text-2xl font-bold text-emerald-900 mt-2">Mon Carnet RACINES</h2>
+                        <p class="text-slate-600 text-sm">Ce carnet appartient symboliquement à l'enfant. Il n'est ni noté ni utilisé pour punir ou surveiller.</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex gap-2">
+                        <input type="text" id="enfantNom" placeholder="Nom ou prénom de l'enfant" class="p-2 border rounded-xl text-sm">
+                    </div>
                 </div>
-                <p class="text-center text-xs text-gray-500 mt-3 italic">Ingénierie à l'échelle stellaire</p>
+
+                <!-- Formulaire d'ajout dans le carnet -->
+                <div class="bg-slate-50 p-6 rounded-2xl border mb-8 space-y-4">
+                    <h3 class="font-bold text-slate-800 text-lg">✍️ Ajouter une page ou une note dans mon carnet</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Rubrique du Carnet</label>
+                            <select id="carnetRubrique" class="w-full p-3 border rounded-xl text-sm bg-white">
+                                <option value="Découvertes & Réussites">🌟 Mes découvertes & réussites</option>
+                                <option value="Défis & Apprentissages">🌱 Mes défis et apprentissages</option>
+                                <option value="Famille & Souvenirs">❤️ Ma famille et mes souvenirs</option>
+                                <option value="Environnement Naturel">🌍 Mon environnement naturel</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Titre ou résumé de l'entrée</label>
+                            <input type="text" id="carnetTitre" placeholder="Ex: J'ai réussi à faire du vélo sans petites roues !" class="w-full p-3 border rounded-xl text-sm bg-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Mon expression libre / Souvenir / Réflexion</label>
+                        <textarea id="carnetTexte" rows="3" placeholder="Écris ce que tu as ressenti, appris ou découvert..." class="w-full p-3 border rounded-xl text-sm bg-white"></textarea>
+                    </div>
+                    <button onclick="ajouterEntreeCarnet()" class="bg-emerald-700 text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-emerald-600 transition">Ajouter à mon carnet</button>
+                </div>
+
+                <!-- Affichage des entrées du carnet -->
+                <h3 class="font-bold text-emerald-900 text-xl mb-4">📚 Pages de mon carnet</h3>
+                <div id="listeCarnet" class="grid md:grid-cols-2 gap-4">
+                    <!-- Entrée par défaut -->
+                    <div class="p-5 rounded-xl border border-emerald-100 bg-emerald-50/40 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full">🌟 Découvertes & Réussites</span>
+                            <span class="text-xs text-slate-400">Aujourd'hui</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800">Ma première page RACINES</h4>
+                        <p class="text-slate-600 text-sm">Bienvenue dans mon carnet personnel. Je grandis, j'apprends et je découvre le monde avec respect !</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Section 4: Galaxie -->
-        <section id="galaxy" class="mb-32 grid md:grid-cols-2 gap-12 items-center scroll-mt-24">
-            <div class="image-container" data-prompt="A galactic scale view of a galaxy with a blue energy network connecting star systems, a colossal structure surrounding the galactic core, super-civilization engineering, breathtaking nebula">
-                <div class="image-placeholder">
-                    <div class="loading-spinner"></div>
+        <!-- ONGLET 5 : APPLICATIONS -->
+        <section id="tab-apps" class="space-y-6 tab-content hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="text-xl font-bold text-emerald-900 mb-2">💡 Générateur de « Phrase du Jour »</h3>
+                <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-emerald-900 font-semibold text-lg min-h-[60px] flex items-center justify-center text-center mt-4" id="phraseBox">
+                    « Qu'est-ce qui t'a fait sourire ou t'a rendu fier aujourd'hui ? »
                 </div>
-                <p class="text-center text-xs text-gray-500 mt-3 italic">La Galaxie NXU interconnectée</p>
-            </div>
-            <div>
-                <h2 class="text-2xl mb-6 text-blue-400">4. La Galaxie NXU</h2>
-                <p class="text-gray-300 leading-relaxed mb-4">
-                    L'aboutissement : des structures d'ingénierie cosmique reliant les systèmes stellaires par un réseau d'énergie pure.
-                </p>
-                <p class="text-gray-400 text-sm">
-                    Le noyau galactique lui-même est contenu, illustrant la maîtrise totale de l'espace-temps par neuraX-ultime.
-                </p>
+                <button onclick="genererPhrase()" class="mt-4 bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-600 transition">Générer une autre question</button>
             </div>
         </section>
 
-        <footer class="border-t border-blue-900/30 pt-10 pb-20 text-center">
-            <p class="text-blue-500 font-bold mb-2">NXU - ARCHIVES CENTRALES</p>
-            <p class="text-gray-500 text-sm">&copy; 2026 neuraX-ultime. Tous droits réservés à la conscience collective.</p>
-        </footer>
-    </div>
+    </main>
 
+    <!-- Pied de page -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-12 text-center text-sm">
+        <p>Plateforme Web Interactive — Programme National RACINES © Québec</p>
+    </footer>
+
+    <!-- Scripts JavaScript -->
     <script>
-        const apiKey = ""; // La clé est injectée au runtime
+        const regionsData = {
+            "01": { name: "Région 01 — Bas-Saint-Laurent", context: "Territoire maritime et rural, proximité du fleuve Saint-Laurent.", eco: "Protection des berges et écosystèmes fluviaux.", passeur: "Témoignages de gardiens de phares et pêcheurs." },
+            "02": { name: "Région 02 — Saguenay–Lac-Saint-Jean", context: "Immensité forestière et hydrographie majeure.", eco: "Traditions forestières et intégration des savoirs de Mashteuiatsh.", passeur: "Cartographie des bassins versants." },
+            "03": { name: "Région 03 — Capitale-Nationale (Québec)", context: "Berceau historique de l'Amérique française, patrimoine UNESCO.", eco: "Visites pédagogiques du Vieux-Québec et parcs de la Jacques-Cartier.", passeur: "Mémoire institutionnelle et artistique de la Capitale." },
+            "04": { name: "Région 04 — Mauricie", context: "Transition entre Basses-Landes et Bouclier canadien.", eco: "Étude historique de la drave et culture Atikamekw.", passeur: "Observation des cycles de la faune boréale." },
+            "05": { name: "Région 05 — Estrie (Cantons-de-l'Est)", context: "Relief vallonné, proximité des Appalaches.", eco: "Protection des lacs intérieurs et des écosystèmes montagnards.", passeur: "Conseils des Enfants axés sur le développement durable." },
+            "06": { name: "Région 06 — Montréal", context: "Métropole cosmopolite, multiculturelle et dense.", eco: "Célébration de la mosaïque interculturelle et autochtone.", passeur: "Partenariats avec les musées et bibliothèques de quartier." },
+            "07": { name: "Région 07 — Outaouais", context: "Région frontalière, bilingue, vallée des Outaouais.", eco: "Traditions ancestrales algonquines de Kitigan Zibi.", passeur: "Dialogue interculturel et interlinguistique." },
+            "08": { name: "Région 08 — Abitibi-Témiscamingue", context: "Territoire minier et forestier, grands espaces.", eco: "Collaboration avec les communautés Anishinabeg et Cries.", passeur: "Respect de la biodiversité boréale." },
+            "09": { name: "Région 09 — Côte-Nord", context: "Immersion côtière, fjordienne et nitassinan.", eco: "Sensibilisation au biorégionalisme marin et boréal.", passeur: "Récits traditionnels innus (Nutshimit)." },
+            "10": { name: "Région 10 — Nord-du-Québec", context: "Territoire arctique et subarctique (Nunavik / Eeyou Istchee).", eco: "Préservation de la banquise et des migrations fauniques.", passeur: "Valeurs communautaires cries et inuites." },
+            "11": { name: "Région 11 — Gaspésie–Îles-de-la-Madeleine", context: "Péninsule maritime et archipel insulaire.", eco: "Patrimoine vivant acadien et protection des littoraux.", passeur: "Contes acadiens et traditions maritimes." },
+            "12": { name: "Région 12 — Chaudière-Appalaches", context: "Région agro-forestière traversée par les Appalaches.", eco: "Traditions acéricoles et agro-pastorales.", passeur: "Implication des cercles de fermières et aînés." },
+            "13": { name: "Région 13 — Laval", context: "Île urbaine et suburbaine à forte densité.", eco: "Protection des parcs urbains et berges de la rivière des Mille Îles.", passeur: "Engagement civique scolaire multiculturel." },
+            "14": { name: "Région 14 — Lanaudière", context: "Basses-terres agricoles et forêts sauvages du nord.", eco: "Folklore québécois et danse traditionnelle.", passeur: "Veillées de contes et légendes régionales." },
+            "15": { name: "Région 15 — Laurentides", context: "Région de villégiature et de montagnes.", eco: "Cohabitation avec la grande faune et protection des lacs.", passeur: "Éducation environnementale et plein air." },
+            "16": { name: "Région 16 — Montérégie", context: "Plaine agricole fertile et collines montérégiennes.", eco: "Histoire agricole et biodiversité des monts St-Hilaire et Rougemont.", passeur: "Partenariats agroalimentaires locaux." },
+            "17": { name: "Région 17 — Centre-du-Québec", context: "Cœur nourricier et logistique du Québec.", eco: "Éducation à l'alimentation saine et locale.", passeur: "Innovation rurale et artisanat du bois." }
+        };
 
-        async function generateImage(prompt, container) {
-            const placeholder = container.querySelector('.image-placeholder');
-            
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        instances: [{ prompt: prompt }],
-                        parameters: { sampleCount: 1 }
-                    })
-                });
+        const phrases = [
+            "« Qu'est-ce qui t'a fait sourire ou t'a rendu fier aujourd'hui ? »",
+            "« Est-ce que tu as aidé quelqu'un aujourd'hui, ou est-ce que quelqu'un t'a aidé ? »",
+            "« Quelle a été la chose la plus difficile pour toi aujourd'hui, et comment as-tu fait ? »",
+            "« De quoi as-tu envie qu'on discute ou qu'on essaie ensemble demain ? »"
+        ];
 
-                if (!response.ok) throw new Error('Erreur API');
-
-                const result = await response.json();
-                const base64Image = result.predictions[0].bytesBase64Encoded;
-                
-                // Remplacement du contenu
-                placeholder.innerHTML = `<img src="data:image/png;base64,${base64Image}" alt="${prompt}" class="w-full h-full object-cover opacity-0 transition-opacity duration-1000">`;
-                
-                // Effet de fondu à l'apparition
-                setTimeout(() => {
-                    placeholder.querySelector('img').classList.remove('opacity-0');
-                }, 100);
-
-            } catch (error) {
-                console.error("Erreur de génération d'image:", error);
-                placeholder.innerHTML = `<div class="text-red-500 text-xs px-4 text-center">Échec de la liaison avec le Core NXU. Vérifiez votre flux d'énergie.</div>`;
-            }
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-emerald-700');
+                el.classList.add('bg-emerald-800/80');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            event.target.classList.remove('bg-emerald-800/80');
+            event.target.classList.add('bg-emerald-700');
         }
 
-        // Lancement des générations au chargement
-        window.onload = () => {
-            const containers = document.querySelectorAll('.image-container');
-            containers.forEach((container, index) => {
-                const prompt = container.getAttribute('data-prompt');
-                // Petit délai entre chaque appel pour lisser la charge
-                setTimeout(() => {
-                    generateImage(prompt, container);
-                }, index * 500);
-            });
-        };
+        function displayRegionData() {
+            const code = document.getElementById('regionSelect').value;
+            const data = regionsData[code];
+            document.getElementById('regionCard').innerHTML = `
+                <h3 class="text-xl font-bold text-slate-800">${data.name}</h3>
+                <p class="text-slate-600 text-sm"><strong>Contexte :</strong> ${data.context}</p>
+                <p class="text-slate-600 text-sm"><strong>Focus Éco :</strong> ${data.eco}</p>
+                <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 text-emerald-900 text-sm">
+                    <strong>Grand-Parent Passeur :</strong> ${data.passeur}
+                </div>
+            `;
+        }
+
+        function genererPhrase() {
+            const aleatoire = phrases[Math.floor(Math.random() * phrases.length)];
+            document.getElementById('phraseBox').innerText = aleatoire;
+        }
+
+        function ajouterEntreeCarnet() {
+            const rubrique = document.getElementById('carnetRubrique').value;
+            const titre = document.getElementById('carnetTitre').value || "Sans titre";
+            const texte = document.getElementById('carnetTexte').value || "Aucune description.";
+            const liste = document.getElementById('listeCarnet');
+
+            const card = document.createElement('div');
+            card.className = "p-5 rounded-xl border border-slate-200 bg-white shadow-sm space-y-2";
+            card.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">${rubrique}</span>
+                    <span class="text-xs text-slate-400">À l'instant</span>
+                </div>
+                <h4 class="font-bold text-slate-800">${titre}</h4>
+                <p class="text-slate-600 text-sm">${texte}</p>
+            `;
+            liste.prepend(card);
+
+            document.getElementById('carnetTitre').value = '';
+            document.getElementById('carnetTexte').value = '';
+        }
+
+        window.onload = displayRegionData;
     </script>
 </body>
 </html>
-
