@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Plateforme interactive RACINES — coéducation, carnet numérique et ancrage régional au Québec.">
+  <title>RACINES — Plateforme interactive</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    :focus-visible { outline: 3px solid #5eead4; outline-offset: 2px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+  <header class="sticky top-0 z-50 bg-emerald-900 text-white shadow-xl">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 md:flex-row">
+      <div>
+        <span class="rounded-full bg-emerald-700 px-3 py-1 text-xs font-semibold uppercase tracking-widest">Plateforme nationale</span>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight">RACINES</h1>
+        <p class="text-sm italic text-emerald-200">Grandir avec respect. Vivre avec conscience. Agir avec cœur.</p>
+      </div>
+      <nav aria-label="Navigation principale" class="flex flex-wrap justify-center gap-2">
+        <button class="tab-btn rounded-lg bg-emerald-700 px-3 py-2 text-sm font-medium" data-tab="accueil">Accueil & axes</button>
+        <button class="tab-btn rounded-lg bg-emerald-800/80 px-3 py-2 text-sm font-medium" data-tab="regions">Régions (17)</button>
+        <button class="tab-btn rounded-lg bg-emerald-800/80 px-3 py-2 text-sm font-medium" data-tab="outils">Boîte à outils</button>
+        <button class="tab-btn rounded-lg bg-emerald-800/80 px-3 py-2 text-sm font-medium" data-tab="carnet">📖 Mon carnet</button>
+        <button class="tab-btn rounded-lg bg-emerald-800/80 px-3 py-2 text-sm font-medium" data-tab="apps">Applications</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-8">
+    <section id="tab-accueil" class="tab-content space-y-8" aria-labelledby="accueil-title">
+      <div class="rounded-2xl border border-slate-100 bg-white p-8 shadow-sm">
+        <h2 id="accueil-title" class="mb-4 text-2xl font-bold text-emerald-900">Cadre de référence pour la coéducation au Québec</h2>
+        <p class="leading-relaxed text-slate-600">Le programme <strong>RACINES</strong> unifie la famille, les éducateurs, les écoles et la communauté autour d’un même projet : offrir aux enfants les repères nécessaires pour devenir des êtres humains conscients, autonomes et ancrés dans leur milieu de vie.</p>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-2xl border border-slate-100 border-t-4 border-t-emerald-600 bg-white p-6 shadow-sm"><h3 class="mb-1 text-lg font-bold">👧 L’enfant</h3><p class="mb-3 text-sm font-medium text-emerald-700">« Je découvre et j’apprends. »</p><p class="text-sm text-slate-600">Acteur de sa démarche, guidé vers l’autonomie et le respect de son rythme.</p></article>
+        <article class="rounded-2xl border border-slate-100 border-t-4 border-t-teal-600 bg-white p-6 shadow-sm"><h3 class="mb-1 text-lg font-bold">👩‍🏫 L’éducateur</h3><p class="mb-3 text-sm font-medium text-teal-700">« J’accompagne et je guide. »</p><p class="text-sm text-slate-600">Passeur culturel, observateur attentif et médiateur bienveillant.</p></article>
+        <article class="rounded-2xl border border-slate-100 border-t-4 border-t-cyan-600 bg-white p-6 shadow-sm"><h3 class="mb-1 text-lg font-bold">👨‍👩‍👧 La famille</h3><p class="mb-3 text-sm font-medium text-cyan-700">« J’écoute, je soutiens et je transmets. »</p><p class="text-sm text-slate-600">Premier milieu affectif et culturel, en coresponsabilité avec le milieu éducatif.</p></article>
+      </div>
+    </section>
+
+    <section id="tab-regions" class="tab-content hidden space-y-6" aria-labelledby="regions-title">
+      <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+        <h2 id="regions-title" class="mb-2 text-2xl font-bold text-emerald-900">Exploration régionale du Québec</h2>
+        <p class="mb-4 text-sm text-slate-600">Sélectionnez une région administrative pour découvrir son ancrage territorial.</p>
+        <label for="regionSelect" class="sr-only">Région administrative</label>
+        <select id="regionSelect" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 font-medium text-slate-700"></select>
+      </div>
+      <div id="regionCard" class="space-y-4 rounded-2xl border border-slate-100 bg-white p-8 shadow-sm"></div>
+    </section>
+
+    <section id="tab-outils" class="tab-content hidden space-y-6" aria-labelledby="outils-title">
+      <div class="rounded-2xl border border-slate-100 bg-white p-8 shadow-sm">
+        <h2 id="outils-title" class="mb-4 text-2xl font-bold text-emerald-900">Boîte à outils pédagogiques</h2>
+        <div class="grid gap-6 md:grid-cols-2">
+          <article class="rounded-xl border border-slate-200 bg-slate-50/50 p-6"><h3 class="mb-2 text-lg font-bold text-emerald-800">📖 Le Carnet RACINES</h3><p class="text-sm text-slate-600">Espace intime et non noté : découvertes, réussites, défis, souvenirs et projets.</p></article>
+          <article class="rounded-xl border border-slate-200 bg-slate-50/50 p-6"><h3 class="mb-2 text-lg font-bold text-emerald-800">⏱️ Rencontre mensuelle</h3><p class="text-sm text-slate-600">4 × 5 minutes : réussites, défis, stratégie commune et objectifs partagés.</p></article>
+          <article class="rounded-xl border border-slate-200 bg-slate-50/50 p-6"><h3 class="mb-2 text-lg font-bold text-emerald-800">🛑 Méthode STOP</h3><p class="text-sm text-slate-600">Stop → Écouter → Comprendre → Réparer → Apprendre.</p></article>
+          <article class="rounded-xl border border-slate-200 bg-slate-50/50 p-6"><h3 class="mb-2 text-lg font-bold text-emerald-800">📋 Plan RACINES</h3><p class="text-sm text-slate-600">Forces, besoins, stratégies et ressources pour un accompagnement personnalisé.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-carnet" class="tab-content hidden space-y-6" aria-labelledby="carnet-title">
+      <div class="rounded-2xl border border-slate-100 bg-white p-8 shadow-sm">
+        <div class="mb-6 flex flex-col items-start justify-between gap-4 border-b pb-4 md:flex-row md:items-center">
+          <div><span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-800">Espace personnel</span><h2 id="carnet-title" class="mt-2 text-2xl font-bold text-emerald-900">Mon Carnet RACINES</h2><p class="text-sm text-slate-600">Ce carnet n’est ni noté ni utilisé pour punir ou surveiller.</p></div>
+          <label class="text-sm text-slate-600">Prénom <input id="enfantNom" class="ml-2 rounded-xl border p-2" placeholder="Mon prénom" maxlength="60"></label>
+        </div>
+        <form id="carnetForm" class="mb-8 space-y-4 rounded-2xl border bg-slate-50 p-6">
+          <h3 class="text-lg font-bold">✍️ Ajouter une page</h3>
+          <div class="grid gap-4 md:grid-cols-2"><label class="text-xs font-bold uppercase text-slate-600">Rubrique<select id="carnetRubrique" class="mt-1 w-full rounded-xl border bg-white p-3 text-sm"><option>🌟 Découvertes & réussites</option><option>🌱 Défis & apprentissages</option><option>❤️ Famille & souvenirs</option><option>🌍 Environnement naturel</option></select></label><label class="text-xs font-bold uppercase text-slate-600">Titre<input id="carnetTitre" required maxlength="120" class="mt-1 w-full rounded-xl border bg-white p-3 text-sm" placeholder="Mon titre"></label></div>
+          <label class="block text-xs font-bold uppercase text-slate-600">Expression libre<textarea id="carnetTexte" maxlength="1000" rows="3" class="mt-1 w-full rounded-xl border bg-white p-3 text-sm" placeholder="Ce que j’ai ressenti, appris ou découvert…"></textarea></label>
+          <button class="rounded-xl bg-emerald-700 px-6 py-2 text-sm font-medium text-white hover:bg-emerald-600">Ajouter à mon carnet</button>
+        </form>
+        <h3 class="mb-4 text-xl font-bold text-emerald-900">📚 Pages de mon carnet</h3><div id="listeCarnet" class="grid gap-4 md:grid-cols-2"></div>
+      </div>
+    </section>
+
+    <section id="tab-apps" class="tab-content hidden space-y-6" aria-labelledby="apps-title"><div class="rounded-2xl border border-slate-100 bg-white p-8 shadow-sm"><h2 id="apps-title" class="text-xl font-bold text-emerald-900">💡 Phrase du jour</h2><div id="phraseBox" class="mt-4 flex min-h-16 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-center text-lg font-semibold text-emerald-900"></div><button id="phraseBtn" class="mt-4 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600">Générer une autre question</button></div></section>
+  </main>
+  <footer class="mt-12 bg-slate-900 py-8 text-center text-sm text-slate-400">Plateforme Web interactive — Programme RACINES © Québec</footer>
+
+<script>
+const regions = [
+ ['01','Bas-Saint-Laurent','Territoire maritime et rural, proximité du fleuve Saint-Laurent.','Protection des berges et écosystèmes fluviaux.','Témoignages de gardiens de phares et pêcheurs.'],['02','Saguenay–Lac-Saint-Jean','Immensité forestière et hydrographie majeure.','Traditions forestières et savoirs de Mashteuiatsh.','Cartographie des bassins versants.'],['03','Capitale-Nationale (Québec)','Berceau historique de l’Amérique française, patrimoine UNESCO.','Visites du Vieux-Québec et des parcs de la Jacques-Cartier.','Mémoire institutionnelle et artistique de la Capitale.'],['04','Mauricie','Transition entre Basses-Landes et Bouclier canadien.','Histoire de la drave et culture Atikamekw.','Observation des cycles de la faune boréale.'],['05','Estrie (Cantons-de-l’Est)','Relief vallonné, proximité des Appalaches.','Protection des lacs et écosystèmes montagnards.','Conseils des enfants sur le développement durable.'],['06','Montréal','Métropole cosmopolite, multiculturelle et dense.','Mosaïque interculturelle et autochtone.','Partenariats avec musées et bibliothèques.'],['07','Outaouais','Région frontalière, bilingue, vallée des Outaouais.','Traditions algonquines de Kitigan Zibi.','Dialogue interculturel et interlinguistique.'],['08','Abitibi-Témiscamingue','Territoire minier et forestier, grands espaces.','Collaboration avec les communautés Anishinabeg et cries.','Respect de la biodiversité boréale.'],['09','Côte-Nord','Immersion côtière, fjordienne et nitassinan.','Biorégionalisme marin et boréal.','Récits traditionnels innus (Nutshimit).'],['10','Nord-du-Québec','Territoire arctique et subarctique.','Préservation de la banquise et des migrations.','Valeurs communautaires cries et inuites.'],['11','Gaspésie–Îles-de-la-Madeleine','Péninsule maritime et archipel insulaire.','Patrimoine acadien et protection des littoraux.','Contes acadiens et traditions maritimes.'],['12','Chaudière-Appalaches','Région agro-forestière traversée par les Appalaches.','Traditions acéricoles et agro-pastorales.','Cercles de fermières et aînés.'],['13','Laval','Île urbaine et suburbaine à forte densité.','Parcs urbains et berges de la rivière des Mille Îles.','Engagement civique scolaire multiculturel.'],['14','Lanaudière','Basses-terres agricoles et forêts du nord.','Folklore québécois et danse traditionnelle.','Veillées de contes et légendes.'],['15','Laurentides','Région de villégiature et de montagnes.','Cohabitation avec la grande faune et protection des lacs.','Éducation environnementale et plein air.'],['16','Montérégie','Plaine agricole fertile et collines montérégiennes.','Histoire agricole et biodiversité des monts.','Partenariats agroalimentaires locaux.'],['17','Centre-du-Québec','Cœur nourricier et logistique du Québec.','Alimentation saine et locale.','Innovation rurale et artisanat du bois.']
+];
+const phrases=["Qu’est-ce qui t’a fait sourire ou t’a rendu fier aujourd’hui ?","As-tu aidé quelqu’un aujourd’hui, ou quelqu’un t’a-t-il aidé ?","Quelle a été ta plus grande difficulté aujourd’hui, et comment l’as-tu surmontée ?","De quoi as-tu envie qu’on discute ou qu’on essaie ensemble demain ?"];
+const $=id=>document.getElementById(id);
+const safeText=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function showTab(name, button){document.querySelectorAll('.tab-content').forEach(x=>x.classList.add('hidden'));$('tab-'+name).classList.remove('hidden');document.querySelectorAll('.tab-btn').forEach(x=>x.classList.replace('bg-emerald-700','bg-emerald-800/80'));button.classList.replace('bg-emerald-800/80','bg-emerald-700');}
+document.querySelectorAll('.tab-btn').forEach(button=>button.addEventListener('click',()=>showTab(button.dataset.tab,button)));
+regions.forEach(([code,name])=>{const option=document.createElement('option');option.value=code;option.textContent=`Région ${code} — ${name}`;$('regionSelect').append(option);});
+function displayRegion(){const data=regions.find(x=>x[0]===$('regionSelect').value);$('regionCard').innerHTML=`<h3 class="text-xl font-bold">Région ${data[0]} — ${safeText(data[1])}</h3><p class="text-sm text-slate-600"><strong>Contexte :</strong> ${safeText(data[2])}</p><p class="text-sm text-slate-600"><strong>Focus éco :</strong> ${safeText(data[3])}</p><div class="rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-900"><strong>Grand-parent passeur :</strong> ${safeText(data[4])}</div>`;}
+$('regionSelect').value='03';$('regionSelect').addEventListener('change',displayRegion);displayRegion();
+function entries(){try{return JSON.parse(localStorage.getItem('racines-entries')||'[]')}catch{return []}}
+function renderEntries(){const list=$('listeCarnet');const all=entries();list.innerHTML='';if(!all.length){list.innerHTML='<p class="text-sm text-slate-500">Aucune page ajoutée pour le moment.</p>';return;}all.forEach(entry=>{const card=document.createElement('article');card.className='space-y-2 rounded-xl border border-emerald-100 bg-emerald-50/40 p-5';card.innerHTML=`<div class="flex justify-between gap-2"><span class="rounded-full bg-emerald-200 px-2 py-0.5 text-xs font-bold text-emerald-800">${safeText(entry.rubrique)}</span><time class="text-xs text-slate-400">${safeText(entry.date)}</time></div><h4 class="font-bold">${safeText(entry.titre)}</h4><p class="text-sm text-slate-600">${safeText(entry.texte)}</p>`;list.append(card);});}
+$('carnetForm').addEventListener('submit',event=>{event.preventDefault();const all=entries();all.unshift({rubrique:$('carnetRubrique').value,titre:$('carnetTitre').value.trim(),texte:$('carnetTexte').value.trim()||'Aucune description.',date:'À l’instant'});localStorage.setItem('racines-entries',JSON.stringify(all.slice(0,50)));$('carnetForm').reset();renderEntries();});
+$('enfantNom').value=localStorage.getItem('racines-name')||'';$('enfantNom').addEventListener('input',event=>localStorage.setItem('racines-name',event.target.value));renderEntries();
+function newPhrase(){ $('phraseBox').textContent=phrases[Math.floor(Math.random()*phrases.length)]; } $('phraseBtn').addEventListener('click',newPhrase);newPhrase();
+</script>
+</body>
+</html>
