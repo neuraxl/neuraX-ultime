@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#7aa57a" />
-  <meta name="description" content="RACINES — plateforme douce et bienveillante pour la coéducation au Québec." />
-  <title>RACINES — Grandir avec douceur</title>
+  <meta name="theme-color" content="#7b8f6f" />
+  <meta name="description" content="RACINES — une plateforme calme, bienveillante et ancrée dans la nature et la pédagogie Montessori." />
+  <title>RACINES — Nature et autonomie</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -16,12 +16,13 @@
             display: ['Georgia', 'serif']
           },
           colors: {
-            sage: '#7aa57a',
-            moss: '#3d6b4d',
-            cream: '#fffaf3',
-            sand: '#f5ead7',
-            peach: '#f7d7c9',
-            lilac: '#efe5ff'
+            moss: '#7b8f6f',
+            sage: '#a5b796',
+            clay: '#c78f6b',
+            sand: '#f6efe2',
+            oat: '#efe9d8',
+            forest: '#2d3c2f',
+            parchment: '#fffaf3'
           }
         }
       }
@@ -29,21 +30,24 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
     :root {
-      --sage: #7aa57a;
-      --moss: #3d6b4d;
-      --cream: #fffaf3;
-      --sand: #f5ead7;
-      --peach: #f7d7c9;
-      --lilac: #efe5ff;
-      --rose: #fff0ef;
-      --ink: #2b2d2a;
+      --forest: #2d3c2f;
+      --moss: #7b8f6f;
+      --sage: #a5b796;
+      --sand: #f6efe2;
+      --oat: #efe9d8;
+      --clay: #c78f6b;
+      --parchment: #fffaf3;
+      --leaf: #dfe7d2;
+      --ink: #2c2d2a;
     }
 
     * { box-sizing: border-box; scroll-behavior: smooth; }
+
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: linear-gradient(180deg, #fffaf3 0%, #fff5e9 42%, #f7f9f2 100%);
+      background: linear-gradient(180deg, #fffaf3 0%, #f6f0e7 42%, #f3f7ef 100%);
       color: var(--ink);
     }
 
@@ -52,20 +56,18 @@
       letter-spacing: -0.04em;
     }
 
-    .hero-pattern {
+    .nature-pattern {
       background-image:
-        linear-gradient(rgba(122,165,122,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(122,165,122,0.08) 1px, transparent 1px);
-      background-size: 24px 24px;
+        linear-gradient(rgba(122, 143, 111, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(122, 143, 111, 0.07) 1px, transparent 1px);
+      background-size: 28px 28px;
     }
 
-    .floaty {
-      animation: float 7s ease-in-out infinite;
-    }
+    .floaty { animation: float 8s ease-in-out infinite; }
     .floaty-delay { animation-delay: -2s; }
     @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(-2deg); }
-      50% { transform: translateY(-12px) rotate(2deg); }
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50% { transform: translateY(-14px) rotate(2deg); }
     }
 
     .tab-content { animation: fade 0.35s ease; }
@@ -74,13 +76,13 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .soft-card {
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(10px);
+    .nature-card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(8px);
     }
 
     :focus-visible {
-      outline: 3px solid rgba(122,165,122,0.9);
+      outline: 3px solid rgba(123, 143, 111, 0.9);
       outline-offset: 3px;
     }
 
@@ -89,7 +91,7 @@
     @media (max-width: 640px) {
       .desktop-nav { display: none; }
       .mobile-nav { display: flex; }
-      .hero-title { font-size: 3.2rem; line-height: 0.96; }
+      .hero-title { font-size: 3.2rem; line-height: 0.9; }
     }
     @media (min-width: 641px) {
       .mobile-nav { display: none; }
@@ -97,52 +99,52 @@
   </style>
 </head>
 <body>
-  <header class="sticky top-0 z-50 border-b border-emerald-800/10 bg-[#f9f5ee]/90 backdrop-blur-md">
+  <header class="sticky top-0 z-50 border-b border-[#dfe7d2] bg-[#f8f3e9]/90 backdrop-blur-md">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
       <button class="flex items-center gap-3 text-left" data-tab="accueil" aria-label="Accueil RACINES">
-        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[#dfeecf] text-2xl shadow-sm">🌿</span>
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[#dfe7d2] text-2xl shadow-sm">🌱</span>
         <span>
-          <span class="block text-[10px] font-bold uppercase tracking-[0.25em] text-[#5d7f5f]">Plateforme bienveillante</span>
-          <span class="block text-xl font-extrabold text-[#2d4a36]">RACINES</span>
+          <span class="block text-[10px] font-bold uppercase tracking-[0.25em] text-[#687e60]">Pédagogie calme</span>
+          <span class="block text-xl font-extrabold text-[#2d3c2f]">RACINES</span>
         </span>
       </button>
 
       <nav class="desktop-nav flex flex-wrap justify-end gap-2" aria-label="Navigation principale">
-        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="accueil">Accueil</button>
-        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="regions">Régions</button>
-        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="outils">Outils</button>
-        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="carnet">📖 Carnet</button>
-        <button class="tab-btn rounded-full bg-[#edf5eb] px-3 py-2 text-sm font-semibold text-[#2d4a36] transition hover:bg-[#dfeecf]" data-tab="apps">Question du jour</button>
+        <button class="tab-btn rounded-full bg-[#edf3e7] px-3 py-2 text-sm font-semibold text-[#2d3c2f] transition hover:bg-[#e3ead9]" data-tab="accueil">Accueil</button>
+        <button class="tab-btn rounded-full bg-[#edf3e7] px-3 py-2 text-sm font-semibold text-[#2d3c2f] transition hover:bg-[#e3ead9]" data-tab="regions">Régions</button>
+        <button class="tab-btn rounded-full bg-[#edf3e7] px-3 py-2 text-sm font-semibold text-[#2d3c2f] transition hover:bg-[#e3ead9]" data-tab="outils">Outils</button>
+        <button class="tab-btn rounded-full bg-[#edf3e7] px-3 py-2 text-sm font-semibold text-[#2d3c2f] transition hover:bg-[#e3ead9]" data-tab="carnet">📖 Carnet</button>
+        <button class="tab-btn rounded-full bg-[#edf3e7] px-3 py-2 text-sm font-semibold text-[#2d3c2f] transition hover:bg-[#e3ead9]" data-tab="apps">Le jour</button>
       </nav>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 sm:pb-12 sm:pt-10">
     <section id="tab-accueil" class="tab-content">
-      <div class="hero-pattern relative overflow-hidden rounded-[2rem] bg-[#f4f0e8] px-5 py-8 shadow-[0_20px_60px_rgba(93,127,95,0.10)] sm:px-12 sm:py-14">
-        <div class="absolute right-0 top-0 hidden h-64 w-64 translate-x-12 -translate-y-8 rounded-full bg-[#e9f3d6] blur-3xl sm:block"></div>
-        <div class="absolute bottom-0 left-0 h-52 w-52 -translate-x-8 translate-y-8 rounded-full bg-[#f9dccc] blur-3xl"></div>
+      <div class="nature-pattern relative overflow-hidden rounded-[2rem] bg-[#f3eee4] px-5 py-8 shadow-[0_25px_60px_rgba(45,60,47,0.08)] sm:px-12 sm:py-14">
+        <div class="absolute left-0 top-0 h-56 w-56 -translate-x-10 -translate-y-14 rounded-full bg-[#dfe7d2] blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 h-60 w-60 translate-x-10 translate-y-8 rounded-full bg-[#f2d7ba] blur-3xl"></div>
 
         <div class="relative z-10 grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
           <div>
-            <span class="inline-flex rounded-full border border-[#9ac29b] bg-[#edf6ea] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#3d6b4d]">Éducation bienveillante</span>
-            <h1 class="hero-title soft-display mt-6 text-5xl leading-[0.9] text-[#2b3d2f] sm:text-7xl">Grandir avec douceur,<br><span class="text-[#6f9a73]">en confiance.</span></h1>
-            <p class="mt-6 max-w-xl text-base leading-8 text-[#4c5a4f] sm:text-lg">RACINES relie les enfants, les familles, les éducateurs et la communauté pour cultiver un environnement où chacun peut s’épanouir, s’écouter et avancer avec respect.</p>
+            <span class="inline-flex rounded-full border border-[#b9c7a6] bg-[#edf3e7] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#4c6751]">Nature & autonomie</span>
+            <h1 class="hero-title soft-display mt-6 text-5xl leading-[0.9] text-[#2d3c2f] sm:text-7xl">Grandir en<br><span class="text-[#7b8f6f]">respect.</span></h1>
+            <p class="mt-6 max-w-xl text-base leading-8 text-[#4a564a] sm:text-lg">RACINES accompagne les enfants, familles et éducateurs dans une pédagogie attentive, lente et profonde, où l’autonomie, l’écoute et le lien à la nature deviennent des repères de vie.</p>
             <div class="mt-8 flex flex-wrap gap-3">
-              <button class="rounded-full bg-[#7aa57a] px-5 py-3 font-bold text-white shadow-lg shadow-[#7aa57a]/20 transition hover:-translate-y-1 hover:bg-[#6d986f]" data-tab="carnet">Ouvrir le carnet</button>
-              <button class="rounded-full border border-[#aac5a7] bg-white/60 px-5 py-3 font-bold text-[#2d4a36] transition hover:bg-white" data-tab="outils">Découvrir les outils</button>
+              <button class="rounded-full bg-[#7b8f6f] px-5 py-3 font-bold text-white shadow-lg shadow-[#7b8f6f]/20 transition hover:-translate-y-1 hover:bg-[#697d62]" data-tab="carnet">Mon carnet</button>
+              <button class="rounded-full border border-[#bfd0b2] bg-white/60 px-5 py-3 font-bold text-[#2d3c2f] transition hover:bg-white" data-tab="outils">Les outils</button>
             </div>
           </div>
 
           <div class="relative flex items-center justify-center">
-            <div class="floaty relative flex h-[290px] w-[290px] items-center justify-center rounded-[2rem] bg-gradient-to-br from-[#edf6ea] via-[#fff0ef] to-[#fbead4] shadow-[0_20px_40px_rgba(93,127,95,0.12)] sm:h-[340px] sm:w-[340px]">
-              <svg class="h-[220px] w-[220px] sm:h-[260px] sm:w-[260px]" viewBox="0 0 260 260" aria-hidden="true">
-                <circle cx="130" cy="130" r="98" fill="#dfeecf"/>
+            <div class="floaty relative flex h-[290px] w-[290px] items-center justify-center rounded-[2.3rem] bg-gradient-to-br from-[#edf3e7] via-[#f9f4eb] to-[#f5e3d0] shadow-[0_25px_55px_rgba(45,60,47,0.12)] sm:h-[340px] sm:w-[340px]">
+              <svg class="h-[220px] w-[220px] sm:h-[250px] sm:w-[250px]" viewBox="0 0 260 260" aria-hidden="true">
+                <circle cx="130" cy="130" r="98" fill="#dfe7d2"/>
                 <circle cx="130" cy="130" r="76" fill="#fffaf3"/>
-                <path d="M130 52C94 71 79 105 79 132c0 38 20 58 51 76 31-18 51-38 51-76 0-27-15-61-51-80Z" fill="#8bb18b" opacity="0.9"/>
-                <path d="M123 99c0-14 8-24 23-24 28 0 34 18 34 34 0 18-12 32-27 32s-30-16-30-42Zm-14 56c12-13 24-19 38-19s25 7 37 20" fill="none" stroke="#2d4a36" stroke-width="7" stroke-linecap="round"/>
-                <path d="M90 200c14-20 35-31 72-31s58 11 72 31" fill="none" stroke="#2d4a36" stroke-width="7" stroke-linecap="round"/>
-                <path d="M102 92l-18 21M170 92l18 21" stroke="#2d4a36" stroke-width="7" stroke-linecap="round"/>
+                <path d="M125 52c-41 18-60 58-60 92 0 36 25 73 60 92 35-19 60-56 60-92 0-34-19-74-60-92Z" fill="#b8c9a3" opacity="0.9"/>
+                <path d="M101 143c13-10 25-15 41-15s28 5 41 15" fill="none" stroke="#2d3c2f" stroke-width="8" stroke-linecap="round"/>
+                <path d="M90 191c18-18 34-27 67-27s49 9 67 27" fill="none" stroke="#2d3c2f" stroke-width="8" stroke-linecap="round"/>
+                <path d="M112 98c-7-18-3-35 10-49m39 0c9 7 14 19 14 30M92 120c13-12 28-18 41-18m34 18c12-4 27-6 43-1" fill="none" stroke="#2d3c2f" stroke-width="7" stroke-linecap="round"/>
               </svg>
             </div>
           </div>
@@ -150,85 +152,85 @@
       </div>
 
       <div class="mt-8 grid gap-4 sm:grid-cols-3">
-        <article class="soft-card rounded-3xl border border-[#ebf1e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <article class="nature-card rounded-[2rem] border border-[#edf3e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
           <span class="text-3xl">👧</span>
-          <h2 class="mt-4 text-xl font-bold text-[#2d4a36]">L’enfant</h2>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Je découvre, j’expérimente et j’apprends à mon rythme, sans peur ni pression.</p>
+          <h2 class="mt-4 text-xl font-bold text-[#2d3c2f]">L’enfant</h2>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">Je découvre, j’ose, j’expérimente à mon rythme avec confiance et sécurité.</p>
         </article>
-        <article class="soft-card rounded-3xl border border-[#ebf1e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <article class="nature-card rounded-[2rem] border border-[#edf3e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
           <span class="text-3xl">🧭</span>
-          <h2 class="mt-4 text-xl font-bold text-[#2d4a36]">L’éducateur</h2>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">J’accompagne avec écoute, observation et confiance pour soutenir chaque pas.</p>
+          <h2 class="mt-4 text-xl font-bold text-[#2d3c2f]">L’éducateur</h2>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">J’écoute, j’observe et j’accompagne les capacités déjà présentes en chacun.</p>
         </article>
-        <article class="soft-card rounded-3xl border border-[#ebf1e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <article class="nature-card rounded-[2rem] border border-[#edf3e7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
           <span class="text-3xl">🏡</span>
-          <h2 class="mt-4 text-xl font-bold text-[#2d4a36]">La famille</h2>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Je soutiens, j’écoute et je transmets des repères qui grandissent avec le temps.</p>
+          <h2 class="mt-4 text-xl font-bold text-[#2d3c2f]">La famille</h2>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">Je soutiens et je transmet des repères simples, durables et profondément humains.</p>
         </article>
       </div>
     </section>
 
     <section id="tab-regions" class="tab-content hidden space-y-5">
-      <div class="rounded-[2rem] border border-[#ebf1e7] bg-white/80 p-5 shadow-sm sm:p-8">
-        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6f9a73]">Ancrage territorial</span>
-        <h2 class="soft-display mt-3 text-4xl text-[#2d4a36]">Explorer le Québec</h2>
-        <p class="mt-2 text-sm text-[#4c5a4f]">Chaque région porte une histoire, des savoirs et des liens à transmettre.</p>
+      <div class="rounded-[2rem] border border-[#edf3e7] bg-white/80 p-5 shadow-sm sm:p-8">
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#687e60]">Ancrage territorial</span>
+        <h2 class="soft-display mt-3 text-4xl text-[#2d3c2f]">Explorer le Québec</h2>
+        <p class="mt-2 text-sm text-[#4a564a]">Chaque région nous permet d’ancrer l’enfant dans un paysage, une histoire et des savoirs vivants.</p>
         <label for="regionSelect" class="sr-only">Choisir une région</label>
-        <select id="regionSelect" class="mt-6 w-full rounded-2xl border-2 border-[#ebf1e7] bg-[#f8faf2] p-4 text-base font-semibold text-[#2d4a36]"></select>
+        <select id="regionSelect" class="mt-6 w-full rounded-2xl border-2 border-[#edf3e7] bg-[#f8faf4] p-4 text-base font-semibold text-[#2d3c2f]"></select>
       </div>
 
-      <div id="regionCard" class="rounded-[2rem] bg-[#2d4a36] p-6 text-white shadow-[0_20px_50px_rgba(45,74,54,0.18)] sm:p-8"></div>
+      <div id="regionCard" class="rounded-[2rem] bg-[#2d3c2f] p-6 text-white shadow-[0_20px_50px_rgba(45,60,47,0.12)] sm:p-8"></div>
     </section>
 
     <section id="tab-outils" class="tab-content hidden">
       <div class="mb-6">
-        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#6f9a73]">Pour avancer ensemble</span>
-        <h2 class="soft-display mt-2 text-4xl text-[#2d4a36]">Boîte à outils</h2>
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#687e60]">Pour avancer ensemble</span>
+        <h2 class="soft-display mt-2 text-4xl text-[#2d3c2f]">Boîte à outils</h2>
       </div>
 
       <div class="grid gap-5 sm:grid-cols-2">
-        <article class="rounded-[2rem] bg-[#edf6ea] p-6">
+        <article class="rounded-[2rem] bg-[#edf3e7] p-6">
           <span class="text-3xl">📖</span>
-          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">Le carnet RACINES</h3>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Un espace intime pour déposer des découvertes, des réussites et des souvenirs.</p>
+          <h3 class="mt-4 text-xl font-bold text-[#2d3c2f]">Le carnet RACINES</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">Un espace intime pour consigner les découvertes, les réussites et les souvenirs de manière douce.</p>
         </article>
-        <article class="rounded-[2rem] bg-[#fcefe8] p-6">
+        <article class="rounded-[2rem] bg-[#f7ecdf] p-6">
           <span class="text-3xl">⏱️</span>
-          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">La rencontre mensuelle</h3>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">4 × 5 minutes : réussites, défis, stratégie commune et objectifs partagés.</p>
+          <h3 class="mt-4 text-xl font-bold text-[#2d3c2f]">La rencontre mensuelle</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">4 × 5 minutes : réussites, défis, stratégie commune et objectifs partagés.</p>
         </article>
-        <article class="rounded-[2rem] bg-[#f5ecff] p-6">
+        <article class="rounded-[2rem] bg-[#f3eaf8] p-6">
           <span class="text-3xl">🛑</span>
-          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">La méthode STOP</h3>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Stop → Écouter → Comprendre → Réparer → Apprendre.</p>
+          <h3 class="mt-4 text-xl font-bold text-[#2d3c2f]">La méthode STOP</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">Stop → Écouter → Comprendre → Réparer → Apprendre.</p>
         </article>
-        <article class="rounded-[2rem] bg-[#eef6ff] p-6">
+        <article class="rounded-[2rem] bg-[#eaf2f7] p-6">
           <span class="text-3xl">📋</span>
-          <h3 class="mt-4 text-xl font-bold text-[#2d4a36]">Le plan RACINES</h3>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">Forces, besoins, stratégies et ressources pour un accompagnement sur mesure.</p>
+          <h3 class="mt-4 text-xl font-bold text-[#2d3c2f]">Le plan RACINES</h3>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">Forces, besoins, stratégies et ressources pour une progression respectueuse et personnalisée.</p>
         </article>
       </div>
     </section>
 
     <section id="tab-carnet" class="tab-content hidden">
-      <div class="rounded-[2rem] border border-[#ebf1e7] bg-white/80 p-5 shadow-sm sm:p-8">
-        <div class="flex flex-col justify-between gap-5 border-b border-[#edf2ea] pb-6 sm:flex-row sm:items-end">
+      <div class="rounded-[2rem] border border-[#edf3e7] bg-white/80 p-5 shadow-sm sm:p-8">
+        <div class="flex flex-col justify-between gap-5 border-b border-[#edf3e7] pb-6 sm:flex-row sm:items-end">
           <div>
-            <span class="rounded-full bg-[#edf6ea] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-[#3d6b4d]">Espace personnel</span>
-            <h2 class="soft-display mt-3 text-4xl text-[#2d4a36]">Mon carnet</h2>
-            <p class="mt-2 max-w-xl text-sm text-[#4c5a4f]">Un lieu à soi. Il n’est ni noté ni utilisé pour punir ou surveiller.</p>
+            <span class="rounded-full bg-[#edf3e7] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-[#4c6751]">Espace personnel</span>
+            <h2 class="soft-display mt-3 text-4xl text-[#2d3c2f]">Mon carnet</h2>
+            <p class="mt-2 max-w-xl text-sm text-[#4a564a]">Un lieu à soi, sans jugement, pour accueillir les pensées, les apprentissages et les souvenirs.</p>
           </div>
-          <label class="text-sm font-semibold text-[#2d4a36]">Mon prénom
-            <input id="enfantNom" maxlength="60" class="mt-2 block w-full rounded-2xl border border-[#dfe8da] bg-[#f8faf6] p-3 sm:w-48" placeholder="Prénom" />
+          <label class="text-sm font-semibold text-[#2d3c2f]">Mon prénom
+            <input id="enfantNom" maxlength="60" class="mt-2 block w-full rounded-2xl border border-[#dfe7d2] bg-[#f8faf5] p-3 sm:w-48" placeholder="Prénom" />
           </label>
         </div>
 
-        <form id="carnetForm" class="my-7 space-y-4 rounded-[2rem] bg-[#faf7f0] p-5 sm:p-6">
-          <h3 class="font-bold text-[#2d4a36]">✍️ Ajouter une page</h3>
+        <form id="carnetForm" class="my-7 space-y-4 rounded-[2rem] bg-[#faf7f2] p-5 sm:p-6">
+          <h3 class="font-bold text-[#2d3c2f]">✍️ Ajouter une page</h3>
 
           <div class="grid gap-4 sm:grid-cols-2">
-            <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5d7f5f]">Rubrique
-              <select id="carnetRubrique" class="mt-2 w-full rounded-2xl border border-[#dfe8da] bg-white p-3 text-sm text-[#2d4a36]">
+            <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5c7561]">Rubrique
+              <select id="carnetRubrique" class="mt-2 w-full rounded-2xl border border-[#dfe7d2] bg-white p-3 text-sm text-[#2d3c2f]">
                 <option>🌟 Découvertes & réussites</option>
                 <option>🌱 Défis & apprentissages</option>
                 <option>❤️ Famille & souvenirs</option>
@@ -236,42 +238,42 @@
               </select>
             </label>
 
-            <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5d7f5f]">Titre
-              <input id="carnetTitre" required maxlength="120" class="mt-2 w-full rounded-2xl border border-[#dfe8da] bg-white p-3 text-sm text-[#2d4a36]" placeholder="Ce que je veux retenir" />
+            <label class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5c7561]">Titre
+              <input id="carnetTitre" required maxlength="120" class="mt-2 w-full rounded-2xl border border-[#dfe7d2] bg-white p-3 text-sm text-[#2d3c2f]" placeholder="Ce que je veux retenir" />
             </label>
           </div>
 
-          <label class="block text-[11px] font-bold uppercase tracking-[0.2em] text-[#5d7f5f]">Mon expression
-            <textarea id="carnetTexte" maxlength="1000" rows="4" class="mt-2 w-full rounded-2xl border border-[#dfe8da] bg-white p-3 text-sm text-[#2d4a36]" placeholder="Ce que j’ai ressenti, appris ou découvert…"></textarea>
+          <label class="block text-[11px] font-bold uppercase tracking-[0.2em] text-[#5c7561]">Mon expression
+            <textarea id="carnetTexte" maxlength="1000" rows="4" class="mt-2 w-full rounded-2xl border border-[#dfe7d2] bg-white p-3 text-sm text-[#2d3c2f]" placeholder="Ce que j’ai ressenti, appris ou découvert…"></textarea>
           </label>
 
-          <button class="rounded-full bg-[#7aa57a] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#6d986f]">Ajouter à mon carnet</button>
+          <button class="rounded-full bg-[#7b8f6f] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#697d62]">Ajouter à mon carnet</button>
         </form>
 
-        <h3 class="mb-4 text-xl font-bold text-[#2d4a36]">📚 Mes pages</h3>
+        <h3 class="mb-4 text-xl font-bold text-[#2d3c2f]">📚 Mes pages</h3>
         <div id="listeCarnet" class="grid gap-4 sm:grid-cols-2"></div>
       </div>
     </section>
 
     <section id="tab-apps" class="tab-content hidden">
-      <div class="rounded-[2rem] bg-gradient-to-br from-[#2d4a36] to-[#4e7b5d] p-6 text-white shadow-[0_20px_50px_rgba(45,74,54,0.2)] sm:p-10">
-        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#dfeecf]">Petite pause réflexive</span>
+      <div class="rounded-[2rem] bg-gradient-to-br from-[#2d3c2f] to-[#6a7b64] p-6 text-white shadow-[0_20px_50px_rgba(45,60,47,0.18)] sm:p-10">
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#dfe7d2]">Petite pause réflexive</span>
         <h2 class="soft-display mt-3 text-4xl">La question du jour</h2>
-        <div id="phraseBox" class="my-8 rounded-[1.5rem] bg-white/10 p-6 text-center text-lg font-semibold leading-8 text-[#edf6ea]"></div>
-        <button id="phraseBtn" class="rounded-full bg-[#f8e9d8] px-5 py-3 font-bold text-[#2d4a36] transition hover:bg-white">Une autre question</button>
+        <div id="phraseBox" class="my-8 rounded-[1.5rem] bg-white/10 p-6 text-center text-lg font-semibold leading-8 text-[#edf3e7]"></div>
+        <button id="phraseBtn" class="rounded-full bg-[#f6efe2] px-5 py-3 font-bold text-[#2d3c2f] transition hover:bg-white">Une autre question</button>
       </div>
     </section>
   </main>
 
-  <nav class="mobile-nav safe-bottom fixed inset-x-0 bottom-0 z-50 justify-around border-t border-[#edf1e7] bg-white/95 px-1 pt-2 shadow-[0_-10px_24px_rgba(0,0,0,0.06)] backdrop-blur-md" aria-label="Navigation mobile">
-    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#2d4a36]" data-tab="accueil"><span class="text-lg">⌂</span>Accueil</button>
-    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="regions"><span class="text-lg">⌖</span>Régions</button>
-    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="outils"><span class="text-lg">✦</span>Outils</button>
-    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="carnet"><span class="text-lg">📖</span>Carnet</button>
-    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4c5a4f]" data-tab="apps"><span class="text-lg">☼</span>Jour</button>
+  <nav class="mobile-nav safe-bottom fixed inset-x-0 bottom-0 z-50 justify-around border-t border-[#edf3e7] bg-white/95 px-1 pt-2 shadow-[0_-10px_24px_rgba(0,0,0,0.06)] backdrop-blur-md" aria-label="Navigation mobile">
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#2d3c2f]" data-tab="accueil"><span class="text-lg">⌂</span>Accueil</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4a564a]" data-tab="regions"><span class="text-lg">⌖</span>Régions</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4a564a]" data-tab="outils"><span class="text-lg">✦</span>Outils</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4a564a]" data-tab="carnet"><span class="text-lg">📖</span>Carnet</button>
+    <button class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[10px] font-bold text-[#4a564a]" data-tab="apps"><span class="text-lg">☼</span>Jour</button>
   </nav>
 
-  <footer class="hidden bg-[#2d4a36] py-10 text-center text-sm text-[#edf6ea] sm:block">RACINES · Grandir avec respect. Vivre avec conscience. Agir avec cœur.</footer>
+  <footer class="hidden bg-[#2d3c2f] py-10 text-center text-sm text-[#edf3e7] sm:block">RACINES · Grandir avec respect. Vivre avec conscience. Agir avec cœur.</footer>
 
   <script>
     const regions = [
@@ -306,13 +308,13 @@
 
     function activateTab(name) {
       document.querySelectorAll('.tab-content').forEach((el) => el.classList.add('hidden'));
-      $( 'tab-' + name ).classList.remove('hidden');
+      $('tab-' + name).classList.remove('hidden');
       document.querySelectorAll('.tab-btn').forEach((button) => {
         const active = button.dataset.tab === name;
-        button.classList.toggle('bg-[#7aa57a]', active);
+        button.classList.toggle('bg-[#7b8f6f]', active);
         button.classList.toggle('text-white', active);
-        button.classList.toggle('text-[#2d4a36]', !active);
-        button.classList.toggle('bg-[#edf5eb]', !active);
+        button.classList.toggle('text-[#2d3c2f]', !active);
+        button.classList.toggle('bg-[#edf3e7]', !active);
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -332,12 +334,12 @@
     function renderRegion() {
       const region = regions.find((item) => item[0] === $('regionSelect').value);
       $('regionCard').innerHTML = `
-        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#dfeecf]">Région ${region[0]}</span>
+        <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#dfe7d2]">Région ${region[0]}</span>
         <h3 class="soft-display mt-2 text-4xl text-white">${escapeText(region[1])}</h3>
         <div class="mt-7 grid gap-5 text-sm sm:grid-cols-3">
-          <p><strong class="block text-[#dfeecf]">Contexte</strong><span class="mt-2 block text-[#edf6ea]/80">${escapeText(region[2])}</span></p>
-          <p><strong class="block text-[#dfeecf]">Focus éco</strong><span class="mt-2 block text-[#edf6ea]/80">${escapeText(region[3])}</span></p>
-          <p><strong class="block text-[#dfeecf]">Passeur</strong><span class="mt-2 block text-[#edf6ea]/80">${escapeText(region[4])}</span></p>
+          <p><strong class="block text-[#dfe7d2]">Contexte</strong><span class="mt-2 block text-[#edf3e7]/80">${escapeText(region[2])}</span></p>
+          <p><strong class="block text-[#dfe7d2]">Focus éco</strong><span class="mt-2 block text-[#edf3e7]/80">${escapeText(region[3])}</span></p>
+          <p><strong class="block text-[#dfe7d2]">Passeur</strong><span class="mt-2 block text-[#edf3e7]/80">${escapeText(region[4])}</span></p>
         </div>
       `;
     }
@@ -355,7 +357,7 @@
       list.innerHTML = '';
 
       if (!entries.length) {
-        list.innerHTML = '<p class="text-sm text-[#4c5a4f]">Aucune page pour le moment. La première peut commencer ici.</p>';
+        list.innerHTML = '<p class="text-sm text-[#4a564a]">Aucune page pour le moment. La première peut commencer ici.</p>';
         return;
       }
 
@@ -364,11 +366,11 @@
         card.className = 'rounded-[1.5rem] border border-[#e7efe5] bg-[#f8fbf8] p-5';
         card.innerHTML = `
           <div class="flex items-center justify-between gap-2">
-            <span class="rounded-full bg-[#edf6ea] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#3d6b4d]">${escapeText(entry.rubrique)}</span>
+            <span class="rounded-full bg-[#edf3e7] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#3d4b3e]">${escapeText(entry.rubrique)}</span>
             <time class="text-xs text-[#7a8479]">${escapeText(entry.date)}</time>
           </div>
-          <h4 class="mt-4 text-lg font-bold text-[#2d4a36]">${escapeText(entry.titre)}</h4>
-          <p class="mt-2 text-sm leading-6 text-[#4c5a4f]">${escapeText(entry.texte)}</p>
+          <h4 class="mt-4 text-lg font-bold text-[#2d3c2f]">${escapeText(entry.titre)}</h4>
+          <p class="mt-2 text-sm leading-6 text-[#4a564a]">${escapeText(entry.texte)}</p>
         `;
         list.append(card);
       });
